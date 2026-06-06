@@ -118,11 +118,18 @@ const WORKLOAD = [
 ];
 
 const WORKSPACES = [
-  {id:'content',  name:'Content',  icon:'file',   color:'#1D6BD0', tint:'#E7EFFB', active:38, today:6,  desc:'Production tasks, files & content workflows'},
-  {id:'teams',    name:'Teams',    icon:'users',  color:'#8A63C4', tint:'#F1EBFA', active:8,  today:2,  desc:'People, capacity, availability & leave'},
-  {id:'requests', name:'Requests', icon:'inbox',  color:'#FF9A4E', tint:'#FFF1E4', active:12, today:4,  desc:'Language, review, approval & clearance'},
-  {id:'review',   name:'Review',   icon:'eye',    color:'#1FA98A', tint:'#E4F5F0', active:9,  today:3,  desc:'QA passes, sign-offs & change history'},
+  {id:'clearance', name:'Clearance', icon:'megaphone', color:'#1F9D86', tint:'#E4F4F0', active:4,  today:2, desc:'Screen & clear public statements before release'},
+  {id:'memos',     name:'Memos',     icon:'route',     color:'#8A63C4', tint:'#F1EBFA', active:11, today:4, desc:'Review, concur & pass memos up the chain'},
+  {id:'prep',      name:'Prep',      icon:'pen',       color:'#1D6BD0', tint:'#E7EFFB', active:7,  today:3, desc:'Draft memos & assessments from templates'},
+  {id:'briefings', name:'Briefing Books', icon:'book', color:'#FF9A4E', tint:'#FFF1E4', active:6,  today:2, desc:'Build & collate briefing books'},
+  {id:'knowledge', name:'Knowledge Management', icon:'bulb', color:'#1FA98A', tint:'#E4F5F0', active:142, today:9, desc:'Capture tribal knowledge into the ecosystem'},
+  {id:'upload',    name:'Data Upload', icon:'database', color:'#5568C7', tint:'#ECEDFB', active:5,  today:1, desc:'Intake forms & bring datasets into the ecosystem'},
+  {id:'teams',     name:'Teams',     icon:'users',     color:'#E068A7', tint:'#FBEAF4', active:8,  today:2, desc:'People, capacity, availability & leave'},
+  {id:'requests',  name:'Requests',  icon:'inbox',     color:'#2FB2F3', tint:'#E6F4FE', active:12, today:4, desc:'Language, review, approval & clearance'},
+  {id:'review',    name:'Review',    icon:'eye',       color:'#7FC457', tint:'#EEF6E6', active:9,  today:3, desc:'QA passes, sign-offs & change history'},
 ];
+// Content browse/search lives under Explore (top nav), not as a workspace
+const CONTENT_WS = {id:'content', name:'Content', icon:'file', color:'#1D6BD0', tint:'#E7EFFB', active:38, today:6, desc:'Production tasks, files & content workflows'};
 
 // calendar events for June 2026 (day -> events)
 const CAL_EVENTS = {
@@ -162,5 +169,5 @@ const DEVICES = [
 
 Object.assign(window, {
   PEOPLE, PL, TAGS, STATUS, PRIORITY, COLUMNS, TASKS, REQUESTS, REQ_STATUS, REQ_TYPE,
-  ACTIVITY, ACT_KIND, KPIS, WORKLOAD, WORKSPACES, CAL_EVENTS, FOLDERS, DEVICES
+  ACTIVITY, ACT_KIND, KPIS, WORKLOAD, WORKSPACES, CONTENT_WS, CAL_EVENTS, FOLDERS, DEVICES
 });

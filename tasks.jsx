@@ -1,22 +1,150 @@
-// tasks.jsx — Kanban board, filters, calendar
+// tasks.jsx — Workflow kanban board with dynamic columns, filters, calendar
 
-function TasksPage({ tasks, moveTask, openTask, openCreate }) {
+// ---- generic board columns (shown for "All tasks") ----
+const GEN_COLS = [
+  { id: 'todo', label: 'To do', accent: '#8C94A3' },
+  { id: 'in_progress', label: 'In progress', accent: '#1D6BD0' },
+  { id: 'blocked', label: 'Blocked / waiting', accent: '#F86566' },
+  { id: 'done', label: 'Done', accent: '#1FA98A', tail: true }];
+
+
+// ---- workflows, each with its own pipeline columns ----
+const WF = {
+  press: {
+    label: 'Press clearance', icon: 'megaphone', color: '#1F9D86', tint: '#E4F4F0',
+    cols: [
+    { id: 'intake', label: 'Intake' },
+    { id: 'airev', label: 'AI risk review' },
+    { id: 'counsel', label: 'Counsel clearance' },
+    { id: 'cleared', label: 'Cleared', tail: true }] },
+
+  relevance: {
+    label: 'Relevance coding', icon: 'inbox', color: '#1D6BD0', tint: '#E7EFFB',
+    cols: [
+    { id: 'queue', label: 'Review queue' },
+    { id: 'first', label: 'First-level' },
+    { id: 'qc', label: 'Conflicts / QC' },
+    { id: 'coded', label: 'Coded', tail: true }] },
+
+  brief: {
+    label: 'Brief review', icon: 'pen', color: '#E1574F', tint: '#FDEBEA',
+    cols: [
+    { id: 'draft', label: 'Drafting' },
+    { id: 'counsel', label: 'Counsel review' },
+    { id: 'revise', label: 'Revisions' },
+    { id: 'filed', label: 'Filed', tail: true }] },
+
+  privilege: {
+    label: 'Privilege sign-off', icon: 'shield', color: '#B5851C', tint: '#F8F0DA',
+    cols: [
+    { id: 'flagged', label: 'Flagged' },
+    { id: 'review', label: 'Privilege review' },
+    { id: 'log', label: 'On the log' },
+    { id: 'signed', label: 'Signed off', tail: true }] },
+
+  deposition: {
+    label: 'Deposition prep', icon: 'mic', color: '#8A63C4', tint: '#F1EBFA',
+    cols: [
+    { id: 'outline', label: 'Outline' },
+    { id: 'exhibits', label: 'Exhibits' },
+    { id: 'desig', label: 'Designations' },
+    { id: 'ready', label: 'Depo-ready', tail: true }] },
+
+  production: {
+    label: 'Production sign-off', icon: 'layers', color: '#2E8B8B', tint: '#E1F2F2',
+    cols: [
+    { id: 'stage', label: 'Staging' },
+    { id: 'qc', label: 'Conversion / QC' },
+    { id: 'priv', label: 'Privilege check' },
+    { id: 'produced', label: 'Produced', tail: true }] } };
+
+
+
+const WF_ORDER = ['press', 'relevance', 'brief', 'privilege', 'deposition', 'production'];
+
+const PRI_COLOR = { urgent: '#E1574F', high: '#C58A1E' };
+
+// people for this board (name + initials + color)
+const P = {
+  jordan: { name: 'Jordan Cole', initials: 'JC', color: '#1D6BD0' },
+  okafor: { name: 'A. Okafor', initials: 'AO', color: '#8A63C4' },
+  park: { name: 'L. Park', initials: 'LP', color: '#1F9D86' },
+  team: { name: 'Review team', initials: 'RT', color: '#5568C7' },
+  self: { name: 'Self', initials: 'TC', color: '#1D3557' },
+  foster: { name: 'D. Foster', initials: 'DF', color: '#FF9A4E' },
+  mine: true };
+
+
+// wf: workflow id · g: generic column · w: workflow column · pri · due · tone · done · doneDate · mine
+function wt(id, wf, g, w, title, desc, who, opts = {}) {
+  return { id, wf, g, w, title, desc, who, pri: opts.pri || null,
+    due: opts.due || '', tone: opts.tone || null, done: !!opts.done, doneDate: opts.doneDate || '', mine: !!opts.mine };
+}
+
+const WF_TASKS = [
+wt('M1', 'press', 'todo', 'airev', 'Clear press release — MSJ filing',
+'5 AI findings open · 2 high-risk (privilege + Rule 3.6)', 'jordan',
+{ pri: 'urgent', due: 'today', tone: 'today', mine: true }),
+wt('M2', 'brief', 'todo', 'counsel', 'Review draft — Motion for Summary Judgment',
+'Argument section needs counsel review before filing', 'okafor',
+{ pri: 'high', due: 'in 2d' }),
+wt('M3', 'privilege', 'todo', 'review', 'Privilege sign-off — 12 flagged documents',
+'GC separation memo & related A/C communications for the log', 'park',
+{ pri: 'high', due: 'in 5d' }),
+wt('M4', 'relevance', 'todo', 'qc', 'Second-level review — VANT-PROD-002 hot docs',
+'Confirm relevance calls on 8 documents flagged hot', 'team',
+{ due: 'in 7d' }),
+wt('M5', 'deposition', 'in_progress', 'exhibits', 'Prep outline — Henderson deposition',
+'Cross-reference exhibits to the chronology before 7/9', 'self',
+{ pri: 'high', due: 'in 6d', mine: true }),
+wt('M6', 'press', 'in_progress', 'counsel', 'Review media statement — depositions',
+'1 minor accuracy finding; awaiting your clearance', 'jordan',
+{ due: 'tomorrow', tone: 'tomorrow', mine: true }),
+wt('M7', 'relevance', 'blocked', 'qc', 'Resolve coding conflicts — Caldwell custodian',
+'Two reviewers disagree on 4 documents; needs your call', 'team',
+{ due: 'in 8d', mine: true }),
+wt('M8', 'production', 'blocked', 'qc', 'Sign off — PLF-PROD-003 before service',
+'Waiting on vendor TIFF conversion to complete', 'foster',
+{ due: 'in 9d' }),
+wt('M9', 'deposition', 'done', 'ready', 'Reviewed — Caldwell deposition designations',
+'Designations & counter-designations finalized', 'okafor',
+{ pri: 'high', done: true, doneDate: 'Jun 26, 24' }),
+wt('M10', 'press', 'done', 'cleared', 'Cleared — initial filing press release',
+'Approved & released 4/11', 'jordan',
+{ done: true, doneDate: 'Apr 10, 24' }),
+wt('M11', 'brief', 'done', 'filed', 'Approve — Motion in Limine (Atlas materials)',
+'Cleared for filing', 'park',
+{ done: true, doneDate: 'Jun 27, 24' })];
+
+
+const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace";
+
+function TasksPage({ openCreate, openTask }) {
   const [view, setView] = React.useState('kanban');
-  const [quick, setQuick] = React.useState('all');
-  const [statusFilter, setStatusFilter] = React.useState([]);
+  const [scope, setScope] = React.useState('teams'); // teams | mine
+  const [wf, setWf] = React.useState('all'); // all | <workflow id>
+  const [items, setItems] = React.useState(WF_TASKS);
 
-  const quickFilters = [
-  { id: 'mine', label: 'Only Mine' },
-  { id: 'teams', label: 'My Teams' },
-  { id: 'all', label: 'All Tasks' },
-  { id: 'recent', label: 'Recently Updated' },
-  { id: 'soon', label: 'Due Soon' }];
+  // scope filter (Only Mine / My Teams) is independent of the workflow chips
+  const scoped = scope === 'mine' ? items.filter((t) => t.mine) : items;
 
+  // open = not done; counts used by the workflow chips
+  const wfCount = (id) => scoped.filter((t) => t.wf === id && !t.done).length;
+  const allOpen = scoped.filter((t) => !t.done).length;
 
-  let filtered = tasks;
-  if (quick === 'mine') filtered = filtered.filter((t) => t.assignees.includes('tyler') || ['T-187', 'T-198', 'T-211'].includes(t.id));
-  if (quick === 'soon') filtered = filtered.filter((t) => ['Jun 4', 'Jun 5', 'Jun 6', 'Jun 7', 'Jun 8', 'Jun 9'].includes(t.due));
-  if (statusFilter.length) filtered = filtered.filter((t) => statusFilter.includes(t.col));
+  // board mode: generic columns for "all", pipeline columns for a workflow
+  const isWf = wf !== 'all';
+  const cols = isWf ? WF[wf].cols : GEN_COLS;
+  const colKey = isWf ? 'w' : 'g';
+  const boardTasks = isWf ? scoped.filter((t) => t.wf === wf) : scoped;
+
+  function moveTask(id, colId) {
+    setItems((arr) => arr.map((t) => t.id === id ? { ...t, [colKey]: colId, done: colKey === 'g' ? colId === 'done' : t.done } : t));
+  }
+
+  const subtitle = isWf ?
+  `${WF[wf].label} pipeline · ${boardTasks.length} matter${boardTasks.length === 1 ? '' : 's'} in flight` :
+  `${allOpen} open across ${GEN_COLS.length - 1} stages · ${scoped.filter((t) => t.tone).length} due within 48h`;
 
   return (
     <div className="rise">
@@ -25,9 +153,9 @@ function TasksPage({ tasks, moveTask, openTask, openCreate }) {
         <div className="page" style={{ position: 'relative', zIndex: 1, paddingTop: 30, paddingBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
             <div>
-              <div className="eyebrow" style={{ marginBottom: 6 }}>Workspace · Content</div>
+              <div className="eyebrow" style={{ marginBottom: 6 }}>Workspace · Litigation</div>
               <h1 style={{ fontSize: 25, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--ink)' }}>Tasks</h1>
-              <p className="sec" style={{ fontSize: 14, margin: '5px 0 0' }}>{tasks.length} tasks across 4 stages · 5 due this week</p>
+              <p className="sec" style={{ fontSize: 14, margin: '5px 0 0' }}>{subtitle}</p>
             </div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
@@ -41,86 +169,140 @@ function TasksPage({ tasks, moveTask, openTask, openCreate }) {
               <button className="btn btn-primary" onClick={openCreate}><Icon name="plus" size={16} sw={2.2} />New Request</button>
             </div>
           </div>
-          {/* filter bar */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0 18px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', gap: 7 }}>
-              {quickFilters.map((q) =>
-              <button key={q.id} className={'chip' + (quick === q.id ? ' on' : '')} onClick={() => setQuick(q.id)}>{q.label}</button>
+
+          {/* scope row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0 0', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
+              {[['mine', 'Only Mine'], ['teams', 'My Teams']].map(([id, lb]) =>
+              <button key={id} onClick={() => setScope(id)} style={{ border: 0, background: scope === id ? '#fff' : 'transparent',
+                color: scope === id ? 'var(--ink)' : 'var(--ink-3)', fontSize: 12.5, fontWeight: 550, padding: '6px 13px', borderRadius: 7,
+                cursor: 'pointer', boxShadow: scope === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}>{lb}</button>
               )}
             </div>
-            <div style={{ width: 1, height: 22, background: 'var(--line-2)', margin: '0 3px' }}></div>
-            <button className="chip"><Icon name="filter" size={13} />Status{statusFilter.length > 0 && <span style={{ background: 'var(--primary)', color: '#fff', borderRadius: 10, padding: '0 5px', fontSize: 10, marginLeft: 2 }}>{statusFilter.length}</span>}</button>
             <button className="chip"><Icon name="user" size={13} />Assignee</button>
-            <button className="chip"><Icon name="clock" size={13} />Due Date</button>
-            <button className="chip"><Icon name="flag" size={13} />Tags</button>
+            <button className="chip"><Icon name="clock" size={13} />Due date</button>
             <div style={{ flex: 1 }}></div>
-            <span className="muted" style={{ fontSize: 12.5 }}>{filtered.length} shown</span>
+            <span className="muted" style={{ fontSize: 12.5 }}>{boardTasks.length} shown</span>
           </div>
+
+          {/* workflow chips */}
+          {view === 'kanban' &&
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '14px 0 18px', flexWrap: 'wrap' }}>
+            <button className={'chip' + (wf === 'all' ? ' on' : '')} onClick={() => setWf('all')}>
+                All<span style={{ marginLeft: 1, fontWeight: 600, opacity: wf === 'all' ? 0.85 : 0.6, fontFamily: MONO, fontSize: 11 }}>{allOpen}</span>
+              </button>
+              {WF_ORDER.map((id) => {
+              const w = WF[id], on = wf === id, n = wfCount(id);
+              return (
+                <button key={id} onClick={() => setWf(id)}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 26, padding: '0 11px', borderRadius: 999, fontSize: 12, fontWeight: 550,
+                  cursor: 'pointer', transition: '.13s', whiteSpace: 'nowrap',
+                  border: '1px solid ' + (on ? w.color : 'var(--line-2)'),
+                  background: on ? w.tint : '#fff',
+                  color: on ? w.color : 'var(--ink-2)' }}
+                onMouseEnter={(e) => {if (!on) e.currentTarget.style.background = 'var(--hover)';}}
+                onMouseLeave={(e) => {if (!on) e.currentTarget.style.background = '#fff';}}>
+                    <Icon name={w.icon} size={13} sw={2} style={{ color: w.color }} />
+                    {w.label}
+                    <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: on ? w.color : 'var(--ink-3)' }}>{n}</span>
+                  </button>);
+
+            })}
+            </div>
+          }
+          {view !== 'kanban' && <div style={{ height: 18 }}></div>}
         </div>
       </div>
 
       <div className="page" style={{ paddingTop: 22 }}>
         {view === 'kanban' ?
-        <Kanban tasks={filtered} moveTask={moveTask} openTask={openTask} openCreate={openCreate} /> :
+        <Kanban cols={cols} colKey={colKey} tasks={boardTasks} moveTask={moveTask} openCreate={openCreate} accentColor={isWf ? WF[wf].color : null} /> :
         <CalendarView openTask={openTask} openCreate={openCreate} />}
       </div>
     </div>);
 
 }
 
-function Kanban({ tasks, moveTask, openTask, openCreate }) {
+function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor }) {
   const [dragId, setDragId] = React.useState(null);
   const [overCol, setOverCol] = React.useState(null);
-  const colAccent = { backlog: '#8C94A3', in_progress: '#1D6BD0', review: '#FF9A4E', complete: '#1FA98A' };
+
+  // accent for a pipeline column: gray start → workflow color middle → green tail
+  const colAccent = (col, i) => {
+    if (col.accent) return col.accent;
+    if (col.tail) return '#1F9D86';
+    if (i === 0) return '#8C94A3';
+    return accentColor || '#1D6BD0';
+  };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, alignItems: 'start' }}>
-      {COLUMNS.map((col) => {
-        const items = tasks.filter((t) => t.col === col.id);
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols.length},1fr)`, gap: 16, alignItems: 'start' }}>
+      {cols.map((col, ci) => {
+        const accent = colAccent(col, ci);
+        const list = tasks.filter((t) => t[colKey] === col.id);
         return (
           <div key={col.id} className={'kcol' + (overCol === col.id ? ' over' : '')}
           onDragOver={(e) => {e.preventDefault();setOverCol(col.id);}}
           onDragLeave={(e) => {if (!e.currentTarget.contains(e.relatedTarget)) setOverCol(null);}}
           onDrop={(e) => {e.preventDefault();if (dragId) moveTask(dragId, col.id);setDragId(null);setOverCol(null);}}
-          style={{ background: 'rgba(247,250,253,.7)', border: '1px solid var(--line)', borderRadius: 14, padding: 10, minHeight: 200 }}>
+          style={{ background: 'rgba(247,250,253,.7)', border: '1px solid var(--line)', borderRadius: 14, padding: 10, minHeight: 220 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 6px 12px' }}>
-              <span style={{ width: 9, height: 9, borderRadius: 3, background: colAccent[col.id] }}></span>
+              <span style={{ width: 9, height: 9, borderRadius: 3, background: accent }}></span>
               <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)' }}>{col.label}</span>
-              <span className="badge" style={{ background: '#EAEEF4', color: 'var(--ink-3)' }}>{items.length}</span>
+              <span className="badge" style={{ background: '#EAEEF4', color: 'var(--ink-3)' }}>{list.length}</span>
               <div style={{ flex: 1 }}></div>
-              <button className="btn btn-ghost btn-icon btn-sm" onClick={openCreate} style={{ width: 26, height: 26 }}><Icon name="plus" size={15} /></button>
+              {col.tail ?
+              <Icon name="check" size={15} sw={2.4} style={{ color: '#1F9D86' }} /> :
+              <button className="btn btn-ghost btn-icon btn-sm" onClick={openCreate} style={{ width: 26, height: 26 }}><Icon name="plus" size={15} /></button>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minHeight: 40 }}>
-              {items.map((t) =>
-              <div key={t.id} className={'kcard' + (dragId === t.id ? ' dragging' : '')} draggable
-              onDragStart={() => setDragId(t.id)} onDragEnd={() => {setDragId(null);setOverCol(null);}}
-              onClick={() => openTask(t.id)}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 9 }}>
-                    <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.35 }}>{t.file}</span>
-                    {(t.priority === 'urgent' || t.priority === 'high') && <PriorityFlag k={t.priority} />}
-                  </div>
-                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 11 }}>
-                    {t.tags.map((tg) => <Tag key={tg} k={tg} sm />)}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 11, color: 'var(--ink-3)', fontSize: 11.5, fontWeight: 500 }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: ['Jun 4', 'Jun 5'].includes(t.due) ? 'var(--coral)' : 'var(--ink-3)' }}><Icon name="clock" size={13} />{t.due}</span>
-                      {t.comments > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Icon name="comment" size={13} />{t.comments}</span>}
-                      {t.attachments > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Icon name="paperclip" size={13} />{t.attachments}</span>}
-                    </div>
-                    <AvatarStack ids={t.assignees} size={22} max={2} />
-                  </div>
-                </div>
-              )}
-              {items.length === 0 &&
+              {list.map((t) => <WFCard key={t.id} t={t} dragId={dragId} setDragId={setDragId} setOverCol={setOverCol} />)}
+              {list.length === 0 &&
               <div style={{ padding: '22px 10px', textAlign: 'center', border: '1.5px dashed var(--line-2)', borderRadius: 10, color: 'var(--ink-4)', fontSize: 12.5 }}>
-                  Drop tasks here
+                  Drop here
                 </div>
               }
             </div>
           </div>);
 
       })}
+    </div>);
+
+}
+
+function WFCard({ t, dragId, setDragId, setOverCol }) {
+  const w = WF[t.wf];
+  const who = P[t.who];
+  const dueColor = t.tone === 'today' || t.tone === 'tomorrow' ? '#E1574F' : 'var(--ink-3)';
+  return (
+    <div className={'kcard' + (dragId === t.id ? ' dragging' : '')} draggable
+    onDragStart={() => setDragId(t.id)} onDragEnd={() => {setDragId(null);setOverCol(null);}}
+    style={{ borderLeft: `3px solid ${w.color}`, paddingLeft: 12, opacity: t.done ? 0.92 : 1 }}>
+      {/* header: workflow + priority */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 9 }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: w.color, fontSize: 10, fontWeight: 700, letterSpacing: '.045em', textTransform: 'uppercase' }}>
+          <Icon name={w.icon} size={13} sw={2} />{w.label}
+        </span>
+        {t.pri &&
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, color: PRI_COLOR[t.pri], fontSize: 10, fontWeight: 700, letterSpacing: '.04em', textTransform: 'uppercase' }}>
+            {t.pri === 'urgent' && <Icon name="flame" size={11} sw={2.2} />}{t.pri}
+          </span>}
+      </div>
+      {/* title */}
+      <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.32, marginBottom: 5,
+        textDecoration: t.done ? 'line-through' : 'none', textDecorationColor: 'var(--ink-4)', color: t.done ? 'var(--ink-3)' : 'var(--ink)' }}>{t.title}</div>
+      {/* desc */}
+      <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.45, marginBottom: 13 }}>{t.desc}</div>
+      {/* footer */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
+          <span className="av" style={{ width: 22, height: 22, background: who.color, fontSize: 9 }}>{who.initials}</span>
+          <span style={{ fontSize: 11.5, color: 'var(--ink-2)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{who.name}</span>
+        </span>
+        {t.done ?
+        <span style={{ fontFamily: MONO, fontSize: 10.5, color: 'var(--ink-4)', fontWeight: 500, whiteSpace: 'nowrap' }}>{t.doneDate}</span> :
+        <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: dueColor, whiteSpace: 'nowrap', letterSpacing: '-.01em' }}>Due {t.due}</span>}
+      </div>
     </div>);
 
 }
@@ -180,7 +362,7 @@ function CalendarView({ openTask, openCreate }) {
                   </div>}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     {evs.slice(0, 3).map((e, j) =>
-                  <div key={j} onClick={(ev) => {ev.stopPropagation();openTask(TASKS[0].id);}} title={e.t}
+                  <div key={j} onClick={(ev) => {ev.stopPropagation();openCreate();}} title={e.t}
                   style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '3px 6px', borderRadius: 5, background: tagTint(e.tag),
                     fontSize: 10.5, fontWeight: 550, color: tagColor(e.tag), whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer' }}>
                         <span style={{ width: 5, height: 5, borderRadius: '50%', background: tagColor(e.tag), flex: 'none' }}></span>{e.t}
@@ -220,7 +402,7 @@ function WeekView({ openTask, openCreate, tagColor, tagTint }) {
               {hours.map((h, hi) => <div key={hi} style={{ height: 70, borderBottom: '1px solid var(--line)' }}></div>)}
               <div style={{ position: 'absolute', inset: 0, padding: '4px 4px', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {evs.map((e, j) =>
-                <div key={j} onClick={(ev) => {ev.stopPropagation();openTask(TASKS[0].id);}}
+                <div key={j} onClick={(ev) => {ev.stopPropagation();openCreate();}}
                 style={{ padding: '5px 7px', borderRadius: 6, background: tagTint(e.tag), borderLeft: `2.5px solid ${tagColor(e.tag)}`,
                   fontSize: 10.5, fontWeight: 550, color: tagColor(e.tag), cursor: 'pointer', lineHeight: 1.3 }}>{e.t}</div>
                 )}
@@ -233,4 +415,4 @@ function WeekView({ openTask, openCreate, tagColor, tagTint }) {
 
 }
 
-Object.assign(window, { TasksPage, Kanban, CalendarView, WeekView });
+Object.assign(window, { TasksPage, Kanban, WFCard, CalendarView, WeekView, WF, WF_TASKS });

@@ -22,6 +22,13 @@ function App(){
   if(page==='dashboard') body=<Dashboard setPage={setPage} openTask={openTask} openCreate={()=>setCreating(true)}/>;
   else if(page==='tasks') body=<TasksPage tasks={tasks} moveTask={moveTask} openTask={openTask} openCreate={()=>setCreating(true)}/>;
   else if(page==='metrics') body=<MetricsPage/>;
+  else if(page==='explore') body=<ExplorePage setPage={setPage} openCreate={()=>setCreating(true)} flash={flash} onSearch={runSearch}/>;
+  else if(page==='clearance') body=<ClearanceWorkspace setPage={setPage} flash={flash}/>;
+  else if(page==='memos') body=<MemosWorkspace setPage={setPage} flash={flash}/>;
+  else if(page==='prep') body=<PrepWorkspace setPage={setPage} flash={flash}/>;
+  else if(page==='briefings') body=<BriefingsWorkspace setPage={setPage} flash={flash}/>;
+  else if(page==='knowledge') body=<KnowledgeWorkspace setPage={setPage} flash={flash}/>;
+  else if(page==='upload') body=<DataUploadWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='search') body=<SearchResults query={searchQuery} setPage={setPage} onSearch={runSearch}/>;
   else body=<WorkspaceDetail id={page} setPage={setPage} openTask={openTask} openCreate={()=>setCreating(true)} flash={flash} onSearch={runSearch}/>;
 

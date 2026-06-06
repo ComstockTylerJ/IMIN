@@ -24,7 +24,7 @@ function WsHeader({name, icon, color, tint, setPage, action}){
 
 function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
   const wid = (id==='workspaces') ? 'content' : id;
-  const w = WORKSPACES.find(x=>x.id===wid) || WORKSPACES[0];
+  const w = (wid==='content') ? CONTENT_WS : (WORKSPACES.find(x=>x.id===wid) || WORKSPACES[0]);
   if(wid==='content') return <ContentWorkspace w={w} setPage={setPage} openCreate={openCreate} flash={flash} onSearch={onSearch}/>;
 
   return (
@@ -66,7 +66,7 @@ function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
 }
 
 // ---------------- Content workspace (search + browse + folders) ----------------
-function ContentWorkspace({w, setPage, openCreate, flash, onSearch}){
+function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed}){
   const [ai,setAi]=React.useState(true);
   const [browse,setBrowse]=React.useState('Collections');
   const [query,setQuery]=React.useState('');
@@ -75,8 +75,8 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch}){
   const go=()=>onSearch&&onSearch(query);
 
   return (
-    <div className="rise">
-      <WsHeader name="Content" icon={w.icon} color={w.color} tint={w.tint} setPage={setPage}/>
+    <div className={embed?'':'rise'}>
+      {!embed && <WsHeader name="Content" icon={w.icon} color={w.color} tint={w.tint} setPage={setPage}/>}
 
       {/* search hero */}
       <div style={{position:'relative',overflow:'hidden'}}>
@@ -321,4 +321,4 @@ function CreateModal({onClose, onCreate}){
   );
 }
 
-Object.assign(window, { WorkspaceDetail, CreateModal, ContentWorkspace });
+Object.assign(window, { WorkspaceDetail, CreateModal, ContentWorkspace, WsHeader });

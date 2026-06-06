@@ -18,11 +18,12 @@ function Header({page, setPage, onCreate, onSearch}){
 
   const nav = [
     {id:'dashboard', label:'Dashboard'},
+    {id:'explore', label:'Explore'},
     {id:'tasks', label:'Tasks'},
     {id:'workspaces', label:'Workspaces', dropdown:true},
     {id:'metrics', label:'Metrics'},
   ];
-  const isWsActive = ['workspaces','content','teams','requests','review'].includes(page);
+  const isWsActive = ['workspaces','clearance','memos','prep','briefings','knowledge','upload','teams','requests','review'].includes(page);
 
   return (
     <header style={{position:'sticky',top:0,zIndex:100,height:'var(--header-h)',
@@ -68,16 +69,6 @@ function Header({page, setPage, onCreate, onSearch}){
         </nav>
 
         <div style={{flex:1}}></div>
-
-        {/* search */}
-        <button onClick={()=>onSearch&&onSearch('finance')} style={{display:'flex',alignItems:'center',gap:8,height:36,padding:'0 12px',width:230,
-          border:'1px solid var(--line-2)',background:'rgba(255,255,255,.6)',borderRadius:8,color:'var(--ink-3)',
-          fontSize:13,cursor:'pointer',transition:'.15s'}}
-          onMouseEnter={e=>e.currentTarget.style.background='#fff'}
-          onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,.6)'}>
-          <Icon name="search" size={16}/><span style={{flex:1,textAlign:'left'}}>Search…</span>
-          <span className="kbd">⌘K</span>
-        </button>
 
         <button className="btn btn-ghost btn-icon" title="Messages"><Icon name="message" size={18}/></button>
         <div ref={notifRef} style={{position:'relative'}}>

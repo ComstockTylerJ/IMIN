@@ -120,7 +120,7 @@ function SearchResults({query, setPage, onSearch}){
           <div className="card" style={{flex:1,display:'flex',alignItems:'center',gap:10,padding:'8px 12px',boxShadow:'var(--shadow-sm)'}}>
             <Icon name="search" size={18} style={{color:'var(--ink-3)',flex:'none'}}/>
             <span className="badge" style={{background:'var(--primary-tint)',color:'var(--primary)',height:26,gap:7,fontSize:12.5}}>
-              {q}<Icon name="x" size={13} style={{cursor:'pointer',opacity:.7}} onClick={()=>setPage('content')}/>
+              {q}<Icon name="x" size={13} style={{cursor:'pointer',opacity:.7}} onClick={()=>setPage('explore')}/>
             </span>
             <div style={{display:'flex',gap:2,background:'#F2F5F9',padding:2,borderRadius:7}}>
               {['AND','OR','NOT'].map((o,i)=>(

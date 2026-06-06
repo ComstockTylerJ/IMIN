@@ -217,17 +217,17 @@ function Workload(){
 
 function ActionCenter({setPage}){
   const items=[
-    {label:'Overdue Reviews', count:2, icon:'eye', color:'#F86566', tint:'#FEECEC', sub:'Past SLA · needs attention'},
-    {label:'Pending Approvals', count:7, icon:'check', color:'#FF9A4E', tint:'#FFF1E4', sub:'Awaiting your sign-off'},
-    {label:'Unassigned Work', count:3, icon:'user', color:'#8A63C4', tint:'#F1EBFA', sub:'No owner set'},
-    {label:'Blocked Tasks', count:1, icon:'alert', color:'#1D6BD0', tint:'#E7EFFB', sub:'Waiting on dependencies'},
+    {label:'Triage', count:9, icon:'inbox', color:'#1D6BD0', tint:'#E7EFFB', sub:'New items awaiting sorting', go:'requests'},
+    {label:'Clearance', count:2, icon:'megaphone', color:'#1F9D86', tint:'#E4F4F0', sub:'Statements pending your screen', go:'clearance'},
+    {label:'Memos', count:4, icon:'route', color:'#8A63C4', tint:'#F1EBFA', sub:'Awaiting your concurrence', go:'memos'},
+    {label:'Prep', count:3, icon:'pen', color:'#FF9A4E', tint:'#FFF1E4', sub:'Drafts in progress', go:'prep'},
   ];
   return (
     <div className="card card-pad">
       <SectionHead title="Action Center" sub="Items that need you" icon="flame"/>
       <div style={{display:'flex',flexDirection:'column',gap:9}}>
         {items.map(it=>(
-          <button key={it.label} onClick={()=>setPage('tasks')} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 12px',
+          <button key={it.label} onClick={()=>setPage(it.go)} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 12px',
             border:'1px solid var(--line)',borderRadius:10,background:'#fff',cursor:'pointer',textAlign:'left',transition:'.15s'}}
             onMouseEnter={e=>{e.currentTarget.style.borderColor=it.color;e.currentTarget.style.background=it.tint+'55';}}
             onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line)';e.currentTarget.style.background='#fff';}}>
