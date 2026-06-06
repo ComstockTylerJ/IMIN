@@ -3,7 +3,7 @@
 function WsHeader({name, icon, color, tint, setPage, action}){
   return (
     <div style={{borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
-      <div className="page" style={{paddingTop:20,paddingBottom:18}}>
+      <div className="page" style={{paddingTop:13,paddingBottom:12}}>
         <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:16,flexWrap:'wrap'}}>
           <div>
             <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--ink-3)',fontWeight:500,marginBottom:7}}>
@@ -32,7 +32,7 @@ function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
       <WsHeader name={w.name} icon={w.icon} color={w.color} tint={w.tint} setPage={setPage}
         action={<button className="btn btn-primary" onClick={openCreate}><Icon name="plus" size={16} sw={2.2}/>New item</button>}/>
       <div className="page" style={{paddingTop:24}}>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:22}}>
+        <div className="grid-4" style={{marginBottom:22}}>
           {[['Active items',w.active,w.color],['Due today',w.today,'#F86566'],['Completed (wk)',Math.round(w.active*0.7),'#1FA98A'],['Avg cycle','2.4d','#8A63C4']].map(([l,v,c])=>(
             <div key={l} className="card card-pad">
               <div style={{fontSize:12.5,fontWeight:550,color:'var(--ink-2)',marginBottom:8}}>{l}</div>
@@ -81,9 +81,9 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed}){
       {/* search hero */}
       <div style={{position:'relative',overflow:'hidden'}}>
         <HeroPattern opacity={0.6}/>
-        <div className="page" style={{position:'relative',zIndex:1,paddingTop:46,paddingBottom:42}}>
+        <div className="page" style={{position:'relative',zIndex:1,paddingTop:30,paddingBottom:28}}>
           <div style={{maxWidth:760,margin:'0 auto',textAlign:'center'}}>
-            <h2 style={{fontSize:32,fontWeight:700,letterSpacing:'-.035em',margin:0,color:'var(--ink)'}}>
+            <h2 style={{fontSize:27,fontWeight:700,letterSpacing:'-.035em',margin:0,color:'var(--ink)'}}>
               What are you <span className="grad-text">looking for?</span>
             </h2>
             <div className="sec" style={{fontSize:13.5,margin:'10px 0 0',display:'flex',flexWrap:'wrap',gap:8,alignItems:'center',justifyContent:'center'}}>
@@ -158,7 +158,7 @@ function FolderGrid({filter, setPage, flash}){
   const list=FOLDERS.filter(f=>f.name.toLowerCase().includes(filter.toLowerCase()));
   if(!list.length) return <Empty label="No collections match your filter."/>;
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
+    <div className="grid-4" style={{paddingBottom:8}}>
       {list.map(f=>(
         <div key={f.id} className="card card-hover" style={{padding:'15px 16px 14px',display:'flex',flexDirection:'column',gap:10}}>
           <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
@@ -189,7 +189,7 @@ function DeviceGrid({filter, flash}){
   const list=DEVICES.filter(d=>d.name.toLowerCase().includes(filter.toLowerCase()));
   if(!list.length) return <Empty label="No connected sources match."/>;
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
+    <div className="grid-4" style={{paddingBottom:8}}>
       {list.map(d=>(
         <div key={d.id} className="card card-hover card-pad" style={{display:'flex',flexDirection:'column',gap:12}}>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
@@ -214,7 +214,7 @@ function PeopleGrid({filter, flash}){
   const list=PL.filter(p=>p.name.toLowerCase().includes(filter.toLowerCase()));
   if(!list.length) return <Empty label="No people match your filter."/>;
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
+    <div className="grid-4" style={{paddingBottom:8}}>
       {list.map((p,i)=>(
         <div key={p.id} className="card card-hover card-pad" style={{display:'flex',alignItems:'center',gap:13}}>
           <Avatar id={p.id} size={42} ring={false}/>
