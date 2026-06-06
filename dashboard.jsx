@@ -6,7 +6,7 @@ function Dashboard({setPage, openTask, openCreate}){
       <DashHero openCreate={openCreate} setPage={setPage}/>
       <div className="page" style={{marginTop:-44,position:'relative',zIndex:2}}>
         <KpiRow setPage={setPage}/>
-        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.65fr) minmax(0,1fr)',gap:20,marginTop:22,alignItems:'start'}}>
+        <div className="grid-main" style={{marginTop:22}}>
           <div style={{display:'flex',flexDirection:'column',gap:20,minWidth:0}}>
             <MyWork openTask={openTask} setPage={setPage}/>
             <RequestsQueue openTask={openTask}/>
@@ -35,7 +35,7 @@ function DashHero({openCreate, setPage}){
   ];
   const online=['diego','lena','noah','maya','priya'];
   return (
-    <div style={{position:'relative',paddingTop:40,paddingBottom:72,overflow:'hidden'}}>
+    <div className="dash-hero" style={{position:'relative',overflow:'hidden'}}>
       <HeroPattern/>
       <div className="page" style={{position:'relative',zIndex:1,paddingBottom:0}}>
         <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:24,flexWrap:'wrap'}}>
@@ -45,7 +45,7 @@ function DashHero({openCreate, setPage}){
               <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
               Week 23
             </div>
-            <h1 style={{fontSize:30,fontWeight:700,letterSpacing:'-.03em',margin:'8px 0 0',color:'var(--ink)'}}>
+            <h1 style={{fontSize:'clamp(24px,5.2vw,30px)',fontWeight:700,letterSpacing:'-.03em',margin:'8px 0 0',color:'var(--ink)'}}>
               Welcome back, Tyler!
             </h1>
             <p className="sec" style={{fontSize:14.5,margin:'6px 0 0',maxWidth:520}}>
@@ -72,7 +72,7 @@ function DashHero({openCreate, setPage}){
             </div>
           </div>
         </div>
-        <div style={{display:'flex',gap:10,marginTop:22,flexWrap:'wrap'}}>
+        <div className="hero-actions" style={{display:'flex',gap:10,marginTop:22,flexWrap:'wrap'}}>
           {actions.map(a=>(
             <button key={a.label} className={'btn '+(a.primary?'btn-primary':'btn-secondary')} onClick={a.cb}>
               <Icon name={a.icon} size={16} sw={2}/>{a.label}
@@ -86,7 +86,7 @@ function DashHero({openCreate, setPage}){
 
 function KpiRow({setPage}){
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:16}}>
+    <div className="grid-kpi">
       {KPIS.map(k=>(
         <div key={k.label} className="card card-hover card-pad" style={{cursor:'pointer',display:'flex',flexDirection:'column',gap:12}}
           onClick={()=>setPage('tasks')}>
@@ -272,7 +272,7 @@ function ActivityFeed(){
 
 function RecentWorkspaces({setPage}){
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
+    <div className="grid-4">
       {WORKSPACES.map(w=>(
         <div key={w.id} className="card card-hover card-pad" style={{cursor:'pointer',display:'flex',flexDirection:'column',gap:14}} onClick={()=>setPage(w.id)}>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>

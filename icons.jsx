@@ -57,6 +57,8 @@ const ICON_PATHS = {
   pin: <><path d="M9 3.5h6l-1 5 3 3-5 1v6l-1.5 1.5L10 19v-6l-5-1 3-3-1-5z"/></>,
   download: <><path d="M12 4v10M8 11l4 4 4-4"/><path d="M5 19.5h14"/></>,
   external: <><path d="M14 4h6v6M20 4l-8 8"/><path d="M18 13.5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H11"/></>,
+  menu: <><path d="M4 7h16M4 12h16M4 17h16"/></>,
+  logout: <><path d="M9 4.5H6A1.5 1.5 0 0 0 4.5 6v12A1.5 1.5 0 0 0 6 19.5h3"/><path d="M14 8l4 4-4 4M18 12H9"/></>,
 };
 
 function Icon({name, size=18, sw=1.75, style, className, fill}){

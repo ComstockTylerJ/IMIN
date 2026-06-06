@@ -22,12 +22,11 @@ function TasksPage({ tasks, moveTask, openTask, openCreate }) {
     <div className="rise">
       <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--line)', background: 'rgba(255,255,255,.4)' }}>
         <HeroPattern opacity={0.7} />
-        <div className="page" style={{ position: 'relative', zIndex: 1, paddingTop: 30, paddingBottom: 0 }}>
+        <div className="page" style={{ position: 'relative', zIndex: 1, paddingTop: 16, paddingBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
             <div>
-              <div className="eyebrow" style={{ marginBottom: 6 }}>Workspace · Content</div>
-              <h1 style={{ fontSize: 25, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--ink)' }}>Tasks</h1>
-              <p className="sec" style={{ fontSize: 14, margin: '5px 0 0' }}>{tasks.length} tasks across 4 stages · 5 due this week</p>
+              <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--ink)' }}>Tasks</h1>
+              <p className="sec" style={{ fontSize: 13.5, margin: '3px 0 0' }}>{tasks.length} tasks across 4 stages · 5 due this week</p>
             </div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
@@ -74,7 +73,7 @@ function Kanban({ tasks, moveTask, openTask, openCreate }) {
   const colAccent = { backlog: '#8C94A3', in_progress: '#1D6BD0', review: '#FF9A4E', complete: '#1FA98A' };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16, alignItems: 'start' }}>
+    <div className="kanban-grid">
       {COLUMNS.map((col) => {
         const items = tasks.filter((t) => t.col === col.id);
         return (
@@ -108,7 +107,7 @@ function Kanban({ tasks, moveTask, openTask, openCreate }) {
                       {t.comments > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Icon name="comment" size={13} />{t.comments}</span>}
                       {t.attachments > 0 && <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}><Icon name="paperclip" size={13} />{t.attachments}</span>}
                     </div>
-                    <AvatarStack ids={t.assignees} size={22} max={2} />
+                    <AvatarStack ids={t.assignees} size={22} max={2} muted />
                   </div>
                 </div>
               )}
