@@ -6,8 +6,15 @@ function App(){
   const [creating, setCreating] = React.useState(false);
   const [toast, setToast] = React.useState(null);
   const [searchQuery, setSearchQuery] = React.useState('finance');
+  const [profileId, setProfileId] = React.useState(null);
+  const [deviceId, setDeviceId] = React.useState(null);
+  const [topicId, setTopicId] = React.useState(null);
 
   function runSearch(q){ setSearchQuery((q||'').trim()||'finance'); setPage('search'); }
+  function openPerson(id){ setProfileId(id); setPage('profile'); }
+  function openDevice(id){ setDeviceId(id); setPage('device'); }
+  function openTopic(id){ setTopicId(id); setPage('topic'); }
+  window.__openPerson = openPerson;
 
   React.useEffect(()=>{ window.scrollTo({top:0}); }, [page]);
 
@@ -22,7 +29,10 @@ function App(){
   if(page==='dashboard') body=<Dashboard setPage={setPage} openTask={openTask} openCreate={()=>setCreating(true)}/>;
   else if(page==='tasks') body=<TasksPage tasks={tasks} moveTask={moveTask} openTask={openTask} openCreate={()=>setCreating(true)}/>;
   else if(page==='metrics') body=<MetricsPage/>;
-  else if(page==='explore') body=<ExplorePage setPage={setPage} openCreate={()=>setCreating(true)} flash={flash} onSearch={runSearch}/>;
+  else if(page==='explore') body=<ExplorePage setPage={setPage} openCreate={()=>setCreating(true)} flash={flash} onSearch={runSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic}/>;
+  else if(page==='profile') body=<PersonProfile id={profileId} setPage={setPage} openTask={openTask} openDevice={openDevice} flash={flash}/>;
+  else if(page==='device') body=<DeviceDetail id={deviceId} setPage={setPage} openPerson={openPerson} flash={flash}/>;
+  else if(page==='topic') body=<TopicDetail id={topicId} setPage={setPage} openDevice={openDevice} openPerson={openPerson} flash={flash}/>;
   else if(page==='clearance') body=<ClearanceWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='memos') body=<MemosWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='prep') body=<PrepWorkspace setPage={setPage} flash={flash}/>;

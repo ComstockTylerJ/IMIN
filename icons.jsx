@@ -81,6 +81,16 @@ const ICON_PATHS = {
   drag: <><circle cx="9" cy="6" r="1.4"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></>,
   text: <><path d="M5 6.5h14M5 6.5V5h14v1.5M12 6.5V19M9.5 19h5"/></>,
   sync: <><path d="M4 11a8 8 0 0 1 13.5-4.5L20 9M20 4v5h-5"/><path d="M20 13a8 8 0 0 1-13.5 4.5L4 15M4 20v-5h5"/></>,
+  phone: <><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></>,
+  laptop: <><rect x="4" y="5" width="16" height="11" rx="1.8"/><path d="M2.5 19.5h19"/></>,
+  tablet: <><rect x="5" y="3" width="14" height="18" rx="2.2"/><path d="M11 18h2"/></>,
+  desktop: <><rect x="3" y="4" width="18" height="12" rx="1.8"/><path d="M9 20h6M12 16v4"/></>,
+  harddrive: <><rect x="3" y="8" width="18" height="9" rx="2"/><path d="M7 12.5h.01M10.5 12.5h6.5"/></>,
+  lock: <><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></>,
+  unlock: <><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 7.5-1.8"/></>,
+  fingerprint: <><path d="M5.5 11a6.5 6.5 0 0 1 13 0v1"/><path d="M8.5 11a3.5 3.5 0 0 1 7 0v2a9 9 0 0 0 .8 3.7"/><path d="M12 11v3a12 12 0 0 0 1 5"/><path d="M9 19.5A10 10 0 0 1 8.5 16v-5"/></>,
+  cpu: <><rect x="7" y="7" width="10" height="10" rx="1.6"/><path d="M10 4v2M14 4v2M10 18v2M14 18v2M4 10h2M4 14h2M18 10h2M18 14h2"/></>,
+  shield_check: <><path d="M12 3.4l7 2.5v5c0 4.5-3 7.8-7 9.6-4-1.8-7-5.1-7-9.6v-5l7-2.5z"/><path d="M9 12l2 2 4-4"/></>,
 };
 
 function Icon({name, size=18, sw=1.75, style, className, fill}){

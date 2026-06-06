@@ -66,7 +66,7 @@ function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
 }
 
 // ---------------- Content workspace (search + browse + folders) ----------------
-function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed}){
+function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed, openPerson, openDevice, openTopic}){
   const [ai,setAi]=React.useState(true);
   const [browse,setBrowse]=React.useState('Collections');
   const [query,setQuery]=React.useState('');
@@ -129,7 +129,7 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed}){
           <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap',marginBottom:18}}>
             <span style={{fontSize:13,fontWeight:600,color:'var(--ink-2)'}}>Browse</span>
             <div style={{display:'flex',gap:3,background:'#EEF1F6',padding:3,borderRadius:9}}>
-              {[['Collections','collections'],['Devices','device'],['People','users']].map(([b,ic])=>(
+              {[['Collections','collections'],['Topics','layers'],['Devices','device'],['People','users']].map(([b,ic])=>(
                 <button key={b} onClick={()=>setBrowse(b)} style={{display:'flex',alignItems:'center',gap:6,border:0,
                   background:browse===b?'#fff':'transparent',color:browse===b?'var(--ink)':'var(--ink-3)',fontSize:12.5,fontWeight:550,
                   padding:'6px 13px',borderRadius:7,cursor:'pointer',boxShadow:browse===b?'var(--shadow-sm)':'none',transition:'.12s'}}>
@@ -145,8 +145,9 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed}){
           </div>
 
           {browse==='Collections' && <FolderGrid filter={filter} setPage={setPage} flash={flash}/>}
-          {browse==='Devices' && <DeviceGrid filter={filter} flash={flash}/>}
-          {browse==='People' && <PeopleGrid filter={filter} flash={flash}/>}
+          {browse==='Topics' && <TopicsGrid filter={filter} openTopic={openTopic}/>}
+          {browse==='Devices' && <DeviceGrid filter={filter} flash={flash} openDevice={openDevice}/>}
+          {browse==='People' && <PeopleGrid filter={filter} flash={flash} openPerson={openPerson}/>}
         </div>
       </div>
     </div>
@@ -390,46 +391,101 @@ function CollectionDetails({folder:f, onClose, onOpen}){
   );
 }
 
-function DeviceGrid({filter, flash}){
-  const list=DEVICES.filter(d=>d.name.toLowerCase().includes(filter.toLowerCase()));
-  if(!list.length) return <Empty label="No connected sources match."/>;
+function DeviceGrid({filter, flash, openDevice}){
+  const f=filter.toLowerCase();
+  const list=DEVICES.filter(d=>d.name.toLowerCase().includes(f) || d.ev.toLowerCase().includes(f) || DEVICE_TYPE[d.type].label.toLowerCase().includes(f));
+  if(!list.length) return <Empty label="No devices match your filter."/>;
   return (
     <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
-      {list.map(d=>(
-        <div key={d.id} className="card card-hover card-pad" style={{display:'flex',flexDirection:'column',gap:12}}>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-            <span style={{width:36,height:36,borderRadius:9,background:d.color+'1a',color:d.color,display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name={d.icon} size={18}/></span>
-            <span style={{display:'flex',alignItems:'center',gap:5,fontSize:11,color:'#1FA98A',fontWeight:600}}><span style={{width:6,height:6,borderRadius:'50%',background:'#1FA98A'}}></span>Synced</span>
+      {list.map(d=>{
+        const ty=DEVICE_TYPE[d.type], stt=DEVICE_STATUS[d.status];
+        return (
+          <div key={d.id} className="card card-hover card-pad" onClick={()=>openDevice&&openDevice(d.id)}
+            style={{display:'flex',flexDirection:'column',gap:12,cursor:'pointer'}}>
+            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
+              <span style={{width:38,height:38,borderRadius:10,background:d.color+'1a',color:d.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={19}/></span>
+              <span className="badge" style={{background:stt.tint,color:stt.color,height:21,fontSize:11,fontWeight:600}}><span style={{width:5.5,height:5.5,borderRadius:'50%',background:stt.color}}></span>{stt.label}</span>
+            </div>
+            <div>
+              <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{d.name}</div>
+              <div className="muted" style={{fontSize:11.5,marginTop:2,display:'flex',alignItems:'center',gap:6}}>
+                <span style={{fontFamily:'ui-monospace,Menlo,monospace',color:'var(--ink-3)'}}>{d.ev}</span>
+                <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{ty.label}
+                {d.encrypted && <Icon name="lock" size={11} style={{color:'var(--ink-4)'}}/>}
+              </div>
+            </div>
+            {/* capacity bar */}
+            <div>
+              <div style={{height:5,borderRadius:3,background:'var(--surface-2)',overflow:'hidden'}}>
+                <div style={{width:Math.max(4,d.used)+'%',height:'100%',background:d.color,borderRadius:3}}></div>
+              </div>
+              <div style={{display:'flex',justifyContent:'space-between',marginTop:5,fontSize:11,color:'var(--ink-3)',fontWeight:500}}>
+                <span>{d.status==='locked'?'Locked — not imaged':`${d.size} of ${d.cap}`}</span>
+                <span>{d.os}</span>
+              </div>
+            </div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',paddingTop:10,borderTop:'1px solid var(--line)'}}>
+              <span style={{display:'flex',alignItems:'center',gap:7,fontSize:12,color:'var(--ink-2)'}}>
+                <Avatar id={d.custodian} size={20}/>{PEOPLE[d.custodian].name.split(' ')[0]}
+              </span>
+              <span style={{fontSize:12,color:'var(--ink-3)',fontWeight:500}}>{d.files? <><b style={{color:'var(--ink)'}}>{d.files.toLocaleString()}</b> files</> : '—'}</span>
+            </div>
           </div>
-          <div>
-            <div style={{fontSize:14,fontWeight:600,color:'var(--ink)'}}>{d.name}</div>
-            <div className="muted" style={{fontSize:11.5,marginTop:2}}>{d.sub}</div>
-          </div>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',paddingTop:10,borderTop:'1px solid var(--line)'}}>
-            <span style={{fontSize:12.5,color:'var(--ink-2)'}}><b style={{color:'var(--ink)'}}>{d.files.toLocaleString()}</b> files</span>
-            <button className="btn btn-ghost btn-sm" onClick={()=>flash&&flash(`Browsing ${d.name}…`)}>Open<Icon name="chevron_right" size={14}/></button>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
-function PeopleGrid({filter, flash}){
-  const list=PL.filter(p=>p.name.toLowerCase().includes(filter.toLowerCase()));
+function PeopleGrid({filter, flash, openPerson}){
+  const f=filter.toLowerCase();
+  const list=PL.filter(p=>p.name.toLowerCase().includes(f) || p.role.toLowerCase().includes(f) || (p.company||'').toLowerCase().includes(f) || (p.relType||'').toLowerCase().includes(f));
   if(!list.length) return <Empty label="No people match your filter."/>;
   return (
     <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
-      {list.map((p,i)=>(
-        <div key={p.id} className="card card-hover card-pad" style={{display:'flex',alignItems:'center',gap:13}}>
-          <Avatar id={p.id} size={42} ring={false}/>
-          <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
-            <div className="muted" style={{fontSize:11.5,marginTop:1}}>{p.role}</div>
-            <div style={{marginTop:6,fontSize:11.5,color:'var(--ink-3)'}}><b style={{color:'var(--ink-2)'}}>{[18,24,42,11,33,7,29,15][i%8]}</b> files owned</div>
+      {list.map(p=>{
+        const ps=PERSON_STATUS[p.status], rs=REL_STATUS[p.rel]||REL_STATUS.active;
+        const owner=p.owner?PEOPLE[p.owner]:null;
+        const days=daysUntil(p.contractEnd);
+        return (
+          <div key={p.id} className="card card-hover card-pad" onClick={()=>openPerson&&openPerson(p.id)}
+            style={{display:'flex',flexDirection:'column',gap:13,cursor:'pointer'}}>
+            <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
+              <span style={{position:'relative',flex:'none'}}>
+                <Avatar id={p.id} size={44} ring={false}/>
+                <span title={ps.label} style={{position:'absolute',right:-1,bottom:-1,width:12,height:12,borderRadius:'50%',background:ps.color,boxShadow:'0 0 0 2.5px #fff'}}></span>
+              </span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
+                <div className="muted" style={{fontSize:11.5,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.relType} · {p.company}</div>
+              </div>
+              <span className="badge" style={{background:rs.tint,color:rs.color,height:20,fontSize:10.5,fontWeight:600,flex:'none'}}><span style={{width:5,height:5,borderRadius:'50%',background:rs.color}}></span>{rs.label}</span>
+            </div>
+            <div style={{display:'flex',flexDirection:'column',gap:6,fontSize:11.5,color:'var(--ink-3)'}}>
+              <span style={{display:'flex',alignItems:'center',gap:7,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+                {owner ? <><Avatar id={owner.id} size={16}/>Managed by {owner.name.split(' ')[0]}</> : <><Icon name="shield" size={13} style={{color:'var(--ink-4)'}}/>In‑house · {p.dept}</>}
+              </span>
+              <span style={{display:'flex',alignItems:'center',gap:7}}><Icon name="calendar" size={13} style={{color:'var(--ink-4)',flex:'none'}}/>Next meeting {p.next}</span>
+            </div>
+            <div style={{display:'flex',gap:0,paddingTop:11,borderTop:'1px solid var(--line)'}}>
+              <div style={{flex:1,textAlign:'center',minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap'}}>{p.value||'—'}</div>
+                <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Contract</div>
+              </div>
+              <div style={{width:1,background:'var(--line)'}}></div>
+              <div style={{flex:1,textAlign:'center',minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:700,letterSpacing:'-.01em',whiteSpace:'nowrap',color:days==null?'var(--ink-4)':(p.rel==='renewal'?'var(--orange)':'var(--ink)')}}>{days==null?'—':days+'d'}</div>
+                <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>To renewal</div>
+              </div>
+              <div style={{width:1,background:'var(--line)'}}></div>
+              <div style={{flex:1,textAlign:'center',minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{p.meetings}</div>
+                <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Meetings</div>
+              </div>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

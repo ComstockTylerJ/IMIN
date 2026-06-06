@@ -17,7 +17,6 @@ function Header({page, setPage, onCreate, onSearch}){
   useClickOutside(notifRef, ()=>setNotifOpen(false));
 
   const nav = [
-    {id:'dashboard', label:'Dashboard'},
     {id:'explore', label:'Explore'},
     {id:'tasks', label:'Tasks'},
     {id:'workspaces', label:'Workspaces', dropdown:true},

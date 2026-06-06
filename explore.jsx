@@ -47,6 +47,27 @@ function geoLatLng(x,y){
   return `${lat.toFixed(2)}°N  ${lng.toFixed(2)}°W`;
 }
 
+// saved polygon area queries — the "Polygon Repo"
+const SAVED_AREAS = [
+  {id:'pa1', name:'Harbor District',     who:'tyler', when:'2d', pts:[{x:612,y:150},{x:802,y:140},{x:846,y:300},{x:720,y:352},{x:592,y:262}]},
+  {id:'pa2', name:'North Convoy Route',  who:'maya',  when:'5d', pts:[{x:168,y:108},{x:344,y:132},{x:392,y:268},{x:236,y:312},{x:140,y:214}]},
+  {id:'pa3', name:'Coastal Sensor Belt', who:'diego', when:'1w', pts:[{x:120,y:372},{x:286,y:402},{x:306,y:528},{x:138,y:512}]},
+  {id:'pa4', name:'Eastern Depot Grid',  who:'sam',   when:'2w', pts:[{x:690,y:372},{x:868,y:398},{x:884,y:512},{x:712,y:506}]},
+];
+// tiny normalized thumbnail of a saved polygon
+function PolyThumb({pts, color='#1D6BD0', w=40, h=28}){
+  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys);
+  const pad=4, sw=maxX-minX||1, sh=maxY-minY||1, s=Math.min((w-pad*2)/sw,(h-pad*2)/sh);
+  const ox=(w-sw*s)/2, oy=(h-sh*s)/2;
+  const str=pts.map(p=>`${ox+(p.x-minX)*s},${oy+(p.y-minY)*s}`).join(' ');
+  return (
+    <svg width={w} height={h} style={{display:'block',borderRadius:7,background:'#E7EEF7',flex:'none'}}>
+      <polygon points={str} fill={color+'26'} stroke={color} strokeWidth="1.5" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
 // stylized basemap land shapes (abstract, cartographic)
 const LAND = [
   "M-20 120 C 120 70, 300 80, 360 160 C 410 226, 360 300, 420 350 C 470 392, 430 470, 320 500 C 200 534, 60 520, -20 470 Z",
@@ -55,38 +76,35 @@ const LAND = [
 ];
 
 // ===================== Explore page =====================
-function ExplorePage({setPage, openCreate, flash, onSearch}){
+function ExplorePage({setPage, openCreate, flash, onSearch, openPerson, openDevice, openTopic}){
   const [tab,setTab]=React.useState('search');
   const tabs=[{id:'search',label:'Search',icon:'search'},{id:'map',label:'Map',icon:'globe'}];
   return (
     <div className="rise">
       <div style={{borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
-        <div className="page" style={{paddingTop:20,paddingBottom:0}}>
-          <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--ink-3)',fontWeight:500,marginBottom:7}}>
-            <span style={{cursor:'pointer'}} onClick={()=>setPage('dashboard')}>Home</span>
-            <Icon name="chevron_right" size={13} style={{opacity:.6}}/>
-            <span style={{color:'var(--ink-2)'}}>Explore</span>
-          </div>
-          <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:16,flexWrap:'wrap'}}>
-            <div>
-              <h1 style={{fontSize:23,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)'}}>Explore</h1>
-              <p className="muted" style={{fontSize:13,margin:'4px 0 0'}}>Search across everything, or query geotagged data by drawing an area.</p>
+        <div className="page" style={{paddingTop:0,paddingBottom:0}}>
+          <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:24}}>
+            <div style={{display:'flex',alignItems:'flex-end',gap:24,minWidth:0}}>
+              <h1 style={{fontSize:18.5,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)',paddingBottom:13,flex:'none'}}>Explore</h1>
+              <div style={{display:'flex',gap:22}}>
+                {tabs.map(t=>(
+                  <button key={t.id} onClick={()=>setTab(t.id)} style={{display:'flex',alignItems:'center',gap:7,border:0,background:'transparent',
+                    padding:'13px 0',cursor:'pointer',fontSize:13.5,fontWeight:tab===t.id?600:500,
+                    color:tab===t.id?'var(--blue)':'var(--ink-3)',position:'relative'}}>
+                    <Icon name={t.icon} size={15}/>{t.label}
+                    {tab===t.id && <span style={{position:'absolute',left:0,right:0,bottom:-1,height:2.5,background:'var(--blue)',borderRadius:2}}></span>}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-          <div style={{display:'flex',justifyContent:'center',gap:2,marginTop:16}}>
-            {tabs.map(t=>(
-              <button key={t.id} onClick={()=>setTab(t.id)} style={{display:'flex',alignItems:'center',gap:8,border:0,background:'transparent',
-                padding:'10px 14px',cursor:'pointer',fontSize:13.5,fontWeight:tab===t.id?600:500,
-                color:tab===t.id?'var(--blue)':'var(--ink-3)',position:'relative'}}>
-                <Icon name={t.icon} size={16}/>{t.label}
-                {tab===t.id && <span style={{position:'absolute',left:8,right:8,bottom:-1,height:2.5,background:'var(--blue)',borderRadius:2}}></span>}
-              </button>
-            ))}
+            <p className="muted" style={{fontSize:12.5,margin:0,paddingBottom:13,textAlign:'right',flex:'none',display:window.innerWidth<760?'none':'block'}}>
+              {tab==='search'?'Search across everything in your workspace':'Query geotagged data by drawing an area'}
+            </p>
           </div>
         </div>
       </div>
       {tab==='search'
-        ? <ContentWorkspace embed w={CONTENT_WS} setPage={setPage} openCreate={openCreate} flash={flash} onSearch={onSearch}/>
+        ? <ContentWorkspace embed w={CONTENT_WS} setPage={setPage} openCreate={openCreate} flash={flash} onSearch={onSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic}/>
         : <MapSearch flash={flash} setPage={setPage}/>}
     </div>
   );
@@ -117,6 +135,7 @@ function MapSearch({flash, setPage}){
   const [cursor,setCursor]=React.useState(null);
   const [hover,setHover]=React.useState(null);    // hovered marker id
   const [drag,setDrag]=React.useState(null);      // vertex index being dragged
+  const [saved,setSaved]=React.useState(SAVED_AREAS);
 
   const CLOSE_R=18;
   const visible=GEO.filter(g=>active[g.kind]);
@@ -140,6 +159,13 @@ function MapSearch({flash, setPage}){
     setPts(a=>[...a,p]);
   }
   function onMove(e){ if(mode==='draw') setCursor(toMap(e)); }
+
+  function loadArea(a){ setMode('done'); setPts(a.pts.map(p=>({...p}))); setCursor(null); }
+  function saveArea(){
+    if(pts.length<3) return;
+    setSaved(s=>[{id:'pa'+Date.now(), name:'Saved area '+(s.length+1), who:'tyler', when:'now', pts:pts.map(p=>({...p}))}, ...s]);
+    flash&&flash('Saved to Polygon Repo');
+  }
 
   // vertex drag
   React.useEffect(()=>{
@@ -362,11 +388,46 @@ function MapSearch({flash, setPage}){
               {inside.length>0 && (
                 <div style={{display:'flex',gap:8,marginTop:13,paddingTop:13,borderTop:'1px solid var(--line)'}}>
                   <button className="btn btn-primary btn-sm" style={{flex:1}} onClick={()=>flash&&flash(`${inside.length} items added to a new collection`)}><Icon name="download" size={14}/>Export {inside.length}</button>
-                  <button className="btn btn-secondary btn-sm" onClick={()=>flash&&flash('Saved area query')}><Icon name="bookmark" size={14}/>Save</button>
+                  <button className="btn btn-secondary btn-sm" onClick={saveArea}><Icon name="bookmark" size={14}/>Save</button>
                 </div>
               )}
             </div>
           )}
+
+          {/* Polygon Repo */}
+          <div className="card card-pad">
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,marginBottom:12}}>
+              <div style={{display:'flex',alignItems:'center',gap:9}}>
+                <span style={{width:30,height:30,borderRadius:8,background:'var(--blue-t)',color:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="polygon" size={16}/></span>
+                <div>
+                  <div style={{fontSize:14,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>Polygon Repo</div>
+                  <div className="muted" style={{fontSize:11.5}}>Saved area queries</div>
+                </div>
+              </div>
+              <span style={{fontSize:12.5,fontWeight:600,color:'var(--ink-3)'}}>{saved.length}</span>
+            </div>
+            <div style={{display:'flex',flexDirection:'column',gap:2,maxHeight:268,overflowY:'auto',margin:'0 -8px'}}>
+              {saved.map((a,i)=>{
+                const n=GEO.filter(g=>active[g.kind]&&pointInPoly(g,a.pts)).length;
+                return (
+                  <div key={a.id} onClick={()=>loadArea(a)} title="Load this area"
+                    style={{display:'flex',alignItems:'center',gap:11,padding:'9px 8px',borderTop:i?'1px solid var(--line)':0,cursor:'pointer',borderRadius:8,transition:'.12s'}}
+                    onMouseEnter={e=>e.currentTarget.style.background='var(--surface-2)'}
+                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                    <PolyThumb pts={a.pts}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.name}</div>
+                      <div style={{display:'flex',alignItems:'center',gap:6,marginTop:3,fontSize:11,color:'var(--ink-3)'}}>
+                        <Avatar id={a.who} size={14}/>{PEOPLE[a.who].name.split(' ')[0]}
+                        <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{a.when}
+                      </div>
+                    </div>
+                    <span className="badge" style={{background:'var(--blue-t)',color:'var(--blue)',height:19,flex:'none'}}>{n}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,15 +1,41 @@
 // data.jsx — sample data for IMIN
 const PEOPLE = {
-  tyler:  {id:'tyler',  name:'Tyler Chen',     initials:'TC', color:'#1D6BD0', role:'Operations Lead'},
-  maya:   {id:'maya',   name:'Maya Okafor',    initials:'MO', color:'#8A63C4', role:'Senior Editor'},
-  diego:  {id:'diego',  name:'Diego Ramírez',  initials:'DR', color:'#F86566', role:'Motion Designer'},
-  priya:  {id:'priya',  name:'Priya Nair',     initials:'PN', color:'#1FA98A', role:'Localization'},
-  sam:    {id:'sam',    name:'Sam Whitfield',  initials:'SW', color:'#FF9A4E', role:'Account Manager'},
-  lena:   {id:'lena',   name:'Lena Brandt',    initials:'LB', color:'#E068A7', role:'Creative Director'},
-  noah:   {id:'noah',   name:'Noah Kim',       initials:'NK', color:'#2FB2F3', role:'Copywriter'},
-  aria:   {id:'aria',   name:'Aria Volkov',    initials:'AV', color:'#7FC457', role:'QA Reviewer'},
+  tyler:  {id:'tyler',  name:'Tyler Chen',     initials:'TC', color:'#1D6BD0', role:'Operations Lead',  dept:'Operations',   status:'online',  location:'San Francisco, CA', tz:'PT · UTC−7',  email:'tyler.chen@imin.team',    phone:'+1 (415) 555‑0142', joined:'Mar 2021', mgr:null,    bio:'Runs production operations and keeps the content pipeline moving end to end.'},
+  maya:   {id:'maya',   name:'Maya Okafor',    initials:'MO', color:'#8A63C4', role:'Senior Editor',    dept:'Editorial',    status:'online',  location:'Brooklyn, NY',      tz:'ET · UTC−4',  email:'maya.okafor@imin.team',   phone:'+1 (917) 555‑0188', joined:'Aug 2021', mgr:'lena',  bio:'Leads long-form edits and house style across every published asset.'},
+  diego:  {id:'diego',  name:'Diego Ramírez',  initials:'DR', color:'#F86566', role:'Motion Designer',  dept:'Creative',     status:'away',    location:'Austin, TX',        tz:'CT · UTC−5',  email:'diego.ramirez@imin.team', phone:'+1 (512) 555‑0119', joined:'Jan 2022', mgr:'lena',  bio:'Builds motion systems, title sequences and the studio’s animation language.'},
+  priya:  {id:'priya',  name:'Priya Nair',     initials:'PN', color:'#1FA98A', role:'Localization Lead',dept:'Localization', status:'offline', location:'London, UK',        tz:'BST · UTC+1', email:'priya.nair@imin.team',    phone:'+44 20 7946 0312',  joined:'May 2022', mgr:'tyler', bio:'Adapts campaigns for EU markets and owns the localization QA loop.'},
+  sam:    {id:'sam',    name:'Sam Whitfield',  initials:'SW', color:'#FF9A4E', role:'Account Manager',  dept:'Accounts',     status:'online',  location:'Chicago, IL',       tz:'CT · UTC−5',  email:'sam.whitfield@imin.team', phone:'+1 (312) 555‑0167', joined:'Feb 2021', mgr:'tyler', bio:'Primary client liaison; manages clearance, approvals and delivery timelines.'},
+  lena:   {id:'lena',   name:'Lena Brandt',    initials:'LB', color:'#E068A7', role:'Creative Director',dept:'Creative',     status:'online',  location:'Los Angeles, CA',   tz:'PT · UTC−7',  email:'lena.brandt@imin.team',   phone:'+1 (213) 555‑0104', joined:'Nov 2020', mgr:null,    bio:'Sets the creative direction and signs off on every brand-facing deliverable.'},
+  noah:   {id:'noah',   name:'Noah Kim',       initials:'NK', color:'#2FB2F3', role:'Copywriter',       dept:'Editorial',    status:'away',    location:'Denver, CO',        tz:'MT · UTC−6',  email:'noah.kim@imin.team',      phone:'+1 (720) 555‑0153', joined:'Jun 2022', mgr:'maya',  bio:'Writes campaign, web and product copy with a sharp, conversational voice.'},
+  aria:   {id:'aria',   name:'Aria Volkov',    initials:'AV', color:'#7FC457', role:'QA Reviewer',      dept:'Quality',      status:'online',  location:'Toronto, CA',       tz:'ET · UTC−4',  email:'aria.volkov@imin.team',   phone:'+1 (416) 555‑0176', joined:'Sep 2022', mgr:'tyler', bio:'Final-pass QA on accessibility, accuracy and release readiness.'},
 };
 const PL = Object.values(PEOPLE);
+const PERSON_STATUS = {
+  online:  {label:'Online',  color:'#1FA98A'},
+  away:    {label:'Away',    color:'#FF9A4E'},
+  offline: {label:'Offline', color:'#8C94A3'},
+};
+
+// ---- CRM layer: each person is a tracked working relationship ----
+const REL_STATUS = {
+  active:   {label:'Active',      color:'#1FA98A', tint:'#E4F5F0'},
+  renewal:  {label:'Renewal due', color:'#FF9A4E', tint:'#FFF1E4'},
+  prospect: {label:'Prospect',    color:'#1D6BD0', tint:'#E7EFFB'},
+  lapsed:   {label:'Lapsed',      color:'#8C94A3', tint:'#EFF2F6'},
+};
+const _CRM = {
+  tyler: {relType:'Staff',      company:'IMIN — Operations', rel:'active',  owner:null,    value:null,      contractEnd:null,         since:'2021', lastMet:'Jun 5', next:'Jun 8',  meetings:18},
+  maya:  {relType:'Contractor', company:'Okafor Editorial',  rel:'renewal', owner:'sam',   value:'$96k/yr', contractEnd:'2026-06-30', since:'2021', lastMet:'Jun 2', next:'Jun 9',  meetings:31},
+  diego: {relType:'Freelance',  company:'Ramírez Motion',    rel:'active',  owner:'lena',  value:'$72k/yr', contractEnd:'2026-12-15', since:'2022', lastMet:'May 28',next:'Jun 11', meetings:24},
+  priya: {relType:'Agency',     company:'Nair Localization', rel:'active',  owner:'tyler', value:'£40k/yr', contractEnd:'2026-09-01', since:'2022', lastMet:'May 20',next:'Jun 14', meetings:16},
+  sam:   {relType:'Staff',      company:'IMIN — Accounts',   rel:'active',  owner:null,    value:null,      contractEnd:null,         since:'2021', lastMet:'Jun 4', next:'Jun 8',  meetings:22},
+  lena:  {relType:'Staff',      company:'IMIN — Creative',   rel:'active',  owner:null,    value:null,      contractEnd:null,         since:'2020', lastMet:'Jun 3', next:'Jun 10', meetings:29},
+  noah:  {relType:'Freelance',  company:'Kim Copywriting',   rel:'renewal', owner:'maya',  value:'$60k/yr', contractEnd:'2026-06-20', since:'2022', lastMet:'May 30',next:'Jun 12', meetings:14},
+  aria:  {relType:'Vendor',     company:'Volkov QA Labs',    rel:'active',  owner:'tyler', value:'$54k/yr', contractEnd:'2026-11-01', since:'2022', lastMet:'May 26',next:'Jun 16', meetings:11},
+};
+Object.keys(_CRM).forEach(k=>Object.assign(PEOPLE[k], _CRM[k]));
+// "today" anchor for the prototype is Jun 6, 2026
+function daysUntil(iso){ if(!iso) return null; return Math.round((new Date(iso) - new Date('2026-06-06'))/86400000); }
 
 const TAGS = {
   campaign:{label:'Campaign', color:'#1D6BD0', tint:'#E7EFFB'},
@@ -160,14 +186,58 @@ const FOLDERS = [
   {id:'f7', name:'Holiday Teaser', updated:'Jun 6', files:12, size:'1.9 GB', types:'MP4, AE', color:'#8A63C4', fav:false, owner:'diego'},
   {id:'f8', name:'Localization Hub', updated:'Jun 1', files:31, size:'96 MB', types:'DOCX, SRT', color:'#1FA98A', fav:false, owner:'priya'},
 ];
+// Devices — phones, laptops, drives & media ingested into the ecosystem
+const DEVICE_TYPE = {
+  phone:   {label:'Phone',   icon:'phone'},
+  laptop:  {label:'Laptop',  icon:'laptop'},
+  tablet:  {label:'Tablet',  icon:'tablet'},
+  drive:   {label:'Drive',   icon:'harddrive'},
+  desktop: {label:'Desktop', icon:'desktop'},
+  camera:  {label:'Camera',  icon:'image'},
+};
+const DEVICE_STATUS = {
+  extracted: {label:'Extracted',  color:'#1FA98A', tint:'#E4F5F0'},
+  processing:{label:'Processing',  color:'#1D6BD0', tint:'#E7EFFB'},
+  review:    {label:'Needs Review',color:'#FF9A4E', tint:'#FFF1E4'},
+  locked:    {label:'Locked',      color:'#F86566', tint:'#FEECEC'},
+};
 const DEVICES = [
-  {id:'d1', name:'Frame.io', sub:'Video review · synced 4m ago', files:128, color:'#1D6BD0', icon:'device'},
-  {id:'d2', name:'Google Drive', sub:'Shared drive · synced 1h ago', files:642, color:'#1FA98A', icon:'device'},
-  {id:'d3', name:'Dropbox', sub:'Team folder · synced 2h ago', files:318, color:'#2FB2F3', icon:'device'},
-  {id:'d4', name:'Studio NAS', sub:'On-prem · synced 12m ago', files:1840, color:'#8A63C4', icon:'device'},
+  {id:'d1', name:'iPhone 15 Pro',      type:'phone',  ev:'EV‑2041', status:'extracted',  files:4820,  size:'182 GB', cap:'256 GB', used:71, os:'iOS 18.2',          custodian:'sam',   acquired:'Jun 2', last:'4m ago',  loc:'Field Office — Austin', encrypted:true,  serial:'F2LXK9PQ7M', color:'#1D6BD0', apps:48, model:'A3102 · Space Black'},
+  {id:'d2', name:'MacBook Pro 16"',    type:'laptop', ev:'EV‑2038', status:'processing', files:38402, size:'441 GB', cap:'1 TB',   used:43, os:'macOS 15.3 Sequoia', custodian:'diego', acquired:'Jun 4', last:'12m ago', loc:'Studio NAS Intake',     encrypted:true,  serial:'C02XR4HJ1WF', color:'#8A63C4', apps:122, model:'M3 Max · 36 GB'},
+  {id:'d3', name:'Galaxy S24 Ultra',   type:'phone',  ev:'EV‑2044', status:'locked',     files:0,     size:'—',      cap:'512 GB', used:0,  os:'Android 14',         custodian:'priya', acquired:'Jun 5', last:'1h ago',  loc:'Evidence Locker B',     encrypted:true,  serial:'RZ8W21A3PKD', color:'#F86566', apps:0,  model:'SM‑S928 · Titanium'},
+  {id:'d4', name:'SanDisk Ultra USB',  type:'drive',  ev:'EV‑2031', status:'extracted',  files:1204,  size:'71 GB',  cap:'256 GB', used:28, os:'exFAT',              custodian:'maya',  acquired:'May 30',last:'2h ago',  loc:'Shared Drive Intake',   encrypted:false, serial:'SDX256‑88B2', color:'#1FA98A', apps:0,  model:'256 GB · 3.2 Gen 1'},
+  {id:'d5', name:'iPad Air (5th gen)', type:'tablet', ev:'EV‑2029', status:'extracted',  files:2611,  size:'96 GB',  cap:'128 GB', used:75, os:'iPadOS 17.6',        custodian:'noah',  acquired:'May 28',last:'5h ago',  loc:'Field Office — Denver', encrypted:true,  serial:'DMPVH2K4Q1', color:'#2FB2F3', apps:36, model:'A2589 · Wi‑Fi'},
+  {id:'d6', name:'Dell Latitude 7440', type:'laptop', ev:'EV‑2025', status:'review',     files:51203, size:'612 GB', cap:'1 TB',   used:60, os:'Windows 11 Pro',     custodian:'aria',  acquired:'May 26',last:'1d ago',  loc:'Studio NAS Intake',     encrypted:false, serial:'7K2LMN0093', color:'#FF9A4E', apps:204, model:'i7‑1365U · 32 GB'},
+  {id:'d7', name:'Seagate Backup HDD', type:'drive',  ev:'EV‑2018', status:'extracted',  files:18950, size:'1.8 TB', cap:'4 TB',   used:46, os:'NTFS',               custodian:'lena',  acquired:'May 22',last:'2d ago',  loc:'On‑prem Archive',       encrypted:true,  serial:'NA9F3KX7TT', color:'#5568C7', apps:0,  model:'4 TB · USB 3.0'},
+  {id:'d8', name:'Pixel 8 Pro',        type:'phone',  ev:'EV‑2012', status:'extracted',  files:3344,  size:'108 GB', cap:'128 GB', used:84, os:'Android 14',         custodian:'tyler', acquired:'May 20',last:'3d ago',  loc:'Field Office — SF',     encrypted:true,  serial:'GP8P2024XQ', color:'#E068A7', apps:41, model:'GA04..  · Obsidian'},
 ];
 
+// Topics — thematic lens over content, devices & people
+const TOPICS = [
+  {id:'t_q3',     name:'Q3 Brand Launch',    desc:'Campaign assets, hero cuts & launch communications',  color:'#1D6BD0', icon:'megaphone', items:86,  collections:['f1','f4'],      devices:['d2'],            people:['lena','diego','noah','sam'], updated:'Jun 5', trend:'up'},
+  {id:'t_mar',    name:'Maritime Logistics', desc:'Port activity, shipping lanes & convoy intelligence', color:'#1F9D86', icon:'globe',     items:412, collections:[],              devices:['d1','d3','d8'],  people:['tyler','sam'],               updated:'Jun 5', trend:'up'},
+  {id:'t_field',  name:'Field Operations',   desc:'On‑site captures, seized devices & field reports',    color:'#FF9A4E', icon:'pin_loc',   items:218, collections:['f5'],          devices:['d1','d6','d8'],  people:['tyler','aria'],              updated:'Jun 4', trend:'up'},
+  {id:'t_social', name:'Social Campaigns',   desc:'Reels, short‑form video & social posts',              color:'#E068A7', icon:'image',     items:64,  collections:['f3'],          devices:['d5'],            people:['diego','noah'],              updated:'Jun 3', trend:'flat'},
+  {id:'t_legal',  name:'Legal & Clearance',  desc:'Trademark, licensing & approval sign‑off',            color:'#F86566', icon:'shield',    items:24,  collections:[],              devices:[],                people:['sam','aria'],                updated:'Jun 3', trend:'up'},
+  {id:'t_loc',    name:'Localization (EU)',  desc:'FR/DE adaptation & regional quality assurance',       color:'#1FA98A', icon:'route',     items:31,  collections:['f8'],          devices:[],                people:['priya','noah'],              updated:'Jun 1', trend:'flat'},
+  {id:'t_img',    name:'Product Imagery',    desc:'Press kit, photography & raw capture sets',           color:'#8A63C4', icon:'image',     items:102, collections:['f5','f2'],      devices:['d4'],            people:['maya','diego'],              updated:'May 30',trend:'flat'},
+  {id:'t_inv',    name:'Investor Relations', desc:'Decks, financial narrative & board materials',        color:'#5568C7', icon:'chart',     items:16,  collections:['f4'],          devices:[],                people:['sam','lena'],                updated:'Jun 2', trend:'up'},
+];
+
+// derived per-person stats from tasks / folders / workload
+function personStats(id){
+  const tasks = TASKS.filter(t=>t.assignees.includes(id));
+  const active = tasks.filter(t=>t.col!=='complete').length;
+  const owned = FOLDERS.filter(f=>f.owner===id);
+  const files = owned.reduce((s,f)=>s+f.files,0);
+  const devices = DEVICES.filter(d=>d.custodian===id);
+  const wl = WORKLOAD.find(w=>w.who===id);
+  return {tasks, active, total:tasks.length, owned, files, collections:owned.length,
+    devices, load: wl?wl.load:null};
+}
+
 Object.assign(window, {
-  PEOPLE, PL, TAGS, STATUS, PRIORITY, COLUMNS, TASKS, REQUESTS, REQ_STATUS, REQ_TYPE,
-  ACTIVITY, ACT_KIND, KPIS, WORKLOAD, WORKSPACES, CONTENT_WS, CAL_EVENTS, FOLDERS, DEVICES
+  PEOPLE, PL, PERSON_STATUS, REL_STATUS, daysUntil, TAGS, STATUS, PRIORITY, COLUMNS, TASKS, REQUESTS, REQ_STATUS, REQ_TYPE,
+  ACTIVITY, ACT_KIND, KPIS, WORKLOAD, WORKSPACES, CONTENT_WS, CAL_EVENTS, FOLDERS,
+  DEVICES, DEVICE_TYPE, DEVICE_STATUS, personStats, TOPICS
 });

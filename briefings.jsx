@@ -15,10 +15,11 @@ const B_STATUS = {
   dist: {label:'Distributed', color:'#1D6BD0', tint:'#E7EFFB'},
 };
 let _bsid=1; const bs=(kind,title,src)=>({id:'s'+(_bsid++),kind,title,src,pages:kind==='imagery'?2:kind==='map'?1:kind==='assess'?4:3});
+let _secid=1; const mkSec=(name)=>({id:'sec'+(_secid++), type:'section', name:name||'New section'});
 
 const BOOKS = [
   {id:'bk1', title:"Principal's Morning Book", sub:'June 5, 2026 · 0600', status:'draft', cover:'#1D3557', contributors:['maya','tyler','noah'],
-    sections:[ bs('tab','Cover & Table of Contents','tyler'), bs('memo','Overnight Highlights','maya'), bs('report','Eastern Sector — Situation','noah'), bs('imagery','Harbor Imagery Pack','diego'), bs('assess','Throughput Assessment','priya') ]},
+    sections:[ bs('tab','Cover & Table of Contents','tyler'), mkSec('Part I — Overnight'), bs('memo','Overnight Highlights','maya'), bs('report','Eastern Sector — Situation','noah'), mkSec('Part II — Imagery & Analysis'), bs('imagery','Harbor Imagery Pack','diego'), bs('assess','Throughput Assessment','priya') ]},
   {id:'bk2', title:'Weekly Regional Roundup', sub:'Week 23 · Jun 1–5', status:'final', cover:'#1F8A5B', contributors:['priya','sam'],
     sections:[ bs('tab','Cover','sam'), bs('report','Regional Summary','priya'), bs('map','Activity Heat Map','noah'), bs('assess','Outlook','priya') ]},
   {id:'bk3', title:'Coordination Pre-Read', sub:'Interagency Sync · Jun 6', status:'draft', cover:'#8A63C4', contributors:['noah','tyler'],
@@ -59,7 +60,9 @@ function BriefingsWorkspace({setPage, flash}){
       <div className="page" style={{paddingTop:24}}>
         <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:18,paddingBottom:40}}>
           {books.map(b=>{
-            const st=B_STATUS[b.status], pages=b.sections.reduce((a,s)=>a+s.pages,0);
+            const st=B_STATUS[b.status];
+            const mats=b.sections.filter(s=>s.type!=='section');
+            const pages=mats.reduce((a,s)=>a+s.pages,0);
             return (
               <div key={b.id} onClick={()=>setOpenId(b.id)} className="card card-hover" style={{padding:0,overflow:'hidden',cursor:'pointer',display:'flex'}}>
                 {/* spine */}
@@ -74,7 +77,7 @@ function BriefingsWorkspace({setPage, flash}){
                   </div>
                   <div style={{fontFamily:B_SERIF,fontSize:18,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',lineHeight:1.2,margin:'5px 0 0'}}>{b.title}</div>
                   <div style={{display:'flex',alignItems:'center',gap:9,marginTop:13,paddingTop:12,borderTop:'1px solid var(--line)'}}>
-                    <span style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><b style={{color:'var(--ink-2)'}}>{b.sections.length}</b> sections</span>
+                    <span style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><b style={{color:'var(--ink-2)'}}>{mats.length}</b> items</span>
                     <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
                     <span style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><b style={{color:'var(--ink-2)'}}>{pages}</b> pages</span>
                     <div style={{flex:1}}></div>
@@ -93,7 +96,9 @@ function BriefingsWorkspace({setPage, flash}){
 function BookBuilder({b, onBack, update, flash}){
   const [filter,setFilter]=React.useState('');
   const st=B_STATUS[b.status];
-  const pages=b.sections.reduce((a,s)=>a+s.pages,0);
+  const mats=b.sections.filter(s=>s.type!=='section');
+  const secCount=b.sections.filter(s=>s.type==='section').length;
+  const pages=mats.reduce((a,s)=>a+s.pages,0);
 
   function move(i,dir){
     const j=i+dir; if(j<0||j>=b.sections.length) return;
@@ -104,6 +109,11 @@ function BookBuilder({b, onBack, update, flash}){
     update(b.id, bk=>({...bk,sections:[...bk.sections, bs(item.kind,item.title,item.src)]}));
     flash&&flash(`Added “${item.title}” to the book`);
   }
+  function addSection(){
+    update(b.id, bk=>({...bk,sections:[...bk.sections, mkSec('New section')]}));
+    flash&&flash('Section added — give it a name');
+  }
+  function renameSection(id,name){ update(b.id, bk=>({...bk,sections:bk.sections.map(s=>s.id===id?{...s,name}:s)})); }
   const lib=B_LIBRARY.filter(x=>x.title.toLowerCase().includes(filter.toLowerCase()));
 
   return (
@@ -115,7 +125,7 @@ function BookBuilder({b, onBack, update, flash}){
           <span style={{width:28,height:28,borderRadius:7,background:b.cover,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="book" size={15} style={{color:'#fff'}}/></span>
           <div style={{minWidth:0,flex:1}}>
             <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.title}</div>
-            <div className="muted" style={{fontSize:11.5}}>{b.sub} · {b.sections.length} sections · {pages} pages</div>
+            <div className="muted" style={{fontSize:11.5}}>{b.sub} · {secCount>0?`${secCount} sections · `:''}{mats.length} items · {pages} pages</div>
           </div>
           <span className="badge" style={{background:st.tint,color:st.color,height:22}}>{st.label}</span>
           <button className="btn btn-secondary btn-sm" onClick={()=>flash&&flash('Exported book as PDF')}><Icon name="download" size={14}/>Export</button>
@@ -126,13 +136,30 @@ function BookBuilder({b, onBack, update, flash}){
       <div className="page" style={{paddingTop:24,display:'grid',gridTemplateColumns:'minmax(0,1fr) 380px',gap:24,alignItems:'start',maxWidth:1240}}>
         {/* book contents */}
         <div className="card card-pad">
-          <SectionHead title="Book contents" sub="Reorder, remove, or add materials to collate the book" icon="layers"/>
+          <SectionHead title="Book contents" sub="Group materials into sections, reorder, or remove" icon="layers"
+            action={<button className="btn btn-secondary btn-sm" onClick={addSection}><Icon name="plus" size={14} sw={2.2}/>Add section</button>}/>
           <div style={{display:'flex',flexDirection:'column',gap:9}}>
-            {b.sections.map((s,i)=>{
+            {(()=>{ let n=0; const hasSec=secCount>0; return b.sections.map((s,i)=>{
+              if(s.type==='section'){
+                return (
+                  <div key={s.id} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 13px',borderRadius:11,background:'var(--surface-2)',border:'1px solid var(--line-2)',marginTop:i?6:0}}>
+                    <span style={{width:30,height:30,borderRadius:8,background:'var(--ink)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="bookmark" size={15}/></span>
+                    <input value={s.name} onChange={e=>renameSection(s.id,e.target.value)} placeholder="Section name"
+                      style={{flex:1,minWidth:0,border:0,outline:'none',background:'transparent',fontSize:13.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em',fontFamily:'inherit'}}/>
+                    <span className="badge" style={{background:'#fff',color:'var(--ink-3)',border:'1px solid var(--line)',height:19,fontSize:10.5,flex:'none'}}>Section</span>
+                    <div style={{display:'flex',alignItems:'center',gap:2,flex:'none'}}>
+                      <button className="btn btn-ghost btn-icon btn-sm" title="Move up" onClick={()=>move(i,-1)} disabled={i===0} style={{opacity:i===0?.35:1}}><Icon name="arrow_up" size={15}/></button>
+                      <button className="btn btn-ghost btn-icon btn-sm" title="Move down" onClick={()=>move(i,1)} disabled={i===b.sections.length-1} style={{opacity:i===b.sections.length-1?.35:1}}><Icon name="arrow_down" size={15}/></button>
+                      <button className="btn btn-ghost btn-icon btn-sm" title="Remove section" onClick={()=>remove(s.id)}><Icon name="trash" size={15}/></button>
+                    </div>
+                  </div>
+                );
+              }
+              n++;
               const k=B_KIND[s.kind];
               return (
-                <div key={s.id} style={{display:'flex',alignItems:'center',gap:13,padding:'12px 14px',border:'1px solid var(--line)',borderRadius:11,background:'#fff'}}>
-                  <span style={{fontFamily:'ui-monospace,Menlo,monospace',fontSize:12,fontWeight:700,color:'var(--ink-4)',width:20,textAlign:'center',flex:'none'}}>{i+1}</span>
+                <div key={s.id} style={{display:'flex',alignItems:'center',gap:13,padding:'12px 14px',border:'1px solid var(--line)',borderRadius:11,background:'#fff',marginLeft:hasSec?18:0}}>
+                  <span style={{fontFamily:'ui-monospace,Menlo,monospace',fontSize:12,fontWeight:700,color:'var(--ink-4)',width:20,textAlign:'center',flex:'none'}}>{n}</span>
                   <span style={{width:34,height:34,borderRadius:9,background:k.color+'18',color:k.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={k.icon} size={16}/></span>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.title}</div>
@@ -145,8 +172,8 @@ function BookBuilder({b, onBack, update, flash}){
                   </div>
                 </div>
               );
-            })}
-            {!b.sections.length && <div style={{textAlign:'center',padding:'30px',color:'var(--ink-3)',fontSize:13,border:'1.5px dashed var(--line-2)',borderRadius:12}}>Empty book — add materials from the library.</div>}
+            }); })()}
+            {!b.sections.length && <div style={{textAlign:'center',padding:'30px',color:'var(--ink-3)',fontSize:13,border:'1.5px dashed var(--line-2)',borderRadius:12}}>Empty book — add a section or materials from the library.</div>}
           </div>
         </div>
 
