@@ -1,0 +1,72 @@
+// icons.jsx — original stroke icon set
+const ICON_PATHS = {
+  grid: <><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></>,
+  check_square: <><path d="M9 11.5l2 2 4.5-4.5"/><rect x="3.5" y="3.5" width="17" height="17" rx="4"/></>,
+  layers: <><path d="M12 3l8.5 4.5L12 12 3.5 7.5 12 3z"/><path d="M4 12l8 4.2L20 12"/><path d="M4 16.5l8 4.2 8-4.2"/></>,
+  tools: <><path d="M14.5 6.5a3.5 3.5 0 0 0-4.6 4.6l-6 6 2.5 2.5 6-6a3.5 3.5 0 0 0 4.6-4.6l-2.2 2.2-2-2 2.2-2.2z"/></>,
+  chart: <><path d="M4 20h16"/><rect x="5" y="11" width="3.2" height="6" rx="1"/><rect x="10.4" y="7" width="3.2" height="10" rx="1"/><rect x="15.8" y="13" width="3.2" height="4" rx="1"/></>,
+  search: <><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></>,
+  bell: <><path d="M18 8.5a6 6 0 1 0-12 0c0 5-2 6.5-2 6.5h16s-2-1.5-2-6.5z"/><path d="M10 19a2 2 0 0 0 4 0"/></>,
+  message: <><path d="M4 5.5h16v10H9l-4 3.5v-3.5H4z" /></>,
+  apps: <><circle cx="6" cy="6" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="18" cy="6" r="1.6"/><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/><circle cx="6" cy="18" r="1.6"/><circle cx="12" cy="18" r="1.6"/><circle cx="18" cy="18" r="1.6"/></>,
+  plus: <><path d="M12 5v14M5 12h14"/></>,
+  chevron_down: <><path d="M6 9.5l6 6 6-6"/></>,
+  chevron_right: <><path d="M9.5 6l6 6-6 6"/></>,
+  chevron_left: <><path d="M14.5 6l-6 6 6 6"/></>,
+  calendar: <><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></>,
+  columns: <><rect x="3.5" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="16" rx="1.5"/><rect x="15.5" y="4" width="5" height="16" rx="1.5"/></>,
+  filter: <><path d="M4 5.5h16l-6 7v5l-4 2v-7l-6-7z"/></>,
+  clock: <><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></>,
+  alert: <><path d="M12 3.5L21 19H3L12 3.5z"/><path d="M12 9.5v4M12 16.5v.5"/></>,
+  more: <><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></>,
+  paperclip: <><path d="M19 11l-7.5 7.5a4 4 0 0 1-5.7-5.7L13 5.6a2.6 2.6 0 0 1 3.7 3.7l-7.2 7.2a1.2 1.2 0 0 1-1.7-1.7l6.6-6.6"/></>,
+  comment: <><path d="M20 12a7 7 0 0 1-9.6 6.5L4 20l1.5-4.4A7 7 0 1 1 20 12z"/></>,
+  arrow_up: <><path d="M12 19V5M6 11l6-6 6 6"/></>,
+  arrow_down: <><path d="M12 5v14M6 13l6 6 6-6"/></>,
+  arrow_right: <><path d="M5 12h14M13 6l6 6-6 6"/></>,
+  trend_up: <><path d="M3 17l6-6 4 4 8-8"/><path d="M16 7h5v5"/></>,
+  users: <><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M16 5.2a3.2 3.2 0 0 1 0 6M16.5 19a5.5 5.5 0 0 0-2-4.3"/></>,
+  user: <><circle cx="12" cy="8" r="3.4"/><path d="M5 19.5a7 7 0 0 1 14 0"/></>,
+  folder: <><path d="M3.5 7a2 2 0 0 1 2-2h3.2l2 2.2H19a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2V7z"/></>,
+  file: <><path d="M6 3.5h7l5 5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><path d="M13 3.5V9h5"/></>,
+  check: <><path d="M5 12.5l4.5 4.5L19 7.5"/></>,
+  x: <><path d="M6 6l12 12M18 6L6 18"/></>,
+  sparkle: <><path d="M12 3c.5 4 1.5 5 5.5 5.5-4 .5-5 1.5-5.5 5.5-.5-4-1.5-5-5.5-5.5C10 8 11 7 12 3z" fill="currentColor" stroke="none"/></>,
+  star: <><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75L12 16.9l-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z"/></>,
+  star_fill: <><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75L12 16.9l-5.2 2.7 1-5.75-4.2-4.1 5.8-.85z" fill="currentColor"/></>,
+  collections: <><rect x="3.5" y="6.5" width="17" height="13" rx="2.5"/><path d="M6.5 6.5V4.5h11v2M5 10h14"/></>,
+  device: <><rect x="3.5" y="4.5" width="13" height="15" rx="2"/><path d="M16.5 9h2.5a1.5 1.5 0 0 1 1.5 1.5v8a1 1 0 0 1-1 1h-4"/><path d="M7 8h6M7 11.5h4"/></>,
+  files: <><path d="M8 3.5h6l4 4V17a1.5 1.5 0 0 1-1.5 1.5h-8.5A1.5 1.5 0 0 1 6.5 17V5A1.5 1.5 0 0 1 8 3.5z"/><path d="M14 3.5V8h4M4 7v12a1.5 1.5 0 0 0 1.5 1.5H14"/></>,
+  list: <><path d="M8.5 6.5h11M8.5 12h11M8.5 17.5h11"/><circle cx="4.5" cy="6.5" r="1.1"/><circle cx="4.5" cy="12" r="1.1"/><circle cx="4.5" cy="17.5" r="1.1"/></>,
+  bookmark: <><path d="M6.5 4.5h11a1 1 0 0 1 1 1v14l-6.5-4.2L5.5 19.5v-14a1 1 0 0 1 1-1z"/></>,
+  sliders: <><path d="M4 7.5h8M16.5 7.5H20M4 16.5h3.5M12 16.5h8"/><circle cx="14" cy="7.5" r="2.1"/><circle cx="9.5" cy="16.5" r="2.1"/></>,
+  image: <><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M4 17l4.5-4 3 2.5L15 11l5 5"/></>,
+  video: <><rect x="3" y="5.5" width="13" height="13" rx="2.5"/><path d="M16 10l5-3v10l-5-3z"/></>,
+  mail: <><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4 7l8 5.5L20 7"/></>,
+  audio: <><path d="M9 17V6.5l9-2V15"/><circle cx="6" cy="17" r="3"/><circle cx="15" cy="15" r="3"/></>,
+  code: <><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></>,
+  flame: <><path d="M12 3c3 3.5 5 6 5 9a5 5 0 0 1-10 0c0-1.6.8-3 2-4 .2 1 .8 1.7 1.6 2 0-2.4.3-4.3 1.4-7z"/></>,
+  inbox: <><path d="M3.5 13.5L6 5.5a2 2 0 0 1 1.9-1.4h8.2A2 2 0 0 1 18 5.5l2.5 8"/><path d="M3.5 13.5H8a1 1 0 0 1 1 1 2 2 0 0 0 2 2h2a2 2 0 0 0 2-2 1 1 0 0 1 1-1h4.5v4a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2v-4z"/></>,
+  settings: <><circle cx="12" cy="12" r="3"/><path d="M12 2.5l1.4 2.3 2.6-.6.5 2.6 2.4 1.1-1 2.4 1 2.4-2.4 1.1-.5 2.6-2.6-.6L12 21.5l-1.4-2.3-2.6.6-.5-2.6L5.1 16l1-2.4-1-2.4 2.4-1.1.5-2.6 2.6.6L12 2.5z"/></>,
+  link: <><path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1.5 1.5"/><path d="M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1.5-1.5"/></>,
+  eye: <><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/></>,
+  send: <><path d="M20 4L3.5 11l6.5 2.2L13 20l7-16z"/><path d="M10 13.2L20 4"/></>,
+  dots_grid: <><circle cx="9" cy="6" r="1.3"/><circle cx="15" cy="6" r="1.3"/><circle cx="9" cy="12" r="1.3"/><circle cx="15" cy="12" r="1.3"/><circle cx="9" cy="18" r="1.3"/><circle cx="15" cy="18" r="1.3"/></>,
+  flag: <><path d="M5 21V4M5 4h11l-2 3.5L16 11H5"/></>,
+  history: <><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.5"/><path d="M3.5 4v4.5H8"/><path d="M12 8v4.2l2.8 1.6"/></>,
+  pin: <><path d="M9 3.5h6l-1 5 3 3-5 1v6l-1.5 1.5L10 19v-6l-5-1 3-3-1-5z"/></>,
+  download: <><path d="M12 4v10M8 11l4 4 4-4"/><path d="M5 19.5h14"/></>,
+  external: <><path d="M14 4h6v6M20 4l-8 8"/><path d="M18 13.5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 4 19V8a1.5 1.5 0 0 1 1.5-1.5H11"/></>,
+};
+
+function Icon({name, size=18, sw=1.75, style, className, fill}){
+  const p = ICON_PATHS[name];
+  if(!p) return null;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill||"none"}
+      stroke="currentColor" strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round"
+      style={style} className={className} aria-hidden="true">{p}</svg>
+  );
+}
+
+Object.assign(window, { Icon, ICON_PATHS });
