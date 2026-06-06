@@ -31,6 +31,8 @@ function App(){
   else if(page==='metrics') body=<MetricsPage/>;
   else if(page==='explore') body=<ExplorePage setPage={setPage} openCreate={()=>setCreating(true)} flash={flash} onSearch={runSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic}/>;
   else if(page==='profile') body=<PersonProfile id={profileId} setPage={setPage} openTask={openTask} openDevice={openDevice} flash={flash}/>;
+  else if(page==='myprofile') body=<MyProfile setPage={setPage} openTask={openTask} openDevice={openDevice} flash={flash}/>;
+  else if(page==='termbase') body=<TermbaseWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='device') body=<DeviceDetail id={deviceId} setPage={setPage} openPerson={openPerson} flash={flash}/>;
   else if(page==='topic') body=<TopicDetail id={topicId} setPage={setPage} openDevice={openDevice} openPerson={openPerson} flash={flash}/>;
   else if(page==='clearance') body=<ClearanceWorkspace setPage={setPage} flash={flash}/>;

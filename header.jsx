@@ -12,9 +12,11 @@ function useClickOutside(ref, onClose){
 function Header({page, setPage, onCreate, onSearch}){
   const [wsOpen, setWsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
-  const wsRef = useRef(), notifRef = useRef();
+  const [avOpen, setAvOpen] = useState(false);
+  const wsRef = useRef(), notifRef = useRef(), avRef = useRef();
   useClickOutside(wsRef, ()=>setWsOpen(false));
   useClickOutside(notifRef, ()=>setNotifOpen(false));
+  useClickOutside(avRef, ()=>setAvOpen(false));
 
   const nav = [
     {id:'explore', label:'Explore'},
@@ -22,7 +24,8 @@ function Header({page, setPage, onCreate, onSearch}){
     {id:'workspaces', label:'Workspaces', dropdown:true},
     {id:'metrics', label:'Metrics'},
   ];
-  const isWsActive = ['workspaces','clearance','memos','prep','briefings','knowledge','upload','teams','requests','review'].includes(page);
+  const isWsActive = ['workspaces','clearance','memos','prep','briefings','knowledge','upload','teams','review'].includes(page);
+  const wsItems = WORKSPACES.filter(w=>w.id!=='requests');
 
   return (
     <header style={{position:'sticky',top:0,zIndex:100,height:'var(--header-h)',
@@ -44,7 +47,7 @@ function Header({page, setPage, onCreate, onSearch}){
                 <div className="pop card" style={{position:'absolute',top:42,left:0,width:800,padding:7,
                   display:'grid',gridTemplateColumns:'1fr 1fr',gap:2,
                   boxShadow:'var(--shadow-lg)',borderRadius:12}}>
-                  {WORKSPACES.map(w=>(
+                  {wsItems.map(w=>(
                     <button key={w.id} onClick={()=>{setPage(w.id);setWsOpen(false);}}
                       style={{display:'flex',gap:11,alignItems:'center',width:'100%',padding:'9px 10px',border:0,
                         background:'transparent',borderRadius:8,textAlign:'left',cursor:'pointer'}}
@@ -69,6 +72,7 @@ function Header({page, setPage, onCreate, onSearch}){
 
         <div style={{flex:1}}></div>
 
+        <button className={'btn btn-ghost btn-icon'+(page==='termbase'?' active':'')} title="Term base" onClick={()=>setPage('termbase')} style={page==='termbase'?{background:'var(--blue-t)',color:'var(--blue)'}:undefined}><Icon name="book" size={18}/></button>
         <button className="btn btn-ghost btn-icon" title="Messages"><Icon name="message" size={18}/></button>
         <div ref={notifRef} style={{position:'relative'}}>
           <button className="btn btn-ghost btn-icon" title="Notifications" onClick={()=>setNotifOpen(o=>!o)} style={{position:'relative'}}>
@@ -79,9 +83,12 @@ function Header({page, setPage, onCreate, onSearch}){
         </div>
         <button className="btn btn-ghost btn-icon" title="Apps"><Icon name="apps" size={18}/></button>
 
-        <button title="Tyler Chen" style={{border:0,background:'transparent',padding:0,cursor:'pointer',marginLeft:2}}>
-          <span className="av" style={{width:32,height:32,background:PEOPLE.tyler.color,fontSize:12,boxShadow:'0 0 0 2px #fff, 0 1px 3px rgba(29,53,87,.2)'}}>TC</span>
-        </button>
+        <div ref={avRef} style={{position:'relative'}}>
+          <button title="Tyler Chen" onClick={()=>setAvOpen(o=>!o)} style={{border:0,background:'transparent',padding:0,cursor:'pointer',marginLeft:2,display:'flex'}}>
+            <span className="av" style={{width:32,height:32,background:PEOPLE.tyler.color,fontSize:12,boxShadow:'0 0 0 2px #fff, 0 1px 3px rgba(29,53,87,.2)'}}>TC</span>
+          </button>
+          {avOpen && <AvatarMenu setPage={setPage} close={()=>setAvOpen(false)}/>}
+        </div>
       </div>
     </header>
   );
@@ -115,4 +122,36 @@ function NotifPanel(){
   );
 }
 
-Object.assign(window, { Header, NotifPanel, useClickOutside });
+function AvatarMenu({setPage, close}){
+  const me = PEOPLE.tyler;
+  function go(fn){ close(); fn(); }
+  const item = (icon,label,onClick,opts={})=>(
+    <button onClick={()=>go(onClick)}
+      style={{display:'flex',alignItems:'center',gap:11,width:'100%',padding:'9px 12px',border:0,background:'transparent',borderRadius:8,textAlign:'left',cursor:'pointer',fontSize:13,fontWeight:550,color:opts.danger?'var(--coral)':'var(--ink)'}}
+      onMouseEnter={e=>e.currentTarget.style.background='var(--hover)'}
+      onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+      <Icon name={icon} size={16} style={{color:opts.danger?'var(--coral)':'var(--ink-3)',flex:'none'}}/>
+      <span style={{flex:1}}>{label}</span>
+      {opts.badge!=null && <span className="badge" style={{background:'var(--blue-tint,#E7EFFB)',color:'var(--blue)',height:18,fontSize:10.5,fontWeight:600}}>{opts.badge}</span>}
+    </button>
+  );
+  return (
+    <div className="pop card" style={{position:'absolute',top:44,right:0,width:248,padding:6,boxShadow:'var(--shadow-lg)',borderRadius:12}}>
+      <div style={{display:'flex',alignItems:'center',gap:11,padding:'8px 10px 10px'}}>
+        <span className="av" style={{width:38,height:38,background:me.color,fontSize:14,flex:'none'}}>TC</span>
+        <div style={{minWidth:0}}>
+          <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{me.name}</div>
+          <div className="muted" style={{fontSize:11.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{me.email||me.role}</div>
+        </div>
+      </div>
+      <div style={{height:1,background:'var(--line)',margin:'2px 4px 6px'}}></div>
+      {item('user','My profile', ()=>setPage('myprofile'))}
+      {item('inbox','My requests', ()=>setPage('requests'), {badge:12})}
+      {item('settings','Settings', ()=>setPage('dashboard'))}
+      <div style={{height:1,background:'var(--line)',margin:'6px 4px'}}></div>
+      {item('external','Sign out', ()=>{}, {danger:true})}
+    </div>
+  );
+}
+
+Object.assign(window, { Header, NotifPanel, AvatarMenu, useClickOutside });
