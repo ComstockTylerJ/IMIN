@@ -2,9 +2,9 @@
 
 const SERIF = "'Spectral', Georgia, 'Times New Roman', serif";
 const CL_MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace";
-const PAPER = '#F1F0EA';
-const CL_LINE = '#E7E5DC';
-const INK_BTN = '#1C1C1A';
+const PAPER = '#F4F7FC';
+const CL_LINE = 'var(--line)';
+const INK_BTN = 'var(--primary)';
 
 // severity palette
 const SEV = {
@@ -153,12 +153,12 @@ const GREEN = '#1F9D86', GRAY = '#CBD2DC', BLUE = '#1D6BD0', RED = '#D24B43';
 // returns {done, act, actC, badge, bC, bT}
 function stageMeta(stage) {
   switch (stage) {
-    case 'awaiting':return { done: 0, act: 0, actC: BLUE, badge: 'Awaiting screen', bC: '#8C94A3', bT: '#EEEEE8' };
+    case 'awaiting':return { done: 0, act: 0, actC: BLUE, badge: 'Awaiting screen', bC: '#8C94A3', bT: '#F2F5F9' };
     case 'flagged':return { done: 1, act: 1, actC: RED, badge: 'Issues flagged', bC: RED, bT: '#FBEAE8' };
     case 'ready':return { done: 2, act: -1, actC: GREEN, badge: 'Ready to route', bC: GREEN, bT: '#E4F4F0' };
     case 'attorney':return { done: 2, act: 2, actC: BLUE, badge: 'Attorney review', bC: '#BC8418', bT: '#F8EFD9' };
     case 'cleared':return { done: 3, act: 3, actC: BLUE, badge: 'Cleared for release', bC: GREEN, bT: '#E4F4F0' };
-    default:return { done: 0, act: 0, actC: BLUE, badge: '', bC: '#8C94A3', bT: '#EEEEE8' };}
+    default:return { done: 0, act: 0, actC: BLUE, badge: '', bC: '#8C94A3', bT: '#F2F5F9' };}
 
 }
 function nodeColor(i, m) {return i < m.done ? GREEN : i === m.act ? m.actC : GRAY;}
@@ -188,7 +188,7 @@ function ClearanceWorkspace({ setPage, flash }) {
   const current = stmts.find((s) => s.id === openId);
 
   return (
-    <div className="rise" style={{ background: PAPER, minHeight: 'calc(100vh - var(--header-h))' }}>
+    <div className="rise">
       {current ?
       <ClReview s={current} onBack={() => setOpenId(null)} onApply={applyF} onDismiss={dismissF} onReopen={reopenF} onRoute={route} onRunScreen={runScreen} /> :
       <ClList stmts={stmts} setPage={setPage} onOpen={setOpenId} flash={flash} />}
@@ -206,14 +206,14 @@ function ClList({ stmts, setPage, onOpen, flash }) {
         </div>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
           <div>
-            <h1 style={{ fontFamily: SERIF, fontSize: 40, fontWeight: 700, letterSpacing: '-.02em', margin: 0, color: 'var(--ink)', lineHeight: 1.05 }}>Press &amp; Public Statements</h1>
+            <h1 style={{ fontSize: 23, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--ink)', lineHeight: 1.1 }}>Press &amp; Public Statements</h1>
             <p style={{ fontSize: 15, margin: '11px 0 0', color: 'var(--ink-3)', maxWidth: 760, lineHeight: 1.5 }}>
               Upload a statement &mdash; AI screens it against the case&rsquo;s privileged &amp; confidential materials, then routes it to counsel for clearance.
             </p>
           </div>
           <button onClick={() => flash && flash('Upload a statement to begin screening')}
           style={{ display: 'inline-flex', alignItems: 'center', gap: 9, border: 0, background: INK_BTN, color: '#fff', fontSize: 14, fontWeight: 600,
-            padding: '13px 20px', borderRadius: 12, cursor: 'pointer', boxShadow: '0 2px 8px rgba(28,28,26,.22)', transition: '.15s' }}
+            padding: '13px 20px', borderRadius: 12, cursor: 'pointer', boxShadow: '0 2px 8px rgba(29,53,87,.22)', transition: '.15s' }}
           onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
           onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}>
             <Icon name="plus" size={17} sw={2.4} />New statement
@@ -232,11 +232,11 @@ function ClList({ stmts, setPage, onOpen, flash }) {
 
 function ClStepper() {
   return (
-    <div style={{ marginTop: 26, background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 16, padding: 6, boxShadow: '0 1px 2px rgba(40,38,30,.04)' }}>
+    <div style={{ marginTop: 26, background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 16, padding: 6, boxShadow: '0 1px 2px rgba(29,53,87,.04)' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', alignItems: 'stretch' }}>
         {CL_STEPS.map((st, i) =>
         <div key={st.id} style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '16px 18px', borderRight: i < 3 ? `1px solid ${CL_LINE}` : '0', position: 'relative' }}>
-            <span style={{ width: 36, height: 36, borderRadius: 10, background: '#F4F3EE', color: 'var(--ink-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+            <span style={{ width: 36, height: 36, borderRadius: 10, background: 'var(--hover)', color: 'var(--ink-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
               <Icon name={st.ic} size={18} />
             </span>
             <div>
@@ -284,11 +284,11 @@ function ClStatementCard({ s, onOpen }) {
 
   return (
     <div onClick={onOpen} style={{ background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 16, padding: '22px 26px', cursor: 'pointer',
-      boxShadow: '0 1px 2px rgba(40,38,30,.04)', transition: 'transform .15s, box-shadow .2s' }}
-    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 10px 30px rgba(40,38,30,.10)';}}
-    onMouseLeave={(e) => {e.currentTarget.style.transform = 'none';e.currentTarget.style.boxShadow = '0 1px 2px rgba(40,38,30,.04)';}}>
+      boxShadow: '0 1px 2px rgba(29,53,87,.04)', transition: 'transform .15s, box-shadow .2s' }}
+    onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 10px 30px rgba(29,53,87,.10)';}}
+    onMouseLeave={(e) => {e.currentTarget.style.transform = 'none';e.currentTarget.style.boxShadow = '0 1px 2px rgba(29,53,87,.04)';}}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-        <span style={{ width: 44, height: 44, borderRadius: 12, background: '#E9EFF1', color: '#3C7C84', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', marginTop: 2 }}>
+        <span style={{ width: 44, height: 44, borderRadius: 12, background: '#E4F4F0', color: '#1F9D86', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', marginTop: 2 }}>
           <Icon name="megaphone" size={21} />
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -325,7 +325,7 @@ function ClReview({ s, onBack, onApply, onDismiss, onReopen, onRoute, onRunScree
   return (
     <div>
       {/* sub header */}
-      <div style={{ position: 'sticky', top: 'var(--header-h)', zIndex: 40, background: 'rgba(248,247,243,.88)', backdropFilter: 'blur(10px)',
+      <div style={{ position: 'sticky', top: 'var(--header-h)', zIndex: 40, background: 'rgba(255,255,255,.85)', backdropFilter: 'blur(10px)',
         borderBottom: `1px solid ${CL_LINE}` }}>
         <div style={{ maxWidth: 1320, margin: '0 auto', padding: '11px 28px', display: 'flex', alignItems: 'center', gap: 16 }}>
           <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: `1px solid ${CL_LINE}`, background: '#fff',
@@ -333,7 +333,7 @@ function ClReview({ s, onBack, onApply, onDismiss, onReopen, onRoute, onRunScree
             <Icon name="chevron_left" size={15} sw={2.2} />Press
           </button>
           <span style={{ width: 1, height: 26, background: CL_LINE }}></span>
-          <span style={{ width: 30, height: 30, borderRadius: 8, background: '#E9EFF1', color: '#3C7C84', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+          <span style={{ width: 30, height: 30, borderRadius: 8, background: '#E4F4F0', color: '#1F9D86', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
             <Icon name="megaphone" size={16} />
           </span>
           <div style={{ minWidth: 0, flex: 1 }}>
@@ -384,7 +384,7 @@ function ClReview({ s, onBack, onApply, onDismiss, onReopen, onRoute, onRunScree
 
             <button onClick={() => onRoute(s.id)}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, border: 0, background: INK_BTN, color: '#fff', fontSize: 14, fontWeight: 600,
-              padding: '15px', borderRadius: 12, cursor: 'pointer', width: '100%', boxShadow: '0 2px 8px rgba(28,28,26,.22)' }}>
+              padding: '15px', borderRadius: 12, cursor: 'pointer', width: '100%', boxShadow: '0 2px 8px rgba(29,53,87,.22)' }}>
                   <Icon name="send" size={16} />Route to {CLP[s.counsel].name} for clearance
                 </button>}
 
@@ -413,7 +413,7 @@ function ClStepPills({ stage }) {
               </span>
               <span style={{ fontSize: 12, fontWeight: isActive ? 700 : 500, color: done || isActive ? 'var(--ink)' : 'var(--ink-4)', whiteSpace: 'nowrap' }}>{st.label}</span>
             </span>
-            {i < 3 && <span style={{ width: 16, height: 2, borderRadius: 2, background: i < m.done ? GREEN : '#E1DFD6', margin: '0 2px' }}></span>}
+            {i < 3 && <span style={{ width: 16, height: 2, borderRadius: 2, background: i < m.done ? GREEN : 'var(--line)', margin: '0 2px' }}></span>}
           </React.Fragment>);
 
       })}
@@ -424,8 +424,8 @@ function ClStepPills({ stage }) {
 function ClDoc({ s, active, setActive }) {
   const byId = Object.fromEntries(s.findings.map((f) => [f.id, f]));
   return (
-    <div style={{ background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 18, padding: '54px 64px 60px', boxShadow: '0 1px 3px rgba(40,38,30,.05)', minHeight: 200 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.14em', color: '#3C7C84', textTransform: 'uppercase', marginBottom: 22 }}>
+    <div style={{ background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 18, padding: '54px 64px 60px', boxShadow: '0 1px 3px rgba(29,53,87,.05)', minHeight: 200 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.14em', color: '#1F9D86', textTransform: 'uppercase', marginBottom: 22 }}>
         {s.forRelease ? 'For Immediate Release' : 'Internal \u2014 Not For Release'}
       </div>
       <h1 style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 700, letterSpacing: '-.015em', color: 'var(--ink)', lineHeight: 1.18, margin: 0 }}>{s.title}</h1>
@@ -469,7 +469,7 @@ function ClUnscreened({ s, onRunScreen }) {
         Run the AI screen to check this draft against the case&rsquo;s privileged &amp; confidential materials and the applicable conduct rules.
       </div>
       <button onClick={() => onRunScreen(s.id)} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9, marginTop: 18, border: 0,
-        background: INK_BTN, color: '#fff', fontSize: 14, fontWeight: 600, padding: '13px 20px', borderRadius: 11, cursor: 'pointer', width: '100%', boxShadow: '0 2px 8px rgba(28,28,26,.22)' }}>
+        background: INK_BTN, color: '#fff', fontSize: 14, fontWeight: 600, padding: '13px 20px', borderRadius: 11, cursor: 'pointer', width: '100%', boxShadow: '0 2px 8px rgba(29,53,87,.22)' }}>
         <Icon name="sparkle" size={16} />Run AI screen
       </button>
       <div style={{ marginTop: 22, textAlign: 'left' }}><ClHistory s={s} /></div>
@@ -484,7 +484,7 @@ function ClFinding({ f, active, onEnter, onLeave, onApply, onDismiss, onReopen }
     return (
       <div style={{ background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 13, padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 11, opacity: .92 }}>
         <span style={{ width: 26, height: 26, borderRadius: 8, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: applied ? '#E4F4F0' : '#EFEEE8', color: applied ? GREEN : 'var(--ink-3)' }}>
+          background: applied ? '#E4F4F0' : 'var(--hover)', color: applied ? GREEN : 'var(--ink-3)' }}>
           <Icon name={applied ? 'check' : 'x'} size={15} sw={2.4} />
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -498,7 +498,7 @@ function ClFinding({ f, active, onEnter, onLeave, onApply, onDismiss, onReopen }
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave}
     style={{ background: '#fff', border: `1.5px solid ${active ? sv.color : CL_LINE}`, borderRadius: 14, padding: '15px 16px',
-      boxShadow: active ? `0 6px 20px ${sv.color}22` : '0 1px 2px rgba(40,38,30,.04)', transition: '.15s' }}>
+      boxShadow: active ? `0 6px 20px ${sv.color}22` : '0 1px 2px rgba(29,53,87,.04)', transition: '.15s' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 11 }}>
         <span style={{ width: 24, height: 24, borderRadius: 7, background: sv.tint, color: sv.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name={f.ic} size={14} /></span>
         <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--ink)' }}>{f.cat}</span>
@@ -542,7 +542,7 @@ function ClHistory({ s }) {
         <div style={{ position: 'absolute', left: 12, top: 10, bottom: 10, width: 1.5, background: CL_LINE }}></div>
         {s.history.map((h, i) =>
         <div key={i} style={{ display: 'flex', gap: 12, padding: '5px 0', position: 'relative' }}>
-            <span style={{ width: 25, height: 25, borderRadius: 7, background: '#F4F3EE', color: 'var(--ink-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', zIndex: 1, boxShadow: `0 0 0 3px ${PAPER}` }}>
+            <span style={{ width: 25, height: 25, borderRadius: 7, background: 'var(--hover)', color: 'var(--ink-3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', zIndex: 1, boxShadow: `0 0 0 3px ${PAPER}` }}>
               <Icon name={h.ic} size={13} />
             </span>
             <div style={{ paddingTop: 3 }}>

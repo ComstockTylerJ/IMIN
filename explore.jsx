@@ -73,7 +73,7 @@ function ExplorePage({setPage, openCreate, flash, onSearch}){
               <p className="muted" style={{fontSize:13,margin:'4px 0 0'}}>Search across everything, or query geotagged data by drawing an area.</p>
             </div>
           </div>
-          <div style={{display:'flex',gap:2,marginTop:16}}>
+          <div style={{display:'flex',justifyContent:'center',gap:2,marginTop:16}}>
             {tabs.map(t=>(
               <button key={t.id} onClick={()=>setTab(t.id)} style={{display:'flex',alignItems:'center',gap:8,border:0,background:'transparent',
                 padding:'10px 14px',cursor:'pointer',fontSize:13.5,fontWeight:tab===t.id?600:500,

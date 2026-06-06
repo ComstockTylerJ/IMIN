@@ -50,7 +50,6 @@ function SearchResults({query, setPage, onSearch}){
   const [filterQ,setFilterQ]=React.useState('');
   const [dismissed,setDismissed]=React.useState([]);
   const [preview,setPreview]=React.useState(null);
-  const [filtersOpen,setFiltersOpen]=React.useState(false);
   const q = query || 'finance';
 
   const dirty = folders.length||ftypes.length||range;
@@ -65,17 +64,13 @@ function SearchResults({query, setPage, onSearch}){
   function viewAll(){ clearAll(); setTab('all'); window.scrollTo({top:0,behavior:'smooth'}); }
 
   return (
-    <div className="rise search-layout" style={{display:'flex',alignItems:'flex-start',gap:0,maxWidth:1480,margin:'0 auto'}}>
-      {filtersOpen && <div className="search-filters-scrim only-mobile" onClick={()=>setFiltersOpen(false)}></div>}
+    <div className="rise" style={{display:'flex',alignItems:'flex-start',gap:0,maxWidth:1480,margin:'0 auto'}}>
       {/* Filters sidebar */}
-      <aside className={'search-filters'+(filtersOpen?' open':'')} style={{width:280,flex:'none',borderRight:'1px solid var(--line)',background:'rgba(255,255,255,.55)',
+      <aside style={{width:280,flex:'none',borderRight:'1px solid var(--line)',background:'rgba(255,255,255,.55)',
         position:'sticky',top:'var(--header-h)',height:'calc(100vh - var(--header-h))',display:'flex',flexDirection:'column'}}>
         <div style={{padding:'18px 20px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <span style={{fontSize:17,fontWeight:700,letterSpacing:'-.02em'}}>Filters</span>
-          <div style={{display:'flex',alignItems:'center',gap:10}}>
-            {dirty ? <span className="linkish" style={{fontSize:12.5}} onClick={clearAll}>Clear all</span> : null}
-            <button className="btn btn-ghost btn-icon btn-sm only-mobile" onClick={()=>setFiltersOpen(false)}><Icon name="x" size={17}/></button>
-          </div>
+          {dirty ? <span className="linkish" style={{fontSize:12.5}} onClick={clearAll}>Clear all</span> : null}
         </div>
         <div style={{padding:'0 20px 12px'}}>
           <button className="btn btn-secondary" style={{width:'100%'}}><Icon name="sparkle" size={15} style={{color:'var(--violet)'}}/>Understand these results</button>
@@ -111,7 +106,7 @@ function SearchResults({query, setPage, onSearch}){
 
         <div style={{padding:'14px 20px',borderTop:'1px solid var(--line)',background:'rgba(255,255,255,.7)'}}>
           <button className="btn btn-primary" disabled={!dirty}
-            onClick={()=>{window.scrollTo({top:0,behavior:'smooth'});setFiltersOpen(false);}}
+            onClick={()=>window.scrollTo({top:0,behavior:'smooth'})}
             style={{width:'100%',opacity:dirty?1:.55,pointerEvents:dirty?'auto':'none'}}>
             {dirty ? `Apply · ${count.toLocaleString()} results` : 'No changes'}
           </button>
@@ -119,7 +114,7 @@ function SearchResults({query, setPage, onSearch}){
       </aside>
 
       {/* Main */}
-      <main className="search-main" style={{flex:1,minWidth:0,padding:'18px 24px 80px'}}>
+      <main style={{flex:1,minWidth:0,padding:'18px 24px 80px'}}>
         {/* query bar */}
         <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:16}}>
           <div className="card" style={{flex:1,display:'flex',alignItems:'center',gap:10,padding:'8px 12px',boxShadow:'var(--shadow-sm)'}}>
@@ -155,7 +150,6 @@ function SearchResults({query, setPage, onSearch}){
             <span className="muted" style={{fontSize:13}}>results</span>
           </div>
           <div style={{flex:1}}></div>
-          <button className="btn btn-secondary btn-sm only-mobile" onClick={()=>setFiltersOpen(true)}><Icon name="filter" size={14}/>Filters{dirty?<span style={{background:'var(--primary)',color:'#fff',borderRadius:10,padding:'0 5px',fontSize:10,marginLeft:2}}>{folders.length+ftypes.length+(range?1:0)}</span>:null}</button>
           {/* skip-faceting CTA */}
           <button className="btn btn-primary btn-sm" onClick={viewAll} title="Skip filters and browse everything">
             View all results<Icon name="arrow_right" size={14}/>

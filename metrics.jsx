@@ -12,12 +12,12 @@ function MetricsPage(){
     <div className="rise">
       <div style={{position:'relative',overflow:'hidden',borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.4)'}}>
         <HeroPattern opacity={0.7}/>
-        <div className="page" style={{position:'relative',zIndex:1,paddingTop:16,paddingBottom:16}}>
+        <div className="page" style={{position:'relative',zIndex:1,paddingTop:34,paddingBottom:26}}>
           <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:20,flexWrap:'wrap'}}>
             <div>
-              <div className="eyebrow" style={{marginBottom:5}}>Analytics</div>
-              <h1 style={{fontSize:22,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)'}}>Metrics</h1>
-              <p className="sec" style={{fontSize:13.5,margin:'3px 0 0'}}>Performance & productivity across the agency</p>
+              <div className="eyebrow" style={{marginBottom:6}}>Analytics</div>
+              <h1 style={{fontSize:25,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)'}}>Metrics</h1>
+              <p className="sec" style={{fontSize:14,margin:'5px 0 0'}}>Performance & productivity across the agency</p>
             </div>
             <div style={{display:'flex',gap:9,alignItems:'center'}}>
               <button className="btn btn-secondary btn-sm"><Icon name="users" size={14}/>All Teams<Icon name="chevron_down" size={13}/></button>
@@ -35,7 +35,7 @@ function MetricsPage(){
       </div>
 
       <div className="page" style={{paddingTop:24}}>
-        <div className="grid-4">
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
           {perf.map(p=>(
             <div key={p.label} className="card card-pad" style={{display:'flex',flexDirection:'column',gap:12}}>
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
@@ -51,7 +51,7 @@ function MetricsPage(){
           ))}
         </div>
 
-        <div className="grid-wide-left" style={{marginTop:20}}>
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.5fr) minmax(0,1fr)',gap:20,marginTop:20,alignItems:'start'}}>
           <div className="card card-pad">
             <SectionHead title="Completion Trends" sub="Tasks completed vs. created · last 8 weeks" icon="trend_up"
               action={<div style={{display:'flex',gap:14}}>
@@ -78,7 +78,7 @@ function MetricsPage(){
           </div>
         </div>
 
-        <div className="grid-wide-right" style={{marginTop:20}}>
+        <div style={{display:'grid',gridTemplateColumns:'minmax(0,1fr) minmax(0,1.3fr)',gap:20,marginTop:20,alignItems:'start'}}>
           <div className="card card-pad">
             <SectionHead title="Request Volume" sub="By type · this month" icon="inbox"/>
             <BarChart data={[24,18,31,12]} labels={['Language','Review','Approval','Clearance']}

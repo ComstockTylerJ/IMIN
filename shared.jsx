@@ -1,20 +1,5 @@
 // shared.jsx — UI primitives & charts
 
-function useViewport(){
-  const get = ()=>{
-    const w = typeof window!=='undefined' ? window.innerWidth : 1440;
-    return { w, isMobile:w<=767, isTablet:w>767&&w<=1023, isDesktop:w>1023 };
-  };
-  const [vp, setVp] = React.useState(get);
-  React.useEffect(()=>{
-    let raf;
-    const onResize=()=>{ cancelAnimationFrame(raf); raf=requestAnimationFrame(()=>setVp(get())); };
-    window.addEventListener('resize', onResize);
-    return ()=>{ window.removeEventListener('resize', onResize); cancelAnimationFrame(raf); };
-  },[]);
-  return vp;
-}
-
 function Logo({size=30}){
   return <img src="assets/logo-256.png" width={size} height={size} alt="IMIN"
     style={{display:'block', filter:'drop-shadow(0 1px 2px rgba(29,53,87,.12))'}} draggable="false"/>;
@@ -28,21 +13,20 @@ function Brand({size=30, onClick}){
   );
 }
 
-function Avatar({id, size=26, ring=true, title, muted}){
+function Avatar({id, size=26, ring=true, title}){
   const p = PEOPLE[id] || {initials:'?', color:'#8C94A3', name:''};
-  const bg = muted ? (id==='tyler' ? '#1D6BD0' : '#B4BcC8') : p.color;
   return (
     <span className="av" title={title===false?undefined:(title||p.name)} style={{
-      width:size, height:size, background:bg, fontSize:Math.round(size*0.4),
+      width:size, height:size, background:p.color, fontSize:Math.round(size*0.4),
       boxShadow: ring ? '0 0 0 2px #fff' : 'none'
     }}>{p.initials}</span>
   );
 }
-function AvatarStack({ids, size=24, max=3, muted}){
+function AvatarStack({ids, size=24, max=3}){
   const shown = ids.slice(0,max), extra = ids.length-max;
   return (
     <div className="av-stack">
-      {shown.map(id=> <Avatar key={id} id={id} size={size} muted={muted}/>)}
+      {shown.map(id=> <Avatar key={id} id={id} size={size}/>)}
       {extra>0 && <span className="av" style={{width:size,height:size,background:'#EAEEF4',color:'var(--ink-3)',fontSize:Math.round(size*0.38)}}>+{extra}</span>}
     </div>
   );
@@ -208,6 +192,6 @@ function SectionHead({title, sub, action, icon}){
 }
 
 Object.assign(window, {
-  useViewport, Logo, Brand, Avatar, AvatarStack, Tag, StatusPill, PriorityFlag,
+  Logo, Brand, Avatar, AvatarStack, Tag, StatusPill, PriorityFlag,
   Sparkline, AreaChart, BarChart, Donut, TrendBadge, HeroPattern, SectionHead, smoothPath
 });

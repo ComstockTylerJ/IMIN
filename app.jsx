@@ -6,7 +6,6 @@ function App(){
   const [creating, setCreating] = React.useState(false);
   const [toast, setToast] = React.useState(null);
   const [searchQuery, setSearchQuery] = React.useState('finance');
-  const [navMode, setNavMode] = React.useState('top');
 
   function runSearch(q){ setSearchQuery((q||'').trim()||'finance'); setPage('search'); }
 
@@ -31,14 +30,14 @@ function App(){
   else if(page==='knowledge') body=<KnowledgeWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='upload') body=<DataUploadWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='search') body=<SearchResults query={searchQuery} setPage={setPage} onSearch={runSearch}/>;
+  else if(page==='review') body=<ReviewQueue setPage={setPage} flash={flash} folderName={window.__reviewFolder}/>;
   else body=<WorkspaceDetail id={page} setPage={setPage} openTask={openTask} openCreate={()=>setCreating(true)} flash={flash} onSearch={runSearch}/>;
 
   return (
     <React.Fragment>
       <div className="mesh-bg"></div>
-      <div className={'shell'+(navMode==='side'?' nav-side':'')}>
-        {navMode==='side' && <SideNav page={page} setPage={setPage} onSearch={runSearch} navMode={navMode} setNavMode={setNavMode}/>}
-        <Header page={page} setPage={setPage} onCreate={()=>setCreating(true)} onSearch={runSearch} navMode={navMode} setNavMode={setNavMode}/>
+      <div className="shell">
+        <Header page={page} setPage={setPage} onCreate={()=>setCreating(true)} onSearch={runSearch}/>
         {body}
       </div>
       {task && <TaskDrawer task={task} onClose={()=>setSelectedTask(null)} moveTask={moveTask}/>}

@@ -150,7 +150,7 @@ function TasksPage({ openCreate, openTask }) {
     <div className="rise">
       <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--line)', background: 'rgba(255,255,255,.4)' }}>
         <HeroPattern opacity={0.7} />
-        <div className="page" style={{ position: 'relative', zIndex: 1, paddingTop: 16, paddingBottom: 0 }}>
+        <div className="page" style={{ position: 'relative', zIndex: 1, paddingTop: 30, paddingBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
             <div>
               <div className="eyebrow" style={{ marginBottom: 6 }}>Workspace · Litigation</div>
