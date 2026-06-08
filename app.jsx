@@ -1,6 +1,6 @@
 // app.jsx — root, routing, shared task state + AI agent integration
 function App(){
-  const [page, setPage] = React.useState('agents');
+  const [page, setPage] = React.useState('dashboard');
   const [tasks, setTasks] = React.useState(TASKS);
   const [selectedTask, setSelectedTask] = React.useState(null);
   const [creating, setCreating] = React.useState(false);
@@ -20,7 +20,7 @@ function App(){
 
   function openRun(id){ setRunId(id); setPage('agentrun'); }
   function openNewRequest(){ setNewReq(true); }
-  function goAgents(){ if(t.convergence==='lens'){ window.__tasksView='fleet'; setPage('tasks'); } else { setPage('agents'); } }
+  function goAgents(){ window.__tasksView='fleet'; setPage('tasks'); }
   window.__goAgents = goAgents;
   function openKickoff(agentId, prefill){ setNewReq(false); setKickoff({agentId:agentId||null, prefill:prefill||null}); }
   function launchAgent(agentId, mode){
@@ -28,7 +28,7 @@ function App(){
     const code = AGENTS[agentId].code;
     flash(code+' launched — running now');
     const existing = RUNS.find(r=>r.agent===agentId && (r.status==='running'||r.status==='needs_you'||r.status==='ready'));
-    if(existing){ openRun(existing.id); } else { setPage('agents'); }
+    if(existing){ openRun(existing.id); } else { goAgents(); }
   }
   function teamRequest(type){ setNewReq(false); flash((type?type.label:'Request')+' submitted to your team'); }
 
@@ -42,6 +42,7 @@ function App(){
   window.__agentTweaks = agentProps;
   window.__setPage = setPage;
   window.__openAskAI = ()=>setAskAI(true);
+  window.__openTasks = (o={})=>{ window.__tasksView=o.view||'board'; window.__tasksAsg=o.asg||null; window.__tasksWf=o.wf||null; setPage('tasks'); };
 
   React.useEffect(()=>{ window.scrollTo({top:0}); }, [page, runId]);
 
@@ -53,11 +54,11 @@ function App(){
   const task = tasks.find(t=>t.id===selectedTask);
 
   let body;
-  if(page==='agents') body=<AgentsPage openRun={openRun} openKickoff={()=>openKickoff()} {...agentProps}/>;
-  else if(page==='agentrun') body=<AgentRunDetail runId={runId} setPage={setPage} flash={flash} {...agentProps}/>;
+  if(page==='agentrun') body=<AgentRunDetail runId={runId} setPage={setPage} flash={flash} {...agentProps}/>;
   else if(page==='dashboard') body=<Dashboard setPage={setPage} openTask={openTask} openCreate={openNewRequest}/>;
   else if(page==='tasks') body=<TasksPage tasks={tasks} moveTask={moveTask} openTask={openTask} openCreate={openNewRequest} openKickoff={openKickoff} openRun={openRun} flash={flash} {...agentProps}/>;
   else if(page==='metrics') body=<MetricsPage/>;
+  else if(page==='tools') body=<ToolsPage setPage={setPage} flash={flash}/>;
   else if(page==='explore') body=<ExplorePage setPage={setPage} openCreate={openNewRequest} flash={flash} onSearch={runSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic}/>;
   else if(page==='profile') body=<PersonProfile id={profileId} setPage={setPage} openTask={openTask} openDevice={openDevice} flash={flash}/>;
   else if(page==='myprofile') body=<MyProfile setPage={setPage} openTask={openTask} openDevice={openDevice} flash={flash}/>;

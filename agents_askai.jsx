@@ -176,8 +176,8 @@ function AskAgents({ glyph, flat, framing, goRun, onClose }){
         </div>
         <div style={{display:'flex',flexDirection:'column',gap:10}}>{running.map(r=><Row key={r.id} r={r}/>)}</div>
       </div>}
-      <button className="btn btn-ghost btn-sm" onClick={()=>{onClose();(window.__goAgents?window.__goAgents():window.__setPage&&window.__setPage('agents'));}}>
-        Open full Mission Control<Icon name="arrow_right" size={14}/></button>
+      <button className="btn btn-ghost btn-sm" onClick={()=>{onClose();(window.__goAgents?window.__goAgents():window.__setPage&&window.__setPage('tasks'));}}>
+        Open in Tasks · List<Icon name="arrow_right" size={14}/></button>
     </div>
   );
 }

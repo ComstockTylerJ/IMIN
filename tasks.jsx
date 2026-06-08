@@ -122,10 +122,14 @@ const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospac
 function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', framing='codename', flat=false }) {
   const [view, setView] = React.useState((window.__tasksView)||'board'); // board | fleet | calendar
   const [scope, setScope] = React.useState('teams'); // teams | mine
-  const [asg, setAsg] = React.useState('all'); // all | people | agents
-  const [wf, setWf] = React.useState('all'); // all | <workflow id>
+  const [asg, setAsg] = React.useState(window.__tasksAsg||'all'); // all | people | agents
+  const [wf, setWf] = React.useState(window.__tasksWf||'all'); // all | <workflow id>
   const [items, setItems] = React.useState(WF_TASKS);
-  React.useEffect(()=>{ if(window.__tasksView){ setView(window.__tasksView); window.__tasksView=null; } },[]);
+  React.useEffect(()=>{
+    if(window.__tasksView){ setView(window.__tasksView); window.__tasksView=null; }
+    if(window.__tasksAsg){ setAsg(window.__tasksAsg); window.__tasksAsg=null; }
+    if(window.__tasksWf){ setWf(window.__tasksWf); window.__tasksWf=null; }
+  },[]);
 
   // scope filter (Only Mine / My Teams) is independent of the workflow chips
   const scoped = scope === 'mine' ? items.filter((t) => t.mine) : items;

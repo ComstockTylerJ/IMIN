@@ -45,8 +45,8 @@ function AgentRunDetail({ runId, setPage, glyph='diamond', framing='codename', f
       <div style={{position:'relative',overflow:'hidden',borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.5)'}}>
         <HeroPattern opacity={.7}/>
         <div className="page" style={{position:'relative',zIndex:1,paddingTop:20,paddingBottom:20}}>
-          <button className="btn btn-ghost btn-sm" onClick={()=>setPage('agents')} style={{marginLeft:-8,marginBottom:14}}>
-            <Icon name="chevron_left" size={16}/>Mission Control
+          <button className="btn btn-ghost btn-sm" onClick={()=>(window.__goAgents?window.__goAgents():setPage('tasks'))} style={{marginLeft:-8,marginBottom:14}}>
+            <Icon name="chevron_left" size={16}/>Back to Tasks · List
           </button>
           <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:20,flexWrap:'wrap'}}>
             <div style={{display:'flex',gap:15,alignItems:'flex-start',minWidth:0}}>

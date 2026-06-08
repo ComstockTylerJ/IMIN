@@ -25,6 +25,7 @@ function Header({page, setPage, onCreate, onSearch, openRun, glyph='diamond', fr
     {id:'tasks', label:'Tasks'},
     {id:'workspaces', label:'Workspaces', dropdown:true},
     {id:'metrics', label:'Metrics'},
+    {id:'tools', label:'Tools'},
   ];
   const runningCount = (typeof RUNS!=='undefined') ? RUNS.filter(r=>r.status==='running').length : 0;
   const needCount = (typeof needsYou!=='undefined') ? needsYou().length : 0;
@@ -192,7 +193,7 @@ function FleetPopover({ setPage, openRun, close, glyph, flat, framing }){
         <FleetToken size={24}/>
         <span style={{fontWeight:700,fontSize:14,letterSpacing:'-.01em'}}>Agent fleet</span>
         <div style={{flex:1}}></div>
-        <span className="linkish" style={{fontSize:12}} onClick={()=>{close();(window.__goAgents?window.__goAgents():setPage('agents'));}}>Mission Control</span>
+        <span className="linkish" style={{fontSize:12}} onClick={()=>{close();(window.__goAgents?window.__goAgents():setPage('tasks'));}}>Open List view</span>
       </div>
       <div style={{maxHeight:380,overflowY:'auto',padding:6}}>
         {attn.length>0 && <div className="eyebrow" style={{padding:'8px 8px 5px',color:'#B5851C'}}>Waiting on you · {attn.length}</div>}
@@ -201,7 +202,7 @@ function FleetPopover({ setPage, openRun, close, glyph, flat, framing }){
         {live.map(r=><Row key={r.id} r={r}/>)}
       </div>
       <button className="btn btn-ghost btn-sm" style={{width:'100%',borderRadius:0,borderTop:'1px solid var(--line)',height:40}} onClick={()=>{close();(window.__goAgents?window.__goAgents():setPage('agents'));}}>
-        Open Mission Control<Icon name="arrow_right" size={14}/>
+        Open in Tasks · List<Icon name="arrow_right" size={14}/>
       </button>
     </div>
   );

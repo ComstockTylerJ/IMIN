@@ -10,14 +10,6 @@ const AGENT_TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 function AgentTweaks({ t, setTweak }){
   return (
     <TweaksPanel>
-      <TweakSection label="Convergence — Mission Control + Tasks"/>
-      <TweakSelect label="Mission Control is…" value={t.convergence}
-        options={[
-          {value:'separate', label:'A separate page (Agents in nav)'},
-          {value:'lens',     label:'A lens of the Tasks board (Fleet view)'},
-        ]}
-        onChange={(v)=>setTweak('convergence', v)}/>
-
       <TweakSection label="Agent model — how agents are framed"/>
       <TweakSelect label="Framing" value={t.framing}
         options={[

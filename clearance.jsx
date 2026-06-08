@@ -199,33 +199,21 @@ function ClearanceWorkspace({ setPage, flash }) {
 // =================== List view ===================
 function ClList({ stmts, setPage, onOpen, flash }) {
   return (
-    <div>
-      <div className="page" style={{ paddingTop: 26, paddingBottom: 8, maxWidth: 1180 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12.5, color: 'var(--ink-3)', fontWeight: 500, marginBottom: 12 }}>
-          <span style={{ cursor: 'pointer' }} onClick={() => setPage('dashboard')}>Henderson v. Vantage Logistics</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
-          <div>
-            <h1 style={{ fontSize: 23, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--ink)', lineHeight: 1.1 }}>Press &amp; Public Statements</h1>
-            <p style={{ fontSize: 15, margin: '11px 0 0', color: 'var(--ink-3)', maxWidth: 760, lineHeight: 1.5 }}>
-              Upload a statement &mdash; AI screens it against the case&rsquo;s privileged &amp; confidential materials, then routes it to counsel for clearance.
-            </p>
-          </div>
-          <div style={{ display:'flex', gap:10, alignItems:'center' }}>
-            <button onClick={() => window.__openKickoff && window.__openKickoff('vesta', {label:'Clearance screen'})}
-            style={{ display:'inline-flex', alignItems:'center', gap:8, border:'1px solid var(--line-2)', background:'#fff', color:'var(--ink)', fontSize:14, fontWeight:600,
-              padding:'12px 16px', borderRadius:12, cursor:'pointer', boxShadow:'var(--shadow-sm)' }}>
-              <Icon name="sparkle" size={16} style={{color:'#1F9D86'}} />Screen with VESTA
+    <React.Fragment>
+      <WsHeader name="Clearance" setPage={setPage}
+        action={
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button className="btn btn-secondary" onClick={() => window.__openKickoff && window.__openKickoff('vesta', { label: 'Clearance screen' })}>
+              <Icon name="sparkle" size={16} style={{ color: '#1F9D86' }} />Screen with VESTA
             </button>
-            <button onClick={() => flash && flash('Upload a statement to begin screening')}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 9, border: 0, background: INK_BTN, color: '#fff', fontSize: 14, fontWeight: 600,
-              padding: '13px 20px', borderRadius: 12, cursor: 'pointer', boxShadow: '0 2px 8px rgba(29,53,87,.22)', transition: '.15s' }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}>
-              <Icon name="plus" size={17} sw={2.4} />New statement
+            <button className="btn btn-primary" onClick={() => flash && flash('Upload a statement to begin screening')}>
+              <Icon name="plus" size={16} sw={2.2} />New statement
             </button>
-          </div>
-        </div>
+          </div>} />
+      <div className="page" style={{ paddingTop: 24, maxWidth: 1180 }}>
+        <p style={{ fontSize: 14.5, margin: 0, color: 'var(--ink-3)', maxWidth: 620, lineHeight: 1.5 }}>
+          Upload a statement &mdash; AI screens it against the case&rsquo;s privileged &amp; confidential materials, then routes it to counsel for clearance.
+        </p>
 
         <ClStepper />
 
@@ -233,7 +221,7 @@ function ClList({ stmts, setPage, onOpen, flash }) {
           {stmts.map((s) => <ClStatementCard key={s.id} s={s} onOpen={() => onOpen(s.id)} />)}
         </div>
       </div>
-    </div>);
+    </React.Fragment>);
 
 }
 

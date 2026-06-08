@@ -1,32 +1,70 @@
 // dashboard.jsx — operational command center
 
 function Dashboard({setPage, openTask, openCreate}){
+  const [showTeam, setShowTeam] = React.useState(false);
   return (
     <div className="rise">
-      <DashHero openCreate={openCreate} setPage={setPage}/>
+      <DashHero openCreate={openCreate} setPage={setPage} openTeam={()=>setShowTeam(true)}/>
       <div className="page" style={{marginTop:-44,position:'relative',zIndex:2}}>
         <KpiRow setPage={setPage}/>
         <div style={{display:'grid',gridTemplateColumns:'minmax(0,1.65fr) minmax(0,1fr)',gap:20,marginTop:22,alignItems:'start'}}>
           <div style={{display:'flex',flexDirection:'column',gap:20,minWidth:0}}>
-            <MyWork openTask={openTask} setPage={setPage}/>
             <RequestsQueue openTask={openTask}/>
-            <Workload/>
           </div>
           <div style={{display:'flex',flexDirection:'column',gap:20,minWidth:0}}>
             <ActionCenter setPage={setPage}/>
             <ActivityFeed/>
           </div>
         </div>
-        <div style={{marginTop:30}}>
-          <SectionHead title="Workspaces" sub="Jump back into where the work lives" icon="layers"/>
-          <RecentWorkspaces setPage={setPage}/>
+      </div>
+      {showTeam && <TeamModal onClose={()=>setShowTeam(false)}/>}
+    </div>
+  );
+}
+
+function TeamModal({onClose}){
+  React.useEffect(()=>{const esc=e=>e.key==='Escape'&&onClose();window.addEventListener('keydown',esc);return()=>window.removeEventListener('keydown',esc);},[]);
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:320,display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:'8vh',paddingBottom:'4vh',overflowY:'auto'}}>
+      <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(36,39,45,.32)',backdropFilter:'blur(2px)',animation:'fade .2s'}}></div>
+      <div className="pop card" style={{position:'relative',width:'min(600px,94vw)',boxShadow:'var(--shadow-lg)',borderRadius:16,overflow:'hidden'}}>
+        <div style={{padding:'17px 20px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',gap:12}}>
+          <span style={{width:34,height:34,borderRadius:9,background:'var(--primary-tint)',color:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="users" size={18}/></span>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em'}}>Team Workload</div>
+            <div className="muted" style={{fontSize:12}}>5 of 8 active · 68% capacity · bottlenecks this week</div>
+          </div>
+          <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon name="x" size={17}/></button>
+        </div>
+        <div style={{padding:'18px 20px'}}>
+          <div style={{display:'flex',flexDirection:'column',gap:14}}>
+            {WORKLOAD.map(w=>{
+              const p=PEOPLE[w.who];
+              const over=w.load>=90, high=w.load>=75;
+              const c=over?'var(--coral)':high?'var(--orange)':'var(--lime)';
+              return (
+                <div key={w.who} style={{display:'flex',alignItems:'center',gap:13}}>
+                  <Avatar id={w.who} size={30}/>
+                  <div style={{width:120,flex:'none'}}>
+                    <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
+                    <div className="muted" style={{fontSize:11}}>{p.role}</div>
+                  </div>
+                  <div style={{flex:1,height:8,background:'#EEF2F7',borderRadius:5,overflow:'hidden'}}>
+                    <div style={{width:w.load+'%',height:'100%',background:c,borderRadius:5,transition:'width .8s cubic-bezier(.2,.8,.3,1)'}}></div>
+                  </div>
+                  <span style={{fontSize:13,fontWeight:600,width:40,textAlign:'right',color:over?'var(--coral)':'var(--ink-2)'}}>{w.load}%</span>
+                  {over && <span className="badge" style={{background:'var(--coral-t)',color:'var(--coral)'}}>Bottleneck</span>}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function DashHero({openCreate, setPage}){
+function DashHero({openCreate, setPage, openTeam}){
   const online=['diego','lena','noah','maya','priya'];
   return (
     <div style={{position:'relative',paddingTop:40,paddingBottom:72,overflow:'hidden'}}>
@@ -47,7 +85,9 @@ function DashHero({openCreate, setPage}){
             </p>
           </div>
           <div style={{display:'flex',flexDirection:'column',gap:12,alignItems:'stretch'}}>
-            <div className="card" style={{padding:'13px 16px',display:'flex',alignItems:'center',gap:14,boxShadow:'var(--shadow)'}}>
+            <div className="card" onClick={openTeam} title="View team workload" style={{padding:'13px 16px',display:'flex',alignItems:'center',gap:14,boxShadow:'var(--shadow)',cursor:'pointer',transition:'transform .14s cubic-bezier(.2,.8,.3,1),box-shadow .18s,border-color .18s'}}
+            onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-2px)';e.currentTarget.style.boxShadow='var(--shadow-md)';e.currentTarget.style.borderColor='var(--line-2)';}}
+            onMouseLeave={e=>{e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='var(--shadow)';e.currentTarget.style.borderColor='var(--line)';}}>
             <div>
               <div className="eyebrow" style={{marginBottom:5}}>Team online</div>
               <div style={{display:'flex',alignItems:'center',gap:9}}>
@@ -228,18 +268,19 @@ function Workload(){
 function ActionCenter({setPage}){
   const agNeed = (typeof needsYou!=='undefined') ? needsYou().length : 0;
   const items=[
-    {label:'Agents need you', count:agNeed, icon:'cpu', color:'#1D6BD0', tint:'#E7EFFB', sub:'Agents paused for your sign-off', go:'agents', agent:true},
-    {label:'Triage', count:9, icon:'inbox', color:'#1D6BD0', tint:'#E7EFFB', sub:'New items awaiting sorting', go:'requests'},
-    {label:'Clearance', count:2, icon:'megaphone', color:'#1F9D86', tint:'#E4F4F0', sub:'Statements pending your screen', go:'clearance'},
+    {label:'Agents need you', count:agNeed, icon:'cpu', color:'#1D6BD0', tint:'#E7EFFB', sub:'Agents paused for your sign-off', tasks:{view:'board', asg:'agents'}, agent:true},
+    {label:'Triage', count:9, icon:'inbox', color:'#1D6BD0', tint:'#E7EFFB', sub:'New items awaiting sorting', tasks:{view:'board', wf:'relevance'}},
+    {label:'Clearance', count:2, icon:'megaphone', color:'#1F9D86', tint:'#E4F4F0', sub:'Statements pending your screen', tasks:{view:'board', wf:'press'}},
     {label:'Memos', count:4, icon:'route', color:'#8A63C4', tint:'#F1EBFA', sub:'Awaiting your concurrence', go:'memos'},
     {label:'Prep', count:3, icon:'pen', color:'#FF9A4E', tint:'#FFF1E4', sub:'Drafts in progress', go:'prep'},
   ];
+  function goItem(it){ if(it.tasks && window.__openTasks) window.__openTasks(it.tasks); else setPage(it.go); }
   return (
     <div className="card card-pad">
       <SectionHead title="Action Center" sub="Items that need you" icon="flame"/>
       <div style={{display:'flex',flexDirection:'column',gap:9}}>
         {items.map(it=>(
-          <button key={it.label} onClick={()=>setPage(it.go)} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 12px',
+          <button key={it.label} onClick={()=>goItem(it)} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 12px',
             border:'1px solid '+(it.agent?'#CBDDF5':'var(--line)'),borderRadius:10,background:it.agent?'linear-gradient(180deg,#F7FAFE,#fff)':'#fff',cursor:'pointer',textAlign:'left',transition:'.15s'}}
             onMouseEnter={e=>{e.currentTarget.style.borderColor=it.color;e.currentTarget.style.background=it.tint+'55';}}
             onMouseLeave={e=>{e.currentTarget.style.borderColor=it.agent?'#CBDDF5':'var(--line)';e.currentTarget.style.background=it.agent?'linear-gradient(180deg,#F7FAFE,#fff)':'#fff';}}>
