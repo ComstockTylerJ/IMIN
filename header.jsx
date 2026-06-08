@@ -9,14 +9,16 @@ function useClickOutside(ref, onClose){
   },[]);
 }
 
-function Header({page, setPage, onCreate, onSearch}){
+function Header({page, setPage, onCreate, onSearch, openRun, glyph='diamond', framing='codename', flat=false}){
   const [wsOpen, setWsOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [avOpen, setAvOpen] = useState(false);
-  const wsRef = useRef(), notifRef = useRef(), avRef = useRef();
+  const [agOpen, setAgOpen] = useState(false);
+  const wsRef = useRef(), notifRef = useRef(), avRef = useRef(), agRef = useRef();
   useClickOutside(wsRef, ()=>setWsOpen(false));
   useClickOutside(notifRef, ()=>setNotifOpen(false));
   useClickOutside(avRef, ()=>setAvOpen(false));
+  useClickOutside(agRef, ()=>setAgOpen(false));
 
   const nav = [
     {id:'explore', label:'Explore'},
@@ -24,6 +26,8 @@ function Header({page, setPage, onCreate, onSearch}){
     {id:'workspaces', label:'Workspaces', dropdown:true},
     {id:'metrics', label:'Metrics'},
   ];
+  const runningCount = (typeof RUNS!=='undefined') ? RUNS.filter(r=>r.status==='running').length : 0;
+  const needCount = (typeof needsYou!=='undefined') ? needsYou().length : 0;
   const isWsActive = ['workspaces','clearance','memos','prep','briefings','knowledge','upload','teams','review'].includes(page);
   const wsItems = WORKSPACES.filter(w=>w.id!=='requests');
 
@@ -72,7 +76,16 @@ function Header({page, setPage, onCreate, onSearch}){
 
         <div style={{flex:1}}></div>
 
+        <div ref={agRef} style={{position:'relative'}}>
+          <button className="navlink" title="Agent fleet" onClick={()=>setAgOpen(o=>!o)} style={{height:34,gap:8,paddingLeft:8,paddingRight:11,border:'1px solid var(--line-2)',background:'#fff'}}>
+            <FleetToken size={20}/>
+            <span style={{fontSize:12.5,fontWeight:600,color:'var(--ink)'}}>{runningCount}</span>
+            {needCount>0 && <span className="badge" style={{background:'#E7EFFB',color:'#1D6BD0',height:18,fontSize:10.5,padding:'0 6px'}}>{needCount} for you</span>}
+          </button>
+          {agOpen && <FleetPopover setPage={setPage} openRun={openRun} close={()=>setAgOpen(false)} glyph={glyph} flat={flat} framing={framing}/>}
+        </div>
         <button className={'btn btn-ghost btn-icon'+(page==='termbase'?' active':'')} title="Term base" onClick={()=>setPage('termbase')} style={page==='termbase'?{background:'var(--blue-t)',color:'var(--blue)'}:undefined}><Icon name="book" size={18}/></button>
+        <div style={{width:1,height:26,background:'var(--line-2)',margin:'0 4px'}}></div>
         <button className="btn btn-ghost btn-icon" title="Messages"><Icon name="message" size={18}/></button>
         <div ref={notifRef} style={{position:'relative'}}>
           <button className="btn btn-ghost btn-icon" title="Notifications" onClick={()=>setNotifOpen(o=>!o)} style={{position:'relative'}}>
@@ -154,4 +167,44 @@ function AvatarMenu({setPage, close}){
   );
 }
 
-Object.assign(window, { Header, NotifPanel, AvatarMenu, useClickOutside });
+function FleetPopover({ setPage, openRun, close, glyph, flat, framing }){
+  const live = RUNS.filter(r=>r.status==='running');
+  const attn = needsYou();
+  const Row = ({r})=>{
+    const a=AGENTS[r.agent], s=RUN_STATUS[r.status];
+    return (
+      <button onClick={()=>{close();openRun(r.id);}} style={{display:'flex',alignItems:'center',gap:10,width:'100%',padding:'9px 10px',border:0,background:'transparent',borderRadius:9,textAlign:'left',cursor:'pointer'}}
+        onMouseEnter={e=>e.currentTarget.style.background='var(--hover)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+        <AgentToken id={r.agent} size={30} glyph={glyph} flat={flat} live={r.status==='running'}/>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:12.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
+          <div style={{fontSize:11,color:s.color,fontWeight:550,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{agentName(r.agent,framing)} · {r.metric}</div>
+        </div>
+        {r.status==='running'
+          ? <span style={{fontSize:11,fontWeight:700,color:a.color,fontFamily:"ui-monospace,Menlo,monospace"}}>{r.progress}%</span>
+          : <span className="badge" style={{background:s.tint,color:s.color}}>{r.status==='ready'?'Ready':'Approve'}</span>}
+      </button>
+    );
+  };
+  return (
+    <div className="pop card" style={{position:'absolute',top:44,right:0,width:354,padding:0,boxShadow:'var(--shadow-lg)',borderRadius:13,overflow:'hidden'}}>
+      <div style={{padding:'12px 15px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',gap:9}}>
+        <FleetToken size={24}/>
+        <span style={{fontWeight:700,fontSize:14,letterSpacing:'-.01em'}}>Agent fleet</span>
+        <div style={{flex:1}}></div>
+        <span className="linkish" style={{fontSize:12}} onClick={()=>{close();(window.__goAgents?window.__goAgents():setPage('agents'));}}>Mission Control</span>
+      </div>
+      <div style={{maxHeight:380,overflowY:'auto',padding:6}}>
+        {attn.length>0 && <div className="eyebrow" style={{padding:'8px 8px 5px',color:'#B5851C'}}>Waiting on you · {attn.length}</div>}
+        {attn.map(r=><Row key={r.id} r={r}/>)}
+        {live.length>0 && <div className="eyebrow" style={{padding:'10px 8px 5px'}}>Working now · {live.length}</div>}
+        {live.map(r=><Row key={r.id} r={r}/>)}
+      </div>
+      <button className="btn btn-ghost btn-sm" style={{width:'100%',borderRadius:0,borderTop:'1px solid var(--line)',height:40}} onClick={()=>{close();(window.__goAgents?window.__goAgents():setPage('agents'));}}>
+        Open Mission Control<Icon name="arrow_right" size={14}/>
+      </button>
+    </div>
+  );
+}
+
+Object.assign(window, { Header, NotifPanel, AvatarMenu, useClickOutside, FleetPopover });

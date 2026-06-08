@@ -27,12 +27,6 @@ function Dashboard({setPage, openTask, openCreate}){
 }
 
 function DashHero({openCreate, setPage}){
-  const actions=[
-    {label:'Create Task', icon:'plus', cb:openCreate, primary:true},
-    {label:'Submit Request', icon:'inbox', cb:()=>setPage('requests')},
-    {label:'Assign Review', icon:'eye', cb:()=>setPage('review')},
-    {label:'View Calendar', icon:'calendar', cb:()=>setPage('tasks')},
-  ];
   const online=['diego','lena','noah','maya','priya'];
   return (
     <div style={{position:'relative',paddingTop:40,paddingBottom:72,overflow:'hidden'}}>
@@ -52,7 +46,8 @@ function DashHero({openCreate, setPage}){
               You have <b style={{color:'var(--ink)'}}>4 tasks</b> due today and <b style={{color:'var(--coral)'}}>2 reviews</b> awaiting your sign-off.
             </p>
           </div>
-          <div className="card" style={{padding:'13px 16px',display:'flex',alignItems:'center',gap:14,boxShadow:'var(--shadow)'}}>
+          <div style={{display:'flex',flexDirection:'column',gap:12,alignItems:'stretch'}}>
+            <div className="card" style={{padding:'13px 16px',display:'flex',alignItems:'center',gap:14,boxShadow:'var(--shadow)'}}>
             <div>
               <div className="eyebrow" style={{marginBottom:5}}>Team online</div>
               <div style={{display:'flex',alignItems:'center',gap:9}}>
@@ -70,14 +65,29 @@ function DashHero({openCreate, setPage}){
                 </span>
               </div>
             </div>
+            </div>
+            <button onClick={()=>window.__openAskAI && window.__openAskAI()}
+              style={{display:'flex',alignItems:'center',gap:12,padding:'12px 14px',borderRadius:14,cursor:'pointer',textAlign:'left',
+                border:'1px solid #CBDDF5',background:'linear-gradient(180deg,#F7FAFE,#fff)',boxShadow:'var(--shadow-sm)',transition:'.15s'}}
+              onMouseEnter={e=>{e.currentTarget.style.transform='translateY(-1px)';e.currentTarget.style.boxShadow='var(--shadow-md)';e.currentTarget.style.borderColor='#9FC1EC';}}
+              onMouseLeave={e=>{e.currentTarget.style.transform='none';e.currentTarget.style.boxShadow='var(--shadow-sm)';e.currentTarget.style.borderColor='#CBDDF5';}}>
+              <FleetToken size={36}/>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:700,letterSpacing:'-.01em',color:'var(--ink)',display:'flex',alignItems:'center',gap:7}}>Ask AI
+                  <span className="badge" style={{background:'#E7EFFB',color:'#1D6BD0',height:17,fontSize:9.5,letterSpacing:'.04em'}}>COPILOT</span></div>
+                <div className="muted" style={{fontSize:11.5,marginTop:1}}>Chat, delegate & watch your agents</div>
+              </div>
+              <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:30,height:30,borderRadius:9,background:'var(--primary)',color:'#fff',flex:'none'}}><Icon name="message" size={16}/></span>
+            </button>
           </div>
         </div>
         <div style={{display:'flex',gap:10,marginTop:22,flexWrap:'wrap'}}>
-          {actions.map(a=>(
-            <button key={a.label} className={'btn '+(a.primary?'btn-primary':'btn-secondary')} onClick={a.cb}>
-              <Icon name={a.icon} size={16} sw={2}/>{a.label}
-            </button>
-          ))}
+          <button className="btn btn-primary" onClick={openCreate}>
+            <Icon name="plus" size={16} sw={2.2}/>New Request
+          </button>
+          <button className="btn btn-secondary" onClick={()=>window.__openKickoff && window.__openKickoff()}>
+            <Icon name="sparkle" size={16} style={{color:'#1D6BD0'}}/>Delegate to agent
+          </button>
         </div>
       </div>
     </div>
@@ -216,7 +226,9 @@ function Workload(){
 }
 
 function ActionCenter({setPage}){
+  const agNeed = (typeof needsYou!=='undefined') ? needsYou().length : 0;
   const items=[
+    {label:'Agents need you', count:agNeed, icon:'cpu', color:'#1D6BD0', tint:'#E7EFFB', sub:'Agents paused for your sign-off', go:'agents', agent:true},
     {label:'Triage', count:9, icon:'inbox', color:'#1D6BD0', tint:'#E7EFFB', sub:'New items awaiting sorting', go:'requests'},
     {label:'Clearance', count:2, icon:'megaphone', color:'#1F9D86', tint:'#E4F4F0', sub:'Statements pending your screen', go:'clearance'},
     {label:'Memos', count:4, icon:'route', color:'#8A63C4', tint:'#F1EBFA', sub:'Awaiting your concurrence', go:'memos'},
@@ -228,10 +240,10 @@ function ActionCenter({setPage}){
       <div style={{display:'flex',flexDirection:'column',gap:9}}>
         {items.map(it=>(
           <button key={it.label} onClick={()=>setPage(it.go)} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 12px',
-            border:'1px solid var(--line)',borderRadius:10,background:'#fff',cursor:'pointer',textAlign:'left',transition:'.15s'}}
+            border:'1px solid '+(it.agent?'#CBDDF5':'var(--line)'),borderRadius:10,background:it.agent?'linear-gradient(180deg,#F7FAFE,#fff)':'#fff',cursor:'pointer',textAlign:'left',transition:'.15s'}}
             onMouseEnter={e=>{e.currentTarget.style.borderColor=it.color;e.currentTarget.style.background=it.tint+'55';}}
-            onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line)';e.currentTarget.style.background='#fff';}}>
-            <span style={{width:36,height:36,borderRadius:9,background:it.tint,color:it.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={it.icon} size={18}/></span>
+            onMouseLeave={e=>{e.currentTarget.style.borderColor=it.agent?'#CBDDF5':'var(--line)';e.currentTarget.style.background=it.agent?'linear-gradient(180deg,#F7FAFE,#fff)':'#fff';}}>
+            <span style={{flex:'none'}}>{it.agent ? <FleetToken size={36}/> : <span style={{width:36,height:36,borderRadius:9,background:it.tint,color:it.color,display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name={it.icon} size={18}/></span>}</span>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)'}}>{it.label}</div>
               <div className="muted" style={{fontSize:11.5}}>{it.sub}</div>

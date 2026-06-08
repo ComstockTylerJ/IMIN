@@ -211,13 +211,20 @@ function ClList({ stmts, setPage, onOpen, flash }) {
               Upload a statement &mdash; AI screens it against the case&rsquo;s privileged &amp; confidential materials, then routes it to counsel for clearance.
             </p>
           </div>
-          <button onClick={() => flash && flash('Upload a statement to begin screening')}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 9, border: 0, background: INK_BTN, color: '#fff', fontSize: 14, fontWeight: 600,
-            padding: '13px 20px', borderRadius: 12, cursor: 'pointer', boxShadow: '0 2px 8px rgba(29,53,87,.22)', transition: '.15s' }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}>
-            <Icon name="plus" size={17} sw={2.4} />New statement
-          </button>
+          <div style={{ display:'flex', gap:10, alignItems:'center' }}>
+            <button onClick={() => window.__openKickoff && window.__openKickoff('vesta', {label:'Clearance screen'})}
+            style={{ display:'inline-flex', alignItems:'center', gap:8, border:'1px solid var(--line-2)', background:'#fff', color:'var(--ink)', fontSize:14, fontWeight:600,
+              padding:'12px 16px', borderRadius:12, cursor:'pointer', boxShadow:'var(--shadow-sm)' }}>
+              <Icon name="sparkle" size={16} style={{color:'#1F9D86'}} />Screen with VESTA
+            </button>
+            <button onClick={() => flash && flash('Upload a statement to begin screening')}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 9, border: 0, background: INK_BTN, color: '#fff', fontSize: 14, fontWeight: 600,
+              padding: '13px 20px', borderRadius: 12, cursor: 'pointer', boxShadow: '0 2px 8px rgba(29,53,87,.22)', transition: '.15s' }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'none'}>
+              <Icon name="plus" size={17} sw={2.4} />New statement
+            </button>
+          </div>
         </div>
 
         <ClStepper />

@@ -119,11 +119,13 @@ wt('M11', 'brief', 'done', 'filed', 'Approve — Motion in Limine (Atlas materia
 
 const MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace";
 
-function TasksPage({ openCreate, openTask }) {
-  const [view, setView] = React.useState('kanban');
+function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', framing='codename', flat=false }) {
+  const [view, setView] = React.useState((window.__tasksView)||'board'); // board | fleet | calendar
   const [scope, setScope] = React.useState('teams'); // teams | mine
+  const [asg, setAsg] = React.useState('all'); // all | people | agents
   const [wf, setWf] = React.useState('all'); // all | <workflow id>
   const [items, setItems] = React.useState(WF_TASKS);
+  React.useEffect(()=>{ if(window.__tasksView){ setView(window.__tasksView); window.__tasksView=null; } },[]);
 
   // scope filter (Only Mine / My Teams) is independent of the workflow chips
   const scoped = scope === 'mine' ? items.filter((t) => t.mine) : items;
@@ -159,7 +161,7 @@ function TasksPage({ openCreate, openTask }) {
             </div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
-                {[['kanban', 'columns', 'Kanban'], ['calendar', 'calendar', 'Calendar']].map(([id, ic, lb]) =>
+                {[['board', 'columns', 'Board'], ['fleet', 'list', 'List'], ['calendar', 'calendar', 'Calendar']].map(([id, ic, lb]) =>
                 <button key={id} onClick={() => setView(id)} style={{ display: 'flex', alignItems: 'center', gap: 6, border: 0,
                   background: view === id ? '#fff' : 'transparent', color: view === id ? 'var(--ink)' : 'var(--ink-3)', fontSize: 13, fontWeight: 550,
                   padding: '7px 13px', borderRadius: 7, cursor: 'pointer', boxShadow: view === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}>
@@ -179,14 +181,20 @@ function TasksPage({ openCreate, openTask }) {
                 cursor: 'pointer', boxShadow: scope === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}>{lb}</button>
               )}
             </div>
-            <button className="chip"><Icon name="user" size={13} />Assignee</button>
+            <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
+              {[['all', 'All', 'list'], ['people', 'People', 'users'], ['agents', 'Agents', 'cpu']].map(([id, lb, ic]) =>
+              <button key={id} onClick={() => setAsg(id)} style={{ display:'flex', alignItems:'center', gap:6, border: 0, background: asg === id ? '#fff' : 'transparent',
+                color: asg === id ? 'var(--ink)' : 'var(--ink-3)', fontSize: 12.5, fontWeight: 550, padding: '6px 12px', borderRadius: 7,
+                cursor: 'pointer', boxShadow: asg === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}><Icon name={ic} size={13}/>{lb}</button>
+              )}
+            </div>
             <button className="chip"><Icon name="clock" size={13} />Due date</button>
             <div style={{ flex: 1 }}></div>
             <span className="muted" style={{ fontSize: 12.5 }}>{boardTasks.length} shown</span>
           </div>
 
           {/* workflow chips */}
-          {view === 'kanban' &&
+          {view !== 'calendar' &&
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '14px 0 18px', flexWrap: 'wrap' }}>
             <button className={'chip' + (wf === 'all' ? ' on' : '')} onClick={() => setWf('all')}>
                 All<span style={{ marginLeft: 1, fontWeight: 600, opacity: wf === 'all' ? 0.85 : 0.6, fontFamily: MONO, fontSize: 11 }}>{allOpen}</span>
@@ -210,20 +218,23 @@ function TasksPage({ openCreate, openTask }) {
             })}
             </div>
           }
-          {view !== 'kanban' && <div style={{ height: 18 }}></div>}
+          {view === 'calendar' && <div style={{ height: 18 }}></div>}
         </div>
       </div>
 
       <div className="page" style={{ paddingTop: 22 }}>
-        {view === 'kanban' ?
-        <Kanban cols={cols} colKey={colKey} tasks={boardTasks} moveTask={moveTask} openCreate={openCreate} accentColor={isWf ? WF[wf].color : null} /> :
+        {view === 'board' ?
+        <Kanban cols={cols} colKey={colKey} tasks={asg==='agents'?[]:boardTasks} moveTask={moveTask} openCreate={openCreate} accentColor={isWf ? WF[wf].color : null}
+          agentRuns={asg==='people'?[]:boardRunsFor(wf)} isWf={isWf} glyph={glyph} flat={flat} framing={framing} /> :
+        view === 'fleet' ?
+        <UnifiedFeed wf={wf} scoped={scoped} asg={asg} openRun={openRun||window.__openRun} glyph={glyph} flat={flat} framing={framing} flash={flash} P={P} WF={WF} /> :
         <CalendarView openTask={openTask} openCreate={openCreate} />}
       </div>
     </div>);
 
 }
 
-function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor }) {
+function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor, agentRuns=[], isWf=false, glyph='diamond', flat=false, framing='codename' }) {
   const [dragId, setDragId] = React.useState(null);
   const [overCol, setOverCol] = React.useState(null);
 
@@ -236,10 +247,12 @@ function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor }) {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols.length},1fr)`, gap: 16, alignItems: 'start' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols.length},minmax(0,1fr))`, gap: 16, alignItems: 'start' }}>
       {cols.map((col, ci) => {
         const accent = colAccent(col, ci);
         const list = tasks.filter((t) => t[colKey] === col.id);
+        const runs = agentRuns.filter((r) => runCol(r, isWf) === col.id);
+        const total = list.length + runs.length;
         return (
           <div key={col.id} className={'kcol' + (overCol === col.id ? ' over' : '')}
           onDragOver={(e) => {e.preventDefault();setOverCol(col.id);}}
@@ -249,15 +262,17 @@ function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 6px 12px' }}>
               <span style={{ width: 9, height: 9, borderRadius: 3, background: accent }}></span>
               <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)' }}>{col.label}</span>
-              <span className="badge" style={{ background: '#EAEEF4', color: 'var(--ink-3)' }}>{list.length}</span>
+              <span className="badge" style={{ background: '#EAEEF4', color: 'var(--ink-3)' }}>{total}</span>
+              {runs.length>0 && <span title={runs.length+' agent'+(runs.length===1?'':'s')} style={{display:'inline-flex'}}><FleetToken size={15}/></span>}
               <div style={{ flex: 1 }}></div>
               {col.tail ?
               <Icon name="check" size={15} sw={2.4} style={{ color: '#1F9D86' }} /> :
               <button className="btn btn-ghost btn-icon btn-sm" onClick={openCreate} style={{ width: 26, height: 26 }}><Icon name="plus" size={15} /></button>}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minHeight: 40 }}>
+              {runs.map((r) => <AgentRunCard key={r.id} run={r} glyph={glyph} flat={flat} framing={framing} />)}
               {list.map((t) => <WFCard key={t.id} t={t} dragId={dragId} setDragId={setDragId} setOverCol={setOverCol} />)}
-              {list.length === 0 &&
+              {total === 0 &&
               <div style={{ padding: '22px 10px', textAlign: 'center', border: '1.5px dashed var(--line-2)', borderRadius: 10, color: 'var(--ink-4)', fontSize: 12.5 }}>
                   Drop here
                 </div>
@@ -293,6 +308,39 @@ function WFCard({ t, dragId, setDragId, setOverCol }) {
         textDecoration: t.done ? 'line-through' : 'none', textDecorationColor: 'var(--ink-4)', color: t.done ? 'var(--ink-3)' : 'var(--ink)' }}>{t.title}</div>
       {/* desc */}
       <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.45, marginBottom: 13 }}>{t.desc}</div>
+      {/* agent affordance: live run strip, or "run with agent" */}
+      {(() => {
+        const run = (typeof runForTask !== 'undefined') && runForTask(t.id);
+        const agId = (typeof WF_AGENT !== 'undefined') && WF_AGENT[t.wf];
+        const gl = window.__agentTweaks || {};
+        if (run) {
+          const ag = AGENTS[run.agent], s = RUN_STATUS[run.status];
+          return (
+            <div onClick={(e) => { e.stopPropagation(); window.__openRun && window.__openRun(run.id); }}
+              style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 9px', margin: '0 0 11px', borderRadius: 9,
+                background: s.tint + 'aa', border: '1px solid ' + s.color + '33', cursor: 'pointer' }}>
+              <AgentToken id={run.agent} size={22} glyph={gl.glyph} flat={gl.flat} live={run.status === 'running'} />
+              <span style={{ fontSize: 10.5, fontWeight: 700, color: ag.color, letterSpacing: '.02em' }}>{ag.code}</span>
+              <span style={{ fontSize: 10.5, fontWeight: 600, color: s.color }}>{s.label}</span>
+              <div style={{ flex: 1 }}></div>
+              <span style={{ fontSize: 10, fontFamily: MONO, fontWeight: 600, color: ag.color }}>{run.status === 'running' ? run.progress + '%' : '→'}</span>
+            </div>
+          );
+        }
+        if (agId && !t.done) {
+          const ag = AGENTS[agId];
+          return (
+            <button onClick={(e) => { e.stopPropagation(); window.__openKickoff && window.__openKickoff(agId, { label: t.title }); }}
+              style={{ display: 'flex', alignItems: 'center', gap: 7, width: '100%', padding: '6px 9px', margin: '0 0 11px', borderRadius: 9,
+                border: '1px dashed var(--line-2)', background: 'transparent', cursor: 'pointer', color: 'var(--ink-3)', fontSize: 11, fontWeight: 600, transition: '.13s' }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = ag.color; e.currentTarget.style.color = ag.color; e.currentTarget.style.background = ag.tint + '66'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'transparent'; }}>
+              <Icon name="sparkle" size={12} />Run with {ag.code}
+            </button>
+          );
+        }
+        return null;
+      })()}
       {/* footer */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
