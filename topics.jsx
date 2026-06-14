@@ -1,44 +1,182 @@
 // topics.jsx — Topics lens: browse data by theme
 
-function TopicsGrid({filter, openTopic}){
-  const f=(filter||'').toLowerCase();
-  const list=TOPICS.filter(t=>t.name.toLowerCase().includes(f) || t.desc.toLowerCase().includes(f));
-  if(!list.length) return <Empty label="No topics match your filter."/>;
+// ===== shared browse-grid helpers (used by Topics / Devices / People) =====
+
+// quick-details modal shell
+function InfoModal({title, sub, icon='layers', color='#475569', onClose, onView, viewLabel='Open', viewIcon='arrow_right', children}){
+  React.useEffect(()=>{const esc=e=>e.key==='Escape'&&onClose();window.addEventListener('keydown',esc);return()=>window.removeEventListener('keydown',esc);},[]);
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
-      {list.map(t=>(
-        <div key={t.id} className="card card-hover card-pad" onClick={()=>openTopic&&openTopic(t.id)}
-          style={{display:'flex',flexDirection:'column',gap:13,cursor:'pointer'}}>
-          <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
-            <span style={{width:40,height:40,borderRadius:11,background:t.color+'1a',color:t.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={20}/></span>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:14.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:'-.01em'}}>{t.name}</div>
-              <div className="muted" style={{fontSize:11.5,marginTop:2,lineHeight:1.4,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{t.desc}</div>
-            </div>
+    <div style={{position:'fixed',inset:0,zIndex:320,display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:'8vh',paddingBottom:'4vh',overflowY:'auto'}}>
+      <div onClick={onClose} style={{position:'fixed',inset:0,background:'rgba(36,39,45,.32)',backdropFilter:'blur(2px)',animation:'fade .2s'}}></div>
+      <div className="pop card" style={{position:'relative',width:'min(540px,94vw)',boxShadow:'var(--shadow-lg)',borderRadius:16,overflow:'hidden'}}>
+        <div style={{padding:'18px 22px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',gap:13}}>
+          <span style={{width:40,height:40,borderRadius:11,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={20}/></span>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em',color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{title}</div>
+            {sub && <div className="muted" style={{fontSize:12,marginTop:1,lineHeight:1.4,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{sub}</div>}
           </div>
-          <div style={{display:'flex',gap:0,paddingTop:11,borderTop:'1px solid var(--line)'}}>
-            <div style={{flex:1,textAlign:'center'}}>
-              <div style={{fontSize:15,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{t.items}</div>
-              <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Items</div>
-            </div>
-            <div style={{width:1,background:'var(--line)'}}></div>
-            <div style={{flex:1,textAlign:'center'}}>
-              <div style={{fontSize:15,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{t.collections.length}</div>
-              <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Collections</div>
-            </div>
-            <div style={{width:1,background:'var(--line)'}}></div>
-            <div style={{flex:1,textAlign:'center'}}>
-              <div style={{fontSize:15,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{t.devices.length}</div>
-              <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Devices</div>
-            </div>
-          </div>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8}}>
-            <AvatarStack ids={t.people} size={22} max={4}/>
-            <span className="muted" style={{fontSize:11.5,display:'flex',alignItems:'center',gap:5}}><Icon name="clock" size={12}/>{t.updated}</span>
-          </div>
+          <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon name="x" size={17}/></button>
+        </div>
+        <div style={{padding:'18px 22px',display:'flex',flexDirection:'column',gap:18,maxHeight:'54vh',overflowY:'auto'}}>{children}</div>
+        <div style={{padding:'13px 22px',borderTop:'1px solid var(--line)',display:'flex',gap:10,background:'var(--surface-2)'}}>
+          {onView && <button className="btn btn-primary" style={{flex:1}} onClick={onView}><Icon name={viewIcon} size={16}/>{viewLabel}</button>}
+          <button className="btn btn-secondary" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+function InfoSection({title, count, children}){
+  return (
+    <div>
+      <div className="eyebrow" style={{marginBottom:9}}>{title}{count!=null && <span style={{color:'var(--ink-4)'}}> · {count}</span>}</div>
+      {children}
+    </div>
+  );
+}
+function InfoItem({icon, title, sub, badge, onClick}){
+  return (
+    <div onClick={onClick} style={{display:'flex',alignItems:'center',gap:11,padding:'8px',margin:'0 -8px',borderRadius:8,cursor:onClick?'pointer':'default',transition:'.12s'}}
+      onMouseEnter={e=>{if(onClick)e.currentTarget.style.background='var(--surface-2)';}}
+      onMouseLeave={e=>{if(onClick)e.currentTarget.style.background='transparent';}}>
+      <span style={{width:30,height:30,borderRadius:8,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={15}/></span>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{title}</div>
+        {sub && <div className="muted" style={{fontSize:11.5,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{sub}</div>}
+      </div>
+      {badge}
+    </div>
+  );
+}
+function InfoRows({rows}){
+  const r=rows.filter(Boolean);
+  return (
+    <div style={{display:'flex',flexDirection:'column'}}>
+      {r.map(([k,v],i)=>(
+        <div key={i} style={{display:'flex',justifyContent:'space-between',gap:16,padding:'8px 0',borderTop:i?'1px solid var(--line)':0,fontSize:13}}>
+          <span style={{color:'var(--ink-3)',flex:'none'}}>{k}</span>
+          <span style={{color:'var(--ink)',fontWeight:500,textAlign:'right',minWidth:0,wordBreak:'break-word'}}>{v}</span>
         </div>
       ))}
     </div>
+  );
+}
+function TypeChips({types}){
+  return (
+    <div style={{display:'flex',flexWrap:'wrap',gap:6}}>
+      {types.length?types.map(ty=><span key={ty} className="badge" style={{background:'var(--hover)',color:'var(--ink-2)',height:24,fontFamily:'ui-monospace,Menlo,monospace',fontWeight:600}}>{ty}</span>)
+        :<span className="muted" style={{fontSize:12.5}}>—</span>}
+    </div>
+  );
+}
+// labeled inline meta line on a card (label + clamped value)
+function MetaLine({label, value}){
+  return (
+    <div style={{display:'flex',gap:8,fontSize:11.5,lineHeight:1.45}}>
+      <span style={{flex:'none',width:70,color:'var(--ink-4)',fontWeight:700,textTransform:'uppercase',fontSize:9.5,letterSpacing:'.05em',paddingTop:2}}>{label}</span>
+      <span style={{flex:1,minWidth:0,color:'var(--ink-2)',fontWeight:500,display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{value}</span>
+    </div>
+  );
+}
+// union of file types across a set of collections
+function collectionTypes(cols){ const s=new Set(); cols.forEach(c=>(c.types||'').split(',').forEach(t=>{const v=t.trim(); if(v)s.add(v.toUpperCase());})); return [...s]; }
+
+// row of View + Details buttons reused across browse cards/lists
+function CardActions({onView, onDetails, viewLabel='View', viewIcon='arrow_right', stacked}){
+  return (
+    <div style={{display:'flex',gap:8, ...(stacked?{}:{marginTop:'auto'})}}>
+      <button className="btn btn-primary btn-sm" style={{flex:stacked?'none':1}} onClick={e=>{e.stopPropagation();onView();}}><Icon name={viewIcon} size={14}/>{viewLabel}</button>
+      <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--line-2)'}} onClick={e=>{e.stopPropagation();onDetails();}}>Details</button>
+    </div>
+  );
+}
+
+function FavStar({on, onToggle, size=18, style}){
+  return (
+    <button onClick={e=>{e.stopPropagation();onToggle&&onToggle();}} title={on?'Remove from favorites':'Add to favorites'}
+      style={{border:0,background:'transparent',padding:2,margin:-2,cursor:'pointer',display:'flex',color:on?'#B5851C':'var(--ink-4)',flex:'none',transition:'color .12s',...(style||{})}}>
+      <Icon name={on?'star_fill':'star'} size={size}/>
+    </button>
+  );
+}
+function TopicsGrid({filter, openTopic, view='card', favs={}, toggleFav=()=>{}, favOnly=false}){
+  const f=(filter||'').toLowerCase();
+  const list=TOPICS.filter(t=>(t.name.toLowerCase().includes(f) || t.desc.toLowerCase().includes(f)) && (!favOnly || favs[t.id]));
+  const [detail,setDetail]=React.useState(null);
+  if(!list.length) return <Empty label={favOnly?"No favorite topics yet.":"No topics match your filter."}/>;
+  const resolve=t=>({
+    cols: t.collections.map(fid=>FOLDERS.find(x=>x.id===fid)).filter(Boolean),
+    devs: t.devices.map(did=>DEVICES.find(x=>x.id===did)).filter(Boolean),
+  });
+  return (
+    <React.Fragment>
+    {view==='list' ? (
+      <div className="card" style={{padding:0,overflow:'hidden'}}>
+        {list.map((t,i)=>{ const {cols,devs}=resolve(t); const types=collectionTypes(cols);
+          return (
+          <div key={t.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',borderTop:i?'1px solid var(--line)':0}}>
+            <FavStar on={!!favs[t.id]} onToggle={()=>toggleFav(t.id)} size={16}/>
+            <span style={{width:36,height:36,borderRadius:9,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={18}/></span>
+            <div style={{width:190,flex:'none',minWidth:0}}>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.name}</div>
+              <div className="muted" style={{fontSize:11.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.items} items · {cols.length} collections · {devs.length} devices</div>
+            </div>
+            <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column',gap:3}}>
+              <MetaLine label="Collections" value={cols.length?cols.map(c=>c.name).join(' · '):'None'}/>
+              <MetaLine label="File types" value={types.length?types.join(' · '):'—'}/>
+            </div>
+            <CardActions stacked viewLabel="View" onView={()=>openTopic&&openTopic(t.id)} onDetails={()=>setDetail(t)}/>
+          </div>);
+        })}
+      </div>
+    ) : (
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
+        {list.map(t=>{ const {cols,devs}=resolve(t); const types=collectionTypes(cols);
+          return (
+          <div key={t.id} className="card card-hover" style={{padding:'15px 16px 14px',display:'flex',flexDirection:'column',gap:12}}>
+            <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
+              <span style={{width:40,height:40,borderRadius:11,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={20}/></span>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:14.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',letterSpacing:'-.01em'}}>{t.name}</div>
+                <div className="muted" style={{fontSize:11.5,marginTop:2}}>{t.items} items · updated {t.updated}</div>
+              </div>
+              <FavStar on={!!favs[t.id]} onToggle={()=>toggleFav(t.id)}/>
+            </div>
+            <div style={{display:'flex',flexDirection:'column',gap:7,paddingTop:11,borderTop:'1px solid var(--line)'}}>
+              <MetaLine label="Collections" value={cols.length?cols.map(c=>c.name).join(' · '):'None'}/>
+              <MetaLine label="Devices" value={devs.length?devs.map(d=>d.name).join(' · '):'None'}/>
+              <MetaLine label="Types" value={types.length?types.join(' · '):'—'}/>
+            </div>
+            <CardActions viewLabel="View" onView={()=>openTopic&&openTopic(t.id)} onDetails={()=>setDetail(t)}/>
+          </div>);
+        })}
+      </div>
+    )}
+    {detail && <TopicQuickDetails t={detail} onClose={()=>setDetail(null)} onView={()=>{setDetail(null);openTopic&&openTopic(detail.id);}}/>}
+    </React.Fragment>
+  );
+}
+
+function TopicQuickDetails({t, onClose, onView}){
+  const cols=t.collections.map(fid=>FOLDERS.find(x=>x.id===fid)).filter(Boolean);
+  const devs=t.devices.map(did=>DEVICES.find(x=>x.id===did)).filter(Boolean);
+  const ppl=t.people.map(pid=>PEOPLE[pid]).filter(Boolean);
+  const types=collectionTypes(cols);
+  return (
+    <InfoModal title={t.name} sub={t.desc} icon={t.icon} onClose={onClose} onView={onView} viewLabel="Open topic" viewIcon="layers">
+      <InfoSection title="File types"><TypeChips types={types}/></InfoSection>
+      <InfoSection title="Collections" count={cols.length}>
+        {cols.length?cols.map(c=><InfoItem key={c.id} icon="folder" title={c.name} sub={`${c.files} files · ${c.size} · ${c.types}`}/>):<span className="muted" style={{fontSize:12.5}}>No collections in this topic.</span>}
+      </InfoSection>
+      <InfoSection title="Devices" count={devs.length}>
+        {devs.length?devs.map(d=>{const stt=DEVICE_STATUS[d.status];return <InfoItem key={d.id} icon={DEVICE_TYPE[d.type].icon} title={d.name} sub={d.ev+' · '+d.os} badge={<span className="badge" style={{background:stt.tint,color:stt.color,height:19,fontSize:10.5,flex:'none'}}>{stt.label}</span>}/>;}):<span className="muted" style={{fontSize:12.5}}>No devices in this topic.</span>}
+      </InfoSection>
+      <InfoSection title="Contributors" count={ppl.length}>
+        <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+          {ppl.map(p=><span key={p.id} style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--ink-2)',background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:999,padding:'3px 11px 3px 3px'}}><Avatar id={p.id} size={20} ring={false}/>{p.name}</span>)}
+        </div>
+      </InfoSection>
+    </InfoModal>
   );
 }
 
@@ -102,7 +240,7 @@ function TopicDetail({id, setPage, openDevice, openPerson, flash}){
           <div style={{display:'flex',flexDirection:'column',gap:20,minWidth:0}}>
             {/* stat tiles */}
             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14}}>
-              {[['Items',t.items,'layers','#1D6BD0'],['Collections',cols.length,'collections','#8A63C4'],['Devices',devs.length,'phone','#1FA98A'],['Contributors',ppl.length,'users','#FF9A4E']].map(([l,v,ic,c])=>(
+              {[['Items',t.items,'layers','#0073E6'],['Collections',cols.length,'collections','#475569'],['Devices',devs.length,'phone','#16A34A'],['Contributors',ppl.length,'users','#B5851C']].map(([l,v,ic,c])=>(
                 <div key={l} className="card card-pad" style={{display:'flex',alignItems:'center',gap:13}}>
                   <span style={{width:38,height:38,borderRadius:10,background:c+'1a',color:c,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ic} size={19}/></span>
                   <div>
@@ -179,4 +317,4 @@ function TopicDetail({id, setPage, openDevice, openPerson, flash}){
   );
 }
 
-Object.assign(window, { TopicsGrid, TopicDetail });
+Object.assign(window, { TopicsGrid, TopicDetail, InfoModal, InfoSection, InfoItem, InfoRows, TypeChips, MetaLine, collectionTypes, CardActions, FavStar, TopicQuickDetails });

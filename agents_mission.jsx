@@ -175,10 +175,9 @@ function RunRow({ run, openRun, glyph, flat, framing }){
             <span className="muted" style={{fontSize:11.5,minWidth:0,overflow:'hidden',textOverflow:'ellipsis'}}>{run.workspace}</span>
           </div>
           <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginBottom:5}}>{run.title}</div>
-          <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12,color: live?a.color:'var(--ink-3)',minWidth:0}}>
-            {live && <Icon name={STEP_KIND[curStep.kind].icon} size={13} sw={2} style={{flex:'none'}}/>}
+          <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12,color:'var(--ink-2)',minWidth:0}}>
+            {live && <Icon name={STEP_KIND[curStep.kind].icon} size={13} sw={2} style={{flex:'none',color:'var(--ink-3)'}}/>}
             <span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
-              {live && <span className="cursor-blink" style={{marginRight:5,color:a.color}}>▍</span>}
               {curStep.txt}
             </span>
           </div>
@@ -190,7 +189,7 @@ function RunRow({ run, openRun, glyph, flat, framing }){
             <span style={{fontSize:11.5,fontWeight:600,color:'var(--ink-2)',fontFamily:"ui-monospace,Menlo,monospace"}}>{run.metric}</span>
             <span style={{fontSize:11,fontWeight:600,color:s.color}}>{run.progress}%</span>
           </div>
-          <RunProgress value={run.progress} color={s.color} animated={live}/>
+          <RunProgress value={run.progress} color={s.color} animated={false}/>
           <div className="muted" style={{fontSize:10.5,marginTop:6}}>{run.eta}</div>
         </div>
 
@@ -209,7 +208,7 @@ function RowActions({ run, openRun }){
   if(run.status==='needs_you')
     return <button className="btn btn-sm" onClick={stop} style={{background:'#E8920C',color:'#fff'}}><Icon name="check" size={13} sw={2.4}/>Approve</button>;
   if(run.status==='ready')
-    return <button className="btn btn-sm" onClick={stop} style={{background:'#8A63C4',color:'#fff'}}><Icon name="eye" size={13}/>Review</button>;
+    return <button className="btn btn-sm" onClick={stop} style={{background:'#475569',color:'#fff'}}><Icon name="eye" size={13}/>Review</button>;
   if(run.status==='running')
     return <div style={{display:'flex',gap:6}}>
       <button className="btn btn-secondary btn-sm" onClick={(e)=>e.stopPropagation()} title="Pause"><Icon name="clock" size={14}/></button>

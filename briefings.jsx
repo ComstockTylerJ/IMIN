@@ -1,23 +1,23 @@
 // briefings.jsx — Briefing Books workspace: build, distribute, track & gather feedback
 
-const B_SERIF = "'Spectral', Georgia, 'Times New Roman', serif";
+const B_SERIF = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 const B_KIND = {
-  memo:    {label:'Memo',     icon:'route',  color:'#8A63C4'},
-  report:  {label:'Report',   icon:'file',   color:'#1D6BD0'},
-  imagery: {label:'Imagery',  icon:'image',  color:'#1F9D86'},
-  map:     {label:'Map',      icon:'globe',  color:'#2FB2F3'},
-  assess:  {label:'Assessment',icon:'chart', color:'#FF9A4E'},
-  tab:     {label:'Tab',      icon:'bookmark',color:'#E068A7'},
+  memo:    {label:'Memo',     icon:'route',  color:'#475569'},
+  report:  {label:'Report',   icon:'file',   color:'#0073E6'},
+  imagery: {label:'Imagery',  icon:'image',  color:'#16A34A'},
+  map:     {label:'Map',      icon:'globe',  color:'#0073E6'},
+  assess:  {label:'Assessment',icon:'chart', color:'#B5851C'},
+  tab:     {label:'Tab',      icon:'bookmark',color:'#0EA5E9'},
 };
 const B_STATUS = {
-  draft:{label:'Draft', color:'#BC8418', tint:'#F8EFD9'},
-  final:{label:'Final', color:'#1F8A5B', tint:'#E4F4F0'},
-  dist: {label:'Distributed', color:'#1D6BD0', tint:'#E7EFFB'},
+  draft:{label:'Draft', color:'#B5851C', tint:'#F8EFD9'},
+  final:{label:'Final', color:'#16A34A', tint:'#F0FDF4'},
+  dist: {label:'Distributed', color:'#0073E6', tint:'#EBF4FF'},
 };
 // receiver feedback verdict
 const B_VERDICT = {
-  useful:   {label:'Highly useful',    color:'#1F8A5B', tint:'#E4F4F0'},
-  partial:  {label:'Partially useful', color:'#BC8418', tint:'#F8EFD9'},
+  useful:   {label:'Highly useful',    color:'#16A34A', tint:'#F0FDF4'},
+  partial:  {label:'Partially useful', color:'#B5851C', tint:'#F8EFD9'},
   followup: {label:'Needs follow‑up',  color:'#C2410C', tint:'#FBE7DD'},
 };
 let _bsid=1; const bs=(kind,title,src)=>({id:'s'+(_bsid++),kind,title,src,pages:kind==='imagery'?2:kind==='map'?1:kind==='assess'?4:3});
@@ -27,15 +27,15 @@ const BOOKS = [
   // ---------- in the build queue ----------
   {id:'bk1', title:"Principal's Morning Book", sub:'June 6, 2026 · 0600', status:'draft', cover:'#1D3557', recipient:"Director's Office", contributors:['maya','tyler','noah'],
     sections:[ bs('tab','Cover & Table of Contents','tyler'), mkSec('Part I — Overnight'), bs('memo','Overnight Highlights','maya'), bs('report','Eastern Sector — Situation','noah'), mkSec('Part II — Imagery & Analysis'), bs('imagery','Harbor Imagery Pack','diego'), bs('assess','Throughput Assessment','priya') ]},
-  {id:'bk2', title:'Weekly Regional Roundup', sub:'Week 23 · Jun 1–5', status:'final', cover:'#1F8A5B', recipient:'Regional Desk Chief', contributors:['priya','sam'],
+  {id:'bk2', title:'Weekly Regional Roundup', sub:'Week 23 · Jun 1–5', status:'final', cover:'#16A34A', recipient:'Regional Desk Chief', contributors:['priya','sam'],
     sections:[ bs('tab','Cover','sam'), bs('report','Regional Summary','priya'), bs('map','Activity Heat Map','noah'), bs('assess','Outlook','priya') ]},
-  {id:'bk3', title:'Coordination Pre-Read', sub:'Interagency Sync · Jun 6', status:'draft', cover:'#8A63C4', recipient:'Interagency Working Group', contributors:['noah','tyler'],
+  {id:'bk3', title:'Coordination Pre-Read', sub:'Interagency Sync · Jun 6', status:'draft', cover:'#475569', recipient:'Interagency Working Group', contributors:['noah','tyler'],
     sections:[ bs('tab','Agenda','noah'), bs('memo','Coordination Points','noah'), bs('report','Deconfliction Notes','tyler') ]},
-  {id:'bk6', title:'Quarterly Posture Review', sub:'Q2 2026', status:'draft', cover:'#5568C7', recipient:'Oversight Board', contributors:['tyler','priya','sam'],
+  {id:'bk6', title:'Quarterly Posture Review', sub:'Q2 2026', status:'draft', cover:'#1D3557', recipient:'Oversight Board', contributors:['tyler','priya','sam'],
     sections:[ bs('tab','Cover','tyler'), bs('assess','Posture Assessment','priya'), bs('report','Collection Summary','sam') ]},
 
   // ---------- distributed — tracked in history, feedback received ----------
-  {id:'bk4', title:'Leadership Decision Folder', sub:'Asset Reallocation · Jun 4', status:'dist', cover:'#C24A2E', recipient:'Leadership Council', contributors:['sam','lena'], distributed:'Jun 4 · 0815',
+  {id:'bk4', title:'Leadership Decision Folder', sub:'Asset Reallocation · Jun 4', status:'dist', cover:'#DC2626', recipient:'Leadership Council', contributors:['sam','lena'], distributed:'Jun 4 · 0815',
     sections:[ bs('tab','Cover','sam'), bs('memo','Decision Memo','sam'), bs('assess','Risk Assessment','lena'), bs('map','Coverage Map','noah') ],
     feedback:{who:'Dir. K. Alvarez', role:'Leadership Council', date:'Jun 4 · 1430', rating:4, verdict:'useful',
       summary:'Clear and decision‑ready. The risk assessment was exactly what the council needed to move. Tighten the recommendation up front next time.',
@@ -53,16 +53,16 @@ const BOOKS = [
       summary:'Useful for handover but the activity map was a day stale. Need same‑day geotags for the evening edition.',
       notes:[ {src:'noah', section:'Activity Map', note:'Map data was 24h old — refresh before the 1800 cut.'} ],
       shared:false, acks:[]}},
-  {id:'bk9', title:'Coordination Pre-Read', sub:'Interagency Sync · Jun 4', status:'dist', cover:'#8A63C4', recipient:'Interagency Working Group', contributors:['noah','tyler'], distributed:'Jun 4 · 1600',
+  {id:'bk9', title:'Coordination Pre-Read', sub:'Interagency Sync · Jun 4', status:'dist', cover:'#475569', recipient:'Interagency Working Group', contributors:['noah','tyler'], distributed:'Jun 4 · 1600',
     sections:[ bs('tab','Agenda','noah'), bs('memo','Coordination Points','noah') ],
     feedback:null},
-  {id:'bk10', title:'Weekly Regional Roundup', sub:'Week 22 · May 25–29', status:'dist', cover:'#1F8A5B', recipient:'Regional Desk Chief', contributors:['priya','sam'], distributed:'May 29 · 1700',
+  {id:'bk10', title:'Weekly Regional Roundup', sub:'Week 22 · May 25–29', status:'dist', cover:'#16A34A', recipient:'Regional Desk Chief', contributors:['priya','sam'], distributed:'May 29 · 1700',
     sections:[ bs('tab','Cover','sam'), bs('report','Regional Summary','priya'), bs('assess','Outlook','priya') ],
     feedback:{who:'Chief M. Ortega', role:'Regional Desk', date:'May 30 · 1010', rating:4, verdict:'followup',
       summary:'Solid roundup. Outlook section raised a question on the southern corridor — please follow up with a focused note.',
       notes:[ {src:'priya', section:'Outlook', note:'Expand the southern corridor call — chief wants a standalone follow‑up.'} ],
       shared:true, acks:['priya']}},
-  {id:'bk5', title:'Field Team Onboarding Book', sub:'Rotation 4 · Jun 2', status:'dist', cover:'#FF9A4E', recipient:'Incoming Field Rotation', contributors:['maya'], distributed:'Jun 2 · 0900',
+  {id:'bk5', title:'Field Team Onboarding Book', sub:'Rotation 4 · Jun 2', status:'dist', cover:'#B5851C', recipient:'Incoming Field Rotation', contributors:['maya'], distributed:'Jun 2 · 0900',
     sections:[ bs('tab','Welcome','maya'), bs('report','Standing Requirements','maya'), bs('report','Reporting Procedures','tyler') ],
     feedback:null},
 ];
@@ -97,7 +97,7 @@ function Stars({value=0, size=15, onSet}){
 function FbStat({value, label, icon, color}){
   return (
     <div className="card card-pad" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 15px'}}>
-      <span style={{width:34,height:34,borderRadius:9,background:(color||'#1D6BD0')+'1a',color:color||'#1D6BD0',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={17}/></span>
+      <span style={{width:34,height:34,borderRadius:9,background:(color||'#0073E6')+'1a',color:color||'#0073E6',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={17}/></span>
       <div style={{minWidth:0}}>
         <div style={{fontSize:19,fontWeight:700,color:'var(--ink)',letterSpacing:'-.02em',lineHeight:1}}>{value}</div>
         <div className="muted" style={{fontSize:11,marginTop:3,fontWeight:500}}>{label}</div>
@@ -130,10 +130,10 @@ function BriefingsWorkspace({setPage, flash}){
       <div className="page" style={{paddingTop:22}}>
         {/* stats */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14,marginBottom:20}}>
-          <FbStat value={queue.length} label="In the build queue" icon="layers" color="#8A63C4"/>
-          <FbStat value={dist.length} label="Distributed (history)" icon="send" color="#1D6BD0"/>
-          <FbStat value={awaiting} label="Awaiting feedback" icon="clock" color="#BC8418"/>
-          <FbStat value={avg?avg.toFixed(1)+' / 5':'—'} label={`Avg. receiver rating · ${rated.length}`} icon="star" color="#1F8A5B"/>
+          <FbStat value={queue.length} label="In the build queue" icon="layers" color="#475569"/>
+          <FbStat value={dist.length} label="Distributed (history)" icon="send" color="#0073E6"/>
+          <FbStat value={awaiting} label="Awaiting feedback" icon="clock" color="#B5851C"/>
+          <FbStat value={avg?avg.toFixed(1)+' / 5':'—'} label={`Avg. receiver rating · ${rated.length}`} icon="star" color="#16A34A"/>
         </div>
 
         {/* view switch */}
@@ -222,7 +222,7 @@ function HistoryTable({books, open}){
                   {!fb.shared && <span className="badge" style={{background:'#FEF1F1',color:'#C2410C',height:19,fontSize:10.5}}>Not shared</span>}
                 </div>
               ) : (
-                <span className="badge" style={{background:'#F8EFD9',color:'#BC8418',height:19,fontSize:10.5}}><Icon name="clock" size={11}/>Awaiting</span>
+                <span className="badge" style={{background:'#F8EFD9',color:'#B5851C',height:19,fontSize:10.5}}><Icon name="clock" size={11}/>Awaiting</span>
               )}
             </div>
             <div style={{justifySelf:'start'}}><AvatarStack ids={b.contributors} size={21} max={3}/></div>
@@ -271,7 +271,7 @@ function BookBuilder({b, tab, setTab, onBack, update, flash}){
               padding:'11px 0',cursor:'pointer',fontSize:13,fontWeight:tab===id?600:500,position:'relative',
               color:tab===id?'var(--blue)':'var(--ink-3)'}}>
               <Icon name={icon} size={15}/>{label}
-              {id==='feedback'&&fbCount>0 && <span style={{fontSize:10.5,fontWeight:700,background:'#E7EFFB',color:'var(--blue)',borderRadius:999,padding:'1px 7px'}}>{fbCount}</span>}
+              {id==='feedback'&&fbCount>0 && <span style={{fontSize:10.5,fontWeight:700,background:'#EBF4FF',color:'var(--blue)',borderRadius:999,padding:'1px 7px'}}>{fbCount}</span>}
               {tab===id && <span style={{position:'absolute',left:0,right:0,bottom:-1,height:2.5,background:'var(--blue)',borderRadius:2}}></span>}
             </button>
           ))}
@@ -441,7 +441,7 @@ function FeedbackView({b, fb, update, flash}){
         <div className="card card-pad">
           <div className="eyebrow" style={{marginBottom:11}}>Share back with contributors</div>
           {fb.shared ? (
-            <div style={{display:'flex',alignItems:'center',gap:10,padding:'11px 12px',borderRadius:10,background:'#E4F4F0',color:'#1F8A5B'}}>
+            <div style={{display:'flex',alignItems:'center',gap:10,padding:'11px 12px',borderRadius:10,background:'#F0FDF4',color:'#16A34A'}}>
               <Icon name="check" size={17}/>
               <span style={{fontSize:12.5,fontWeight:600}}>Shared with all {b.contributors.length} contributors</span>
             </div>
@@ -461,7 +461,7 @@ function FeedbackView({b, fb, update, flash}){
                     <Avatar id={id} size={26}/>
                     <span style={{flex:1,fontSize:12.5,fontWeight:550,color:'var(--ink)'}}>{PEOPLE[id].name}</span>
                     {seen
-                      ? <span className="badge" style={{background:'#E4F4F0',color:'#1F8A5B',height:18,fontSize:10.5}}><Icon name="check" size={11}/>Notified</span>
+                      ? <span className="badge" style={{background:'#F0FDF4',color:'#16A34A',height:18,fontSize:10.5}}><Icon name="check" size={11}/>Notified</span>
                       : <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',height:18,fontSize:10.5,border:'1px solid var(--line)'}}>Pending</span>}
                   </div>
                 );
@@ -494,7 +494,7 @@ function FeedbackCapture({b, update, flash}){
     <div className="page" style={{paddingTop:24,maxWidth:760,paddingBottom:48}}>
       <div className="card card-pad">
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
-          <span style={{width:34,height:34,borderRadius:9,background:'#F8EFD9',color:'#BC8418',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="clock" size={17}/></span>
+          <span style={{width:34,height:34,borderRadius:9,background:'#F8EFD9',color:'#B5851C',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="clock" size={17}/></span>
           <div>
             <div style={{fontSize:15,fontWeight:600,color:'var(--ink)'}}>Log feedback from {b.recipient}</div>
             <div className="muted" style={{fontSize:12,marginTop:1}}>Distributed {b.distributed} · awaiting feedback</div>

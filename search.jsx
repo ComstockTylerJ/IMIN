@@ -11,21 +11,21 @@ const RESULT_TYPES = [
   {id:'other', label:'Other', n:372, icon:'files'},
 ];
 const SEARCH_FOLDERS = [
-  {n:'Finance', c:'#1FA98A', count:5643}, {n:'Legal', c:'#F86566', count:6824},
-  {n:'HR', c:'#8A63C4', count:1779}, {n:'Engineering', c:'#1D6BD0', count:1736},
-  {n:'Marketing', c:'#FF9A4E', count:1797}, {n:'Operations', c:'#2FB2F3', count:1807},
-  {n:'Strategy', c:'#E068A7', count:2895}, {n:'Compliance', c:'#7FC457', count:2992},
+  {n:'Finance', c:'#16A34A', count:5643}, {n:'Legal', c:'#DC2626', count:6824},
+  {n:'HR', c:'#475569', count:1779}, {n:'Engineering', c:'#0073E6', count:1736},
+  {n:'Marketing', c:'#B5851C', count:1797}, {n:'Operations', c:'#0073E6', count:1807},
+  {n:'Strategy', c:'#0EA5E9', count:2895}, {n:'Compliance', c:'#16A34A', count:2992},
 ];
 const SEARCH_FILETYPES = [
   {n:'PDF', count:1284}, {n:'Word', count:842}, {n:'MP4', count:429}, {n:'PNG', count:427},
   {n:'Figma', count:412}, {n:'Keynote', count:318}, {n:'SRT', count:124}, {n:'Email', count:97},
 ];
 const MATCH = {
-  tag:    {icon:'sparkle', color:'#8A63C4', label:'tag match'},
-  sender: {icon:'mail',    color:'#1FA98A', label:'sender match'},
-  keyword:{icon:'search',  color:'#1D6BD0', label:'keyword match in content'},
-  ocr:    {icon:'eye',     color:'#FF9A4E', label:'OCR text match'},
-  title:  {icon:'file',    color:'#E068A7', label:'title match'},
+  tag:    {icon:'sparkle', color:'#475569', label:'tag match'},
+  sender: {icon:'mail',    color:'#16A34A', label:'sender match'},
+  keyword:{icon:'search',  color:'#0073E6', label:'keyword match in content'},
+  ocr:    {icon:'eye',     color:'#B5851C', label:'OCR text match'},
+  title:  {icon:'file',    color:'#0EA5E9', label:'title match'},
 };
 const TYPE_ICON = {documents:'file', images:'image', videos:'video', emails:'mail', audio:'audio', code:'code', other:'files'};
 const RESULTS = [
@@ -50,7 +50,15 @@ function SearchResults({query, setPage, onSearch}){
   const [filterQ,setFilterQ]=React.useState('');
   const [dismissed,setDismissed]=React.useState([]);
   const [preview,setPreview]=React.useState(null);
+  const [overview,setOverview]=React.useState(false);
+  const [analyzing,setAnalyzing]=React.useState(false);
   const q = query || 'finance';
+
+  function toggleOverview(){
+    if(overview){ setOverview(false); return; }
+    setOverview(true); setAnalyzing(true);
+    clearTimeout(window.__ovT); window.__ovT=setTimeout(()=>setAnalyzing(false), 950);
+  }
 
   const dirty = folders.length||ftypes.length||range;
   const base = 1755;
@@ -73,7 +81,10 @@ function SearchResults({query, setPage, onSearch}){
           {dirty ? <span className="linkish" style={{fontSize:12.5}} onClick={clearAll}>Clear all</span> : null}
         </div>
         <div style={{padding:'0 20px 12px'}}>
-          <button className="btn btn-secondary" style={{width:'100%'}}><Icon name="sparkle" size={15} style={{color:'var(--violet)'}}/>Understand these results</button>
+          <button className="btn btn-secondary" onClick={toggleOverview}
+            style={{width:'100%', ...(overview?{background:'#F1F5F9',borderColor:'#475569',color:'#475569'}:{})}}>
+            <Icon name="sparkle" size={15} style={{color:'#475569'}}/>Understand these results
+          </button>
         </div>
         <div style={{padding:'0 20px 14px'}}>
           <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 11px',border:'1px solid var(--line-2)',background:'#fff',borderRadius:8}}>
@@ -166,6 +177,10 @@ function SearchResults({query, setPage, onSearch}){
           <button className={'btn btn-sm '+(bulk?'btn-primary':'btn-secondary')} onClick={()=>setBulk(b=>!b)}><Icon name="check_square" size={14}/>Bulk</button>
           <button className="btn btn-secondary btn-sm"><Icon name="bookmark" size={14}/>Save</button>
         </div>
+
+        {/* AI overview */}
+        {overview && <SearchOverview q={q} count={count} analyzing={analyzing}
+          onClose={()=>setOverview(false)} onOpen={setPreview} onAsk={()=>window.__openAskAI&&window.__openAskAI()}/>}
 
         {/* results */}
         {view==='list' ? (
@@ -312,6 +327,134 @@ function SearchPreview({item, q, onClose, onDismiss}){
           <button className="btn btn-secondary btn-icon" title="Flag"><Icon name="flag" size={16}/></button>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ---- AI overview of the result set ----
+const OV_THEMES = [
+  {label:'Quarterly close & reporting', prop:.366, color:'#0073E6', note:'Q3/Q4 reforecasts, ledgers & close packets'},
+  {label:'Budget & forecasting',        prop:.238, color:'#0EA5E9', note:'FY budget models, burn & pricing analysis'},
+  {label:'Invoices & payments',         prop:.163, color:'#B5851C', note:'AP/AR records, terms & reconciliations'},
+  {label:'Investor & earnings comms',   prop:.143, color:'#475569', note:'Call transcripts, decks & infographics'},
+  {label:'Compliance & legal flags',    prop:.090, color:'#DC2626', note:'Items routed for review before filing'},
+];
+const OV_NOTABLE = [1, 5, 6]; // result ids
+
+function OvBar({color, pct}){
+  return (
+    <div style={{height:5,borderRadius:3,background:'var(--line)',overflow:'hidden',flex:1}}>
+      <div style={{width:pct+'%',height:'100%',background:color,borderRadius:3,transition:'width .5s cubic-bezier(.2,.8,.3,1)'}}></div>
+    </div>
+  );
+}
+function OvShimmer({w}){
+  return (
+    <div style={{position:'relative',overflow:'hidden',height:11,width:w,borderRadius:5,background:'var(--surface-2)'}}>
+      <div className="prog-sheen"></div>
+    </div>
+  );
+}
+
+function SearchOverview({q, count, analyzing, onClose, onOpen, onAsk}){
+  const themes = OV_THEMES.map(t=>({...t, n: Math.max(1, Math.round(count*t.prop))}));
+  const max = themes[0].n;
+  const notable = OV_NOTABLE.map(id=>RESULTS.find(r=>r.id===id)).filter(Boolean);
+
+  return (
+    <div className="card" style={{padding:0,overflow:'hidden',marginBottom:16,border:'1px solid var(--violet)',
+      boxShadow:'0 6px 24px rgba(138,99,196,.13)',position:'relative'}}>
+      <div style={{position:'absolute',left:0,top:0,bottom:0,width:3,background:'var(--logo-grad)'}}></div>
+
+      {/* header */}
+      <div style={{display:'flex',alignItems:'center',gap:12,padding:'15px 18px 14px',borderBottom:'1px solid var(--line)'}}>
+        <span style={{width:34,height:34,borderRadius:9,background:'var(--logo-grad)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',
+          boxShadow:'0 2px 8px rgba(138,99,196,.3)'}}>
+          <Icon name="sparkle" size={18} style={{color:'#fff'}}/>
+        </span>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <span style={{fontSize:14.5,fontWeight:700,letterSpacing:'-.01em',color:'var(--ink)'}}>AI overview</span>
+            <span className="badge" style={{background:'var(--violet-t)',color:'var(--violet)',height:18,fontSize:10,fontWeight:700,letterSpacing:'.04em'}}>BETA</span>
+          </div>
+          <div className="muted" style={{fontSize:12,marginTop:1}}>
+            {analyzing ? <span style={{animation:'blink 1.1s ease-in-out infinite'}}>Reading the top matches…</span>
+              : <>Synthesized across <b style={{color:'var(--ink-2)',fontWeight:600}}>{count.toLocaleString()}</b> results for &ldquo;{q}&rdquo;</>}
+          </div>
+        </div>
+        <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose} title="Hide overview" style={{flex:'none'}}><Icon name="x" size={16}/></button>
+      </div>
+
+      {analyzing ? (
+        <div style={{padding:'18px',display:'flex',flexDirection:'column',gap:11}}>
+          <OvShimmer w="92%"/><OvShimmer w="98%"/><OvShimmer w="74%"/>
+          <div style={{display:'flex',gap:8,marginTop:6}}><OvShimmer w={120}/><OvShimmer w={92}/><OvShimmer w={138}/></div>
+        </div>
+      ) : (
+        <div style={{padding:'17px 18px 16px'}}>
+          {/* summary */}
+          <p style={{fontSize:13.5,lineHeight:1.6,color:'var(--ink-2)',margin:0,textWrap:'pretty'}}>
+            Most material clusters around <b style={{color:'var(--ink)',fontWeight:600}}>quarterly financial reporting and forecasting</b>. The
+            strongest matches are Q3/Q4 close documents and budget models; a reconciled ledger and two flagged line items are routed for
+            <b style={{color:'var(--ink)',fontWeight:600}}> legal review before filing</b>. Coverage spans 7 file types and 6 contributors,
+            concentrated in the <b style={{color:'var(--ink)',fontWeight:600}}>Finance</b> and <b style={{color:'var(--ink)',fontWeight:600}}>Strategy</b> folders.
+          </p>
+
+          {/* themes */}
+          <div className="eyebrow" style={{margin:'18px 0 11px'}}>Key themes</div>
+          <div style={{display:'flex',flexDirection:'column',gap:11}}>
+            {themes.map(t=>(
+              <div key={t.label} style={{display:'flex',alignItems:'center',gap:12}}>
+                <span style={{width:8,height:8,borderRadius:'50%',background:t.color,flex:'none'}}></span>
+                <div style={{width:208,flex:'none',minWidth:0}}>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.label}</div>
+                  <div className="muted" style={{fontSize:11,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.note}</div>
+                </div>
+                <OvBar color={t.color} pct={Math.round(t.n/max*100)}/>
+                <span style={{fontSize:12.5,fontWeight:600,color:'var(--ink-2)',width:48,textAlign:'right',flex:'none',fontVariantNumeric:'tabular-nums'}}>{t.n.toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* needs attention */}
+          <div style={{display:'flex',alignItems:'center',gap:10,marginTop:16,padding:'10px 13px',borderRadius:9,
+            background:'var(--orange-t)',border:'1px solid #F4D9B8'}}>
+            <Icon name="flag" size={15} style={{color:'#C2410C',flex:'none'}}/>
+            <span style={{fontSize:12.5,color:'#9A3412',fontWeight:550,lineHeight:1.4}}>
+              <b style={{fontWeight:700}}>2 items</b> flag line items for legal review before the quarter can be filed.
+            </span>
+          </div>
+
+          {/* notable */}
+          <div className="eyebrow" style={{margin:'18px 0 9px'}}>Notable in these results</div>
+          <div style={{display:'flex',flexDirection:'column',gap:2}}>
+            {notable.map(r=>{
+              const m=MATCH[r.match];
+              return (
+                <button key={r.id} onClick={()=>onOpen&&onOpen(r)} style={{display:'flex',alignItems:'center',gap:12,width:'100%',textAlign:'left',
+                  border:0,background:'transparent',borderRadius:9,padding:'9px 8px',cursor:'pointer',transition:'.12s'}}
+                  onMouseEnter={e=>e.currentTarget.style.background='var(--hover)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                  <span style={{width:30,height:30,borderRadius:8,background:'var(--surface-2)',border:'1px solid var(--line)',color:'var(--ink-3)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={TYPE_ICON[r.type]||'file'} size={15}/></span>
+                  <div style={{flex:1,minWidth:0}}>
+                    <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
+                    <div className="muted" style={{fontSize:11.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.snippet.replace(/^…|…$/g,'')}</div>
+                  </div>
+                  <span style={{display:'flex',alignItems:'center',gap:5,color:m.color,fontWeight:600,fontSize:11.5,flex:'none',whiteSpace:'nowrap'}}><Icon name={m.icon} size={12}/>{m.label.split(' ')[0]}</span>
+                  <Icon name="chevron_right" size={15} style={{color:'var(--ink-4)',flex:'none'}}/>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* footer */}
+          <div style={{display:'flex',alignItems:'center',gap:12,marginTop:15,paddingTop:13,borderTop:'1px solid var(--line)',flexWrap:'wrap'}}>
+            <span className="muted" style={{fontSize:11.5,display:'flex',alignItems:'center',gap:6,flex:1,minWidth:160}}>
+              <Icon name="sparkle" size={12} style={{color:'var(--violet)'}}/>Synthesized from the top 50 matches · AI can be imprecise
+            </span>
+            <button className="btn btn-secondary btn-sm" onClick={onAsk}><Icon name="sparkle" size={13} style={{color:'var(--violet)'}}/>Ask a follow-up</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

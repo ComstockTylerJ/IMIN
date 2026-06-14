@@ -1,13 +1,13 @@
 // prep.jsx — Prep workspace: draft memos & assessments from templates
 
-const P_SERIF = "'Spectral', Georgia, 'Times New Roman', serif";
+const P_SERIF = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 const P_MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
 const PREP_TEMPLATES = [
-  {id:'intel', name:'Intelligence Memo', icon:'file', color:'#1D6BD0', tint:'#E7EFFB', sections:['Bottom line','Background','Assessment','Outlook'], desc:'Standard finished-intelligence format'},
-  {id:'decision', name:'Decision Memo', icon:'check_square', color:'#8A63C4', tint:'#F1EBFA', sections:['Issue','Options','Recommendation','Decision'], desc:'For a specific approve/disapprove call'},
-  {id:'talking', name:'Talking Points', icon:'message', color:'#1F9D86', tint:'#E4F4F0', sections:['Purpose','Points','Anticipated Q&A'], desc:'Bullet points for a briefing or call'},
-  {id:'assess', name:'Assessment', icon:'chart', color:'#FF9A4E', tint:'#FFF1E4', sections:['Key judgments','Evidence','Confidence','Gaps'], desc:'Analytic assessment with confidence'},
+  {id:'intel', name:'Intelligence Memo', icon:'file', color:'#0073E6', tint:'#EBF4FF', sections:['Bottom line','Background','Assessment','Outlook'], desc:'Standard finished-intelligence format'},
+  {id:'decision', name:'Decision Memo', icon:'check_square', color:'#475569', tint:'#F1F5F9', sections:['Issue','Options','Recommendation','Decision'], desc:'For a specific approve/disapprove call'},
+  {id:'talking', name:'Talking Points', icon:'message', color:'#16A34A', tint:'#F0FDF4', sections:['Purpose','Points','Anticipated Q&A'], desc:'Bullet points for a briefing or call'},
+  {id:'assess', name:'Assessment', icon:'chart', color:'#B5851C', tint:'#FFFBEB', sections:['Key judgments','Evidence','Confidence','Gaps'], desc:'Analytic assessment with confidence'},
 ];
 const PREP_DRAFTS = [
   {id:'D-118', title:'Eastern Sector — Activity Trend', tmpl:'intel', cls:'CUI', progress:72, edited:'4m ago', words:640, collab:['maya','noah']},
@@ -15,7 +15,9 @@ const PREP_DRAFTS = [
   {id:'D-109', title:'Coastal Sensor Coverage Gaps', tmpl:'assess', cls:'CUI', progress:88, edited:'3h ago', words:910, collab:['priya','diego']},
   {id:'D-103', title:'Weekly Sync — Coordination Points', tmpl:'talking', cls:'U', progress:30, edited:'yesterday', words:180, collab:['tyler']},
 ];
-const P_CLS = {U:{label:'UNCLASSIFIED',color:'#1F8A5B'}, CUI:{label:'CUI',color:'#1D6BD0'}, S:{label:'SECRET // NOFORN',color:'#C24A2E'}};
+const P_CLS = {U:{label:'UNCLASSIFIED',color:'#16A34A'}, CUI:{label:'CUI',color:'#0073E6'}, S:{label:'SECRET // NOFORN',color:'#DC2626'}};
+
+const P_SCOPES = [{ id: 'me', label: 'Assigned to me' }, { id: 'team', label: 'My team' }, { id: 'all', label: 'All' }];
 
 function PrepWorkspace({setPage, flash}){
   const [editing,setEditing]=React.useState(null); // {draft} or {tmpl}
@@ -24,13 +26,32 @@ function PrepWorkspace({setPage, flash}){
 
   if(editing) return <PrepEditor cfg={editing} onBack={()=>setEditing(null)} setPage={setPage} flash={flash}/>;
 
+  const columns=[
+    {label:'Draft', render:d=>{const t=PREP_TEMPLATES.find(x=>x.id===d.tmpl);
+      return <QTitle icon={t.icon} color={t.color} tint={t.tint} title={d.title} sub={t.name+' · '+d.id}/>;}},
+    {label:'Class.', width:120, render:d=>{const c=P_CLS[d.cls];
+      return <span style={{fontSize:12,fontWeight:700,color:c.color}}>{c.label}</span>;}},
+    {label:'Draft progress', width:160, render:d=>(
+      <div style={{display:'flex',alignItems:'center',gap:9}}>
+        <div style={{flex:1,height:6,background:'#F1F5F9',borderRadius:4,overflow:'hidden'}}><div style={{width:d.progress+'%',height:'100%',background:'var(--logo-grad)',borderRadius:4}}></div></div>
+        <span style={{fontSize:11.5,fontWeight:600,color:'var(--ink-2)',width:30,textAlign:'right'}}>{d.progress}%</span>
+      </div>)},
+    {label:'Collaborators', width:118, render:d=><AvatarStack ids={d.collab} size={24} max={3}/>},
+    {label:'Edited', width:96, align:'right', render:d=><span style={{fontSize:12,color:'var(--ink-4)'}}>{d.edited}</span>},
+  ];
+
   return (
     <div className="rise">
       <WsHeader name="Prep" setPage={setPage}
         action={<button className="btn btn-primary" onClick={()=>newDraft(PREP_TEMPLATES[0])}><Icon name="plus" size={16} sw={2.2}/>New draft</button>}/>
-      <div className="page" style={{paddingTop:24}}>
-        <SectionHead title="Start from a template" sub="Structured formats that route cleanly into Memos" icon="text"/>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:30}}>
+      <WorkQueue
+        blurb="Drafts in progress &mdash; pick up where you or your team left off. Each routes cleanly into Memos when it&rsquo;s ready for review."
+        scopes={P_SCOPES} scopeOf={d=>d.collab.includes('tyler')?'me':'team'} rows={PREP_DRAFTS} columns={columns}
+        onOpen={id=>openDraft(PREP_DRAFTS.find(d=>d.id===id))} emptyLabel="No drafts in this view."/>
+
+      <div className="page" style={{paddingTop:0,paddingBottom:56,maxWidth:1240}}>
+        <SectionHead title="Start something new" sub="Structured formats that route cleanly into Memos" icon="plus"/>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
           {PREP_TEMPLATES.map(t=>(
             <button key={t.id} onClick={()=>newDraft(t)} className="card card-hover" style={{padding:'16px 17px',textAlign:'left',cursor:'pointer',border:'1px solid var(--line)',display:'flex',flexDirection:'column',gap:12}}>
               <span style={{width:40,height:40,borderRadius:11,background:t.tint,color:t.color,display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name={t.icon} size={20}/></span>
@@ -43,36 +64,6 @@ function PrepWorkspace({setPage, flash}){
               </div>
             </button>
           ))}
-        </div>
-
-        <SectionHead title="Your drafts" sub="Pick up where you left off" icon="pen"/>
-        <div className="card card-pad">
-          <div style={{display:'flex',flexDirection:'column'}}>
-            {PREP_DRAFTS.map((d,i)=>{
-              const t=PREP_TEMPLATES.find(x=>x.id===d.tmpl), cls=P_CLS[d.cls];
-              return (
-                <div key={d.id} onClick={()=>openDraft(d)} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 6px',borderTop:i?'1px solid var(--line)':0,cursor:'pointer',borderRadius:8}}
-                  onMouseEnter={e=>e.currentTarget.style.background='var(--surface-2)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                  <span style={{width:36,height:36,borderRadius:9,background:t.tint,color:t.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={17}/></span>
-                  <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:14,fontWeight:600,color:'var(--ink)'}}>{d.title}</div>
-                    <div style={{display:'flex',alignItems:'center',gap:9,marginTop:3,fontSize:11.5,color:'var(--ink-3)'}}>
-                      <span style={{fontWeight:600,color:cls.color}}>{cls.label}</span>
-                      <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{t.name}
-                      <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{d.words} words
-                      <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>edited {d.edited}
-                    </div>
-                  </div>
-                  <div style={{width:120,flex:'none'}}>
-                    <div style={{display:'flex',justifyContent:'space-between',fontSize:11,color:'var(--ink-3)',marginBottom:4}}><span>Draft</span><span style={{fontWeight:600,color:'var(--ink-2)'}}>{d.progress}%</span></div>
-                    <div style={{height:6,background:'#EEF2F7',borderRadius:4,overflow:'hidden'}}><div style={{width:d.progress+'%',height:'100%',background:'var(--logo-grad)',borderRadius:4}}></div></div>
-                  </div>
-                  <AvatarStack ids={d.collab} size={24} max={3}/>
-                  <Icon name="chevron_right" size={16} style={{color:'var(--ink-4)',flex:'none'}}/>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
     </div>
@@ -113,7 +104,7 @@ function PrepEditor({cfg, onBack, setPage, flash}){
             <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{title}</div>
             <div className="muted" style={{fontSize:11.5}}>{t.name} · Draft</div>
           </div>
-          <span style={{display:'flex',alignItems:'center',gap:6,fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><span style={{width:6,height:6,borderRadius:'50%',background:'#1F8A5B'}}></span>Auto-saved</span>
+          <span style={{display:'flex',alignItems:'center',gap:6,fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><span style={{width:6,height:6,borderRadius:'50%',background:'#16A34A'}}></span>Auto-saved</span>
           <button className="btn btn-secondary btn-sm" onClick={()=>flash&&flash('Saved to drafts')}><Icon name="check" size={14}/>Save</button>
           <button className="btn btn-primary btn-sm" onClick={()=>{flash&&flash('Submitted to Memos for review');setPage('memos');}}><Icon name="send" size={14}/>Submit to review</button>
         </div>
@@ -129,7 +120,7 @@ function PrepEditor({cfg, onBack, setPage, flash}){
                 color:active===i?'var(--blue)':'var(--ink-2)',padding:'9px 11px',borderRadius:8,cursor:'pointer',textAlign:'left',fontSize:13,fontWeight:active===i?600:500,transition:'.12s'}}>
                 <span style={{width:20,height:20,borderRadius:6,background:active===i?'var(--blue)':'var(--line)',color:active===i?'#fff':'var(--ink-3)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,flex:'none'}}>{i+1}</span>
                 <span style={{flex:1}}>{s}</span>
-                {body[i].trim() && <Icon name="check" size={13} sw={2.6} style={{color:'#1F8A5B'}}/>}
+                {body[i].trim() && <Icon name="check" size={13} sw={2.6} style={{color:'#16A34A'}}/>}
               </button>
             ))}
           </div>
@@ -181,7 +172,7 @@ function PrepEditor({cfg, onBack, setPage, flash}){
             <div className="eyebrow" style={{marginBottom:8}}>Pre-flight checks</div>
             {[['Classification set',true],['All sections filled',body.every(b=>b.trim())],['Sourcing present',body.join('').includes('Source')]].map(([l,ok])=>(
               <div key={l} style={{display:'flex',alignItems:'center',gap:9,padding:'5px 0',fontSize:12.5,color:'var(--ink-2)'}}>
-                <span style={{width:18,height:18,borderRadius:'50%',background:ok?'#E4F4F0':'#EFF2F6',color:ok?'#1F8A5B':'var(--ink-4)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ok?'check':'x'} size={11} sw={3}/></span>
+                <span style={{width:18,height:18,borderRadius:'50%',background:ok?'#F0FDF4':'#F1F5F9',color:ok?'#16A34A':'var(--ink-4)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ok?'check':'x'} size={11} sw={3}/></span>
                 {l}
               </div>
             ))}

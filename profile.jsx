@@ -4,12 +4,12 @@
 function _mSeed(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
 function _mRng(seed){ return function(){ let t=seed+=0x6D2B79F5; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
 const MTG_TYPE = {
-  kickoff:  {label:'Kickoff',         icon:'bulb',    color:'#1D6BD0'},
-  checkin:  {label:'Weekly check‑in', icon:'message', color:'#1FA98A'},
-  review:   {label:'Creative review', icon:'eye',     color:'#8A63C4'},
-  delivery: {label:'Delivery sync',   icon:'check',   color:'#7FC457'},
-  renewal:  {label:'Renewal call',    icon:'route',   color:'#FF9A4E'},
-  qbr:      {label:'Quarterly review',icon:'chart',   color:'#5568C7'},
+  kickoff:  {label:'Kickoff',         icon:'bulb',    color:'#0073E6'},
+  checkin:  {label:'Weekly check‑in', icon:'message', color:'#16A34A'},
+  review:   {label:'Creative review', icon:'eye',     color:'#475569'},
+  delivery: {label:'Delivery sync',   icon:'check',   color:'#16A34A'},
+  renewal:  {label:'Renewal call',    icon:'route',   color:'#B5851C'},
+  qbr:      {label:'Quarterly review',icon:'chart',   color:'#1D3557'},
 };
 const MTG_CH = {video:{label:'Video',icon:'video'}, call:{label:'Call',icon:'phone'}, person:{label:'In person',icon:'users'}};
 const _MTG_NOTE = {
@@ -38,7 +38,7 @@ function genMeetings(p){
 function ProfileStat({value, label, icon, color, accent}){
   return (
     <div className="card card-pad" style={{display:'flex',alignItems:'center',gap:13}}>
-      <span style={{width:38,height:38,borderRadius:10,background:(color||'#1D6BD0')+'1a',color:color||'#1D6BD0',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={19}/></span>
+      <span style={{width:38,height:38,borderRadius:10,background:(color||'#0073E6')+'1a',color:color||'#0073E6',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={19}/></span>
       <div style={{minWidth:0}}>
         <div style={{fontSize:21,fontWeight:700,color:accent||'var(--ink)',letterSpacing:'-.02em',lineHeight:1,whiteSpace:'nowrap'}}>{value}</div>
         <div className="muted" style={{fontSize:11.5,marginTop:3,fontWeight:500}}>{label}</div>
@@ -122,10 +122,10 @@ function PersonProfile({id, setPage, openTask, openDevice, flash}){
           <div style={{display:'flex',flexDirection:'column',gap:20,minWidth:0}}>
             {/* CRM stat tiles */}
             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14}}>
-              <ProfileStat value={p.value||'In‑house'} label="Contract value" icon="chart" color="#1FA98A"/>
-              <ProfileStat value={days==null?'—':days+'d'} label="To renewal" icon="calendar" color="#FF9A4E" accent={days!=null&&p.rel==='renewal'?'var(--orange)':undefined}/>
-              <ProfileStat value={p.meetings} label="Meetings logged" icon="message" color="#8A63C4"/>
-              <ProfileStat value={p.lastMet} label="Last contact" icon="clock" color="#1D6BD0"/>
+              <ProfileStat value={p.value||'In‑house'} label="Contract value" icon="chart" color="#16A34A"/>
+              <ProfileStat value={days==null?'—':days+'d'} label="To renewal" icon="calendar" color="#B5851C" accent={days!=null&&p.rel==='renewal'?'var(--orange)':undefined}/>
+              <ProfileStat value={p.meetings} label="Meetings logged" icon="message" color="#475569"/>
+              <ProfileStat value={p.lastMet} label="Last contact" icon="clock" color="#0073E6"/>
             </div>
 
             {/* meeting history */}

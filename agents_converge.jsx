@@ -11,8 +11,8 @@ function AgentRunCard({ run, glyph='diamond', flat=false, framing='codename' }){
   const cur = run.steps[run.steps.length-1];
   return (
     <div onClick={()=>window.__openRun && window.__openRun(run.id)}
-      style={{position:'relative',background:'linear-gradient(180deg,#FCFDFF,#fff)',border:'1px solid '+a.color+'44',
-        borderLeft:'3px solid '+a.color,borderRadius:10,padding:'11px 12px 12px',cursor:'pointer',boxShadow:'var(--shadow-sm)',
+      style={{position:'relative',background:'#fff',border:'1px solid var(--line)',
+        borderLeft:'3px solid var(--line-2)',borderRadius:10,padding:'11px 12px 12px',cursor:'pointer',boxShadow:'var(--shadow-sm)',
         transition:'box-shadow .15s,transform .12s'}}
       onMouseEnter={e=>{e.currentTarget.style.boxShadow='var(--shadow)';e.currentTarget.style.transform='translateY(-1px)';}}
       onMouseLeave={e=>{e.currentTarget.style.boxShadow='var(--shadow-sm)';e.currentTarget.style.transform='none';}}>
@@ -28,13 +28,13 @@ function AgentRunCard({ run, glyph='diamond', flat=false, framing='codename' }){
       {/* title */}
       <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',lineHeight:1.32,marginBottom:6}}>{run.title}</div>
       {/* current step */}
-      <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:live?a.color:'var(--ink-3)',marginBottom:10,minWidth:0}}>
-        {live && <Icon name={STEP_KIND[cur.kind].icon} size={12} sw={2} style={{flex:'none'}}/>}
-        <span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,flex:1}}>{live && <span className="cursor-blink" style={{color:a.color}}>▍</span>} {cur.txt}</span>
+      <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--ink-2)',marginBottom:10,minWidth:0}}>
+        {live && <Icon name={STEP_KIND[cur.kind].icon} size={12} sw={2} style={{flex:'none',color:'var(--ink-3)'}}/>}
+        <span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,flex:1}}>{cur.txt}</span>
       </div>
       {/* progress */}
       <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:run.status==='needs_you'||run.status==='ready'?10:0}}>
-        <div style={{flex:1,minWidth:0}}><RunProgress value={run.progress} color={s.color} h={4} animated={live}/></div>
+        <div style={{flex:1,minWidth:0}}><RunProgress value={run.progress} color={s.color} h={4} animated={false}/></div>
         <span style={{fontFamily:CMONO,fontSize:10,fontWeight:600,color:s.color,flex:'none',whiteSpace:'nowrap'}}>{run.metric}</span>
       </div>
       {/* inline CTA when waiting */}
@@ -51,24 +51,24 @@ function AgentRunCard({ run, glyph='diamond', flat=false, framing='codename' }){
 function TaskFeedRow({ t, P, WF, openTask, flash }){
   const w = WF[t.wf], who = P[t.who];
   const due = t.done ? t.doneDate : (t.due?('Due '+t.due):'');
-  const dueColor = t.tone==='today'||t.tone==='tomorrow' ? '#E1574F' : 'var(--ink-3)';
+  const dueColor = t.tone==='today'||t.tone==='tomorrow' ? '#DC2626' : 'var(--ink-3)';
   return (
     <div className="card agent-row" onClick={()=>flash && flash('Opening '+t.id)}
       style={{display:'flex',alignItems:'stretch',padding:0,cursor:'pointer',overflow:'hidden',borderColor:'var(--line)'}}>
-      <div style={{width:4,background:w.color,flex:'none'}}></div>
+      <div style={{width:4,background:'var(--line-2)',flex:'none'}}></div>
       <div style={{flex:1,display:'flex',alignItems:'center',gap:16,padding:'13px 18px',minWidth:0}}>
         <span title={who.name} className="av" style={{width:38,height:38,background:who.color,fontSize:13,flex:'none'}}>{who.initials}</span>
         <div style={{flex:1,minWidth:0}}>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:3,whiteSpace:'nowrap',overflow:'hidden'}}>
-            <span style={{fontSize:11,fontWeight:700,letterSpacing:'.03em',color:w.color,textTransform:'uppercase',flex:'none'}}>{who.name}</span>
+            <span style={{fontSize:11,fontWeight:700,letterSpacing:'.03em',color:'var(--ink-2)',textTransform:'uppercase',flex:'none'}}>{who.name}</span>
             <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)',flex:'none'}}></span>
-            <span className="muted" style={{fontSize:11.5,display:'inline-flex',alignItems:'center',gap:5,minWidth:0,overflow:'hidden',textOverflow:'ellipsis'}}><Icon name={w.icon} size={12} style={{color:w.color,flex:'none'}}/>{w.label}</span>
+            <span className="muted" style={{fontSize:11.5,display:'inline-flex',alignItems:'center',gap:5,minWidth:0,overflow:'hidden',textOverflow:'ellipsis'}}><Icon name={w.icon} size={12} style={{color:'var(--ink-3)',flex:'none'}}/>{w.label}</span>
           </div>
           <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginBottom:4}}>{t.title}</div>
           <div style={{fontSize:12,color:'var(--ink-3)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.desc}</div>
         </div>
         <div style={{width:120,flex:'none',display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
-          <span className="badge" style={{background:'#EFF2F6',color:'var(--ink-2)'}}><Icon name="user" size={11}/>Person</span>
+          <span className="badge" style={{background:'#F1F5F9',color:'var(--ink-2)'}}><Icon name="user" size={11}/>Person</span>
           <span style={{fontFamily:CMONO,fontSize:11,fontWeight:600,color:dueColor}}>{due}</span>
         </div>
       </div>
@@ -90,13 +90,13 @@ function UnifiedFeed({ wf, scoped, asg, openRun, glyph='diamond', flat=false, fr
     {id:'wait',  label:'Waiting on you', color:'#E8920C',
       runs: runs.filter(r=>['needs_you','ready','blocked'].includes(r.status)),
       tasks: humans.filter(t=>!t.done && t.g==='blocked')},
-    {id:'active',label:'In progress', color:'#1D6BD0',
+    {id:'active',label:'In progress', color:'#0073E6',
       runs: runs.filter(r=>r.status==='running'),
       tasks: humans.filter(t=>!t.done && t.g==='in_progress')},
-    {id:'sched', label:'Scheduled & to do', color:'#5568C7',
+    {id:'sched', label:'Scheduled & to do', color:'#1D3557',
       runs: runs.filter(r=>['queued','paused'].includes(r.status)),
       tasks: humans.filter(t=>!t.done && t.g==='todo')},
-    {id:'done',  label:'Completed', color:'#1FA98A',
+    {id:'done',  label:'Completed', color:'#16A34A',
       runs: runs.filter(r=>r.status==='done'),
       tasks: humans.filter(t=>t.done)},
   ];

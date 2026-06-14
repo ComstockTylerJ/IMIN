@@ -2,16 +2,16 @@
 
 const K_SOURCES = [
   {name:'Notion', sub:'Team wiki', color:'#24272D', count:512, state:'synced', t:'4m ago'},
-  {name:'Confluence', sub:'Ops space', color:'#1D6BD0', count:1840, state:'synced', t:'1h ago'},
-  {name:'OneNote', sub:'Analyst notebooks', color:'#8A63C4', count:286, state:'syncing', t:'now'},
-  {name:'Slack', sub:'#ops-floor archive', color:'#1F9D86', count:9420, state:'synced', t:'12m ago'},
-  {name:'SharePoint', sub:'Legacy share', color:'#FF9A4E', count:638, state:'review', t:'—'},
-  {name:'Local notes', sub:'Desktop imports', color:'#5568C7', count:74, state:'synced', t:'2h ago'},
+  {name:'Confluence', sub:'Ops space', color:'#0073E6', count:1840, state:'synced', t:'1h ago'},
+  {name:'OneNote', sub:'Analyst notebooks', color:'#475569', count:286, state:'syncing', t:'now'},
+  {name:'Slack', sub:'#ops-floor archive', color:'#16A34A', count:9420, state:'synced', t:'12m ago'},
+  {name:'SharePoint', sub:'Legacy share', color:'#B5851C', count:638, state:'review', t:'—'},
+  {name:'Local notes', sub:'Desktop imports', color:'#1D3557', count:74, state:'synced', t:'2h ago'},
 ];
 const K_STATE = {
-  synced:{label:'Synced', color:'#1F8A5B', dot:'#1F8A5B'},
-  syncing:{label:'Syncing…', color:'#BC8418', dot:'#BC8418'},
-  review:{label:'Needs review', color:'#C24A2E', dot:'#C24A2E'},
+  synced:{label:'Synced', color:'#16A34A', dot:'#16A34A'},
+  syncing:{label:'Syncing…', color:'#B5851C', dot:'#B5851C'},
+  review:{label:'Needs review', color:'#DC2626', dot:'#DC2626'},
 };
 const K_CAPTURE = [
   {who:'maya', where:'Slack · #ops-floor', text:'Walkthrough of the northern terminal collection workaround when the primary feed drops.', kind:'Procedure'},
@@ -27,7 +27,7 @@ const K_ARTICLES = [
   {title:'Sensor Grid — Trip Triage', who:'noah', tags:['sensors','triage'], excerpt:'A fast decision tree for separating real sensor trips from environmental noise.', endorse:11, updated:'May 30'},
   {title:'Cable Drafting — House Style', who:'lena', tags:['writing','memos'], excerpt:'The conventions that get cables through clearance on the first pass.', endorse:18, updated:'May 29'},
 ];
-const K_TAG = {color:'#1FA98A', tint:'#E4F5F0'};
+const K_TAG = {color:'#16A34A', tint:'#F0FDF4'};
 
 function KnowledgeWorkspace({setPage, flash}){
   const [capture,setCapture]=React.useState(K_CAPTURE);
@@ -35,7 +35,7 @@ function KnowledgeWorkspace({setPage, flash}){
 
   return (
     <div className="rise">
-      <WsHeader name="Knowledge Management" setPage={setPage}
+      <WsHeader name="Language Exploitation" setPage={setPage}
         action={<button className="btn btn-primary" onClick={()=>flash&&flash('Capture started — pick a source or write a note')}><Icon name="plus" size={16} sw={2.2}/>Capture knowledge</button>}/>
       <div className="page" style={{paddingTop:24}}>
         {/* banner */}
@@ -43,13 +43,13 @@ function KnowledgeWorkspace({setPage, flash}){
           <HeroPattern opacity={0.5}/>
           <div style={{position:'relative',zIndex:1,display:'flex',alignItems:'center',gap:28,flexWrap:'wrap'}}>
             <div style={{display:'flex',alignItems:'center',gap:13,flex:1,minWidth:260}}>
-              <span style={{width:46,height:46,borderRadius:12,background:'var(--lime-t)',color:'#1FA98A',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="bulb" size={23}/></span>
+              <span style={{width:46,height:46,borderRadius:12,background:'var(--lime-t)',color:'#16A34A',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="bulb" size={23}/></span>
               <div>
                 <div style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em',color:'var(--ink)'}}>Bring tribal knowledge into the ecosystem</div>
                 <div className="muted" style={{fontSize:13,marginTop:2}}>Connect the places people already keep notes, then capture what only lives in their heads.</div>
               </div>
             </div>
-            {[['Notes captured','142','#1FA98A'],['Contributors','23','#1D6BD0'],['Sources connected','8','#8A63C4']].map(([l,v,c])=>(
+            {[['Notes captured','142','#16A34A'],['Contributors','23','#0073E6'],['Sources connected','8','#475569']].map(([l,v,c])=>(
               <div key={l} style={{textAlign:'center',flex:'none'}}>
                 <div style={{fontSize:26,fontWeight:700,letterSpacing:'-.03em',color:c}}>{v}</div>
                 <div className="muted" style={{fontSize:11.5,fontWeight:500}}>{l}</div>
@@ -75,7 +75,7 @@ function KnowledgeWorkspace({setPage, flash}){
                     <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
                     <span className="muted" style={{fontSize:11.5}}>{a.updated}</span>
                     <div style={{flex:1}}></div>
-                    <span style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,color:'var(--ink-3)'}}><Icon name="check" size={14} sw={2.4} style={{color:'#1F8A5B'}}/>{a.endorse}</span>
+                    <span style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,color:'var(--ink-3)'}}><Icon name="check" size={14} sw={2.4} style={{color:'#16A34A'}}/>{a.endorse}</span>
                   </div>
                 </div>
               ))}
@@ -127,7 +127,7 @@ function KnowledgeWorkspace({setPage, flash}){
                 ))}
                 {!capture.length && (
                   <div style={{textAlign:'center',padding:'22px 8px'}}>
-                    <span style={{width:36,height:36,borderRadius:10,background:'#E4F4F0',color:'#1F8A5B',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={18} sw={2.4}/></span>
+                    <span style={{width:36,height:36,borderRadius:10,background:'#F0FDF4',color:'#16A34A',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={18} sw={2.4}/></span>
                     <div style={{fontSize:13,color:'var(--ink-3)',marginTop:8,fontWeight:500}}>All caught up — nothing waiting to capture.</div>
                   </div>
                 )}

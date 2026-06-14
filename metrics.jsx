@@ -3,10 +3,10 @@
 function MetricsPage(){
   const [range,setRange]=React.useState('30d');
   const perf=[
-    {label:'Tasks Completed', value:'248', delta:+18, dir:'up', good:true, accent:'#1FA98A', spark:[120,140,135,160,180,200,225,248]},
-    {label:'Review Throughput', value:'92', delta:+7, dir:'up', good:true, accent:'#1D6BD0', spark:[60,68,72,70,78,84,88,92], unit:'/wk'},
-    {label:'Avg Approval Time', value:'1.8', delta:-0.4, dir:'down', good:true, accent:'#8A63C4', spark:[3.2,3.0,2.7,2.5,2.2,2.0,1.9,1.8], unit:'days'},
-    {label:'Completion Rate', value:'94', delta:+3, dir:'up', good:true, accent:'#FF9A4E', spark:[86,88,87,90,91,92,93,94], unit:'%'},
+    {label:'Tasks Completed', value:'248', delta:+18, dir:'up', good:true, accent:'#16A34A', spark:[120,140,135,160,180,200,225,248]},
+    {label:'Review Throughput', value:'92', delta:+7, dir:'up', good:true, accent:'#0073E6', spark:[60,68,72,70,78,84,88,92], unit:'/wk'},
+    {label:'Avg Approval Time', value:'1.8', delta:-0.4, dir:'down', good:true, accent:'#475569', spark:[3.2,3.0,2.7,2.5,2.2,2.0,1.9,1.8], unit:'days'},
+    {label:'Completion Rate', value:'94', delta:+3, dir:'up', good:true, accent:'#B5851C', spark:[86,88,87,90,91,92,93,94], unit:'%'},
   ];
   return (
     <div className="rise">
@@ -55,22 +55,22 @@ function MetricsPage(){
           <div className="card card-pad">
             <SectionHead title="Completion Trends" sub="Tasks completed vs. created · last 8 weeks" icon="trend_up"
               action={<div style={{display:'flex',gap:14}}>
-                <Legend c="#1D6BD0" l="Completed"/><Legend c="#8C94A3" l="Created"/>
+                <Legend c="#0073E6" l="Completed"/><Legend c="#64748B" l="Created"/>
               </div>}/>
-            <AreaChart series={[[18,22,26,24,30,34,36,38],[24,26,25,30,32,33,35,34]]} color={['#1D6BD0','#AEB5C0']}
+            <AreaChart series={[[18,22,26,24,30,34,36,38],[24,26,25,30,32,33,35,34]]} color={['#0073E6','#CBD5E1']}
               labels={['W16','W17','W18','W19','W20','W21','W22','W23']} h={236}/>
           </div>
           <div className="card card-pad">
             <SectionHead title="SLA Performance" sub="On-time delivery" icon="clock"/>
             <div style={{display:'flex',alignItems:'center',gap:22,padding:'8px 0'}}>
-              <Donut value={94} label="94%" sub="on time" color="#1FA98A" size={132}/>
+              <Donut value={94} label="94%" sub="on time" color="#16A34A" size={132}/>
               <div style={{flex:1,display:'flex',flexDirection:'column',gap:12}}>
-                {[['Met SLA','#1FA98A',94],['At risk','#FF9A4E',4],['Breached','#F86566',2]].map(([l,c,v])=>(
+                {[['Met SLA','#16A34A',94],['At risk','#B5851C',4],['Breached','#DC2626',2]].map(([l,c,v])=>(
                   <div key={l}>
                     <div style={{display:'flex',justifyContent:'space-between',fontSize:12.5,marginBottom:4}}>
                       <span style={{color:'var(--ink-2)',fontWeight:500}}>{l}</span><span style={{fontWeight:600,color:'var(--ink)'}}>{v}%</span>
                     </div>
-                    <div style={{height:6,background:'#EEF2F7',borderRadius:4,overflow:'hidden'}}><div style={{width:v+'%',height:'100%',background:c,borderRadius:4}}></div></div>
+                    <div style={{height:6,background:'#F1F5F9',borderRadius:4,overflow:'hidden'}}><div style={{width:v+'%',height:'100%',background:c,borderRadius:4}}></div></div>
                   </div>
                 ))}
               </div>
@@ -82,22 +82,22 @@ function MetricsPage(){
           <div className="card card-pad">
             <SectionHead title="Request Volume" sub="By type · this month" icon="inbox"/>
             <BarChart data={[24,18,31,12]} labels={['Language','Review','Approval','Clearance']}
-              color={['#1FA98A','#1D6BD0','#8A63C4','#FF9A4E']} h={210}/>
+              color={['#16A34A','#0073E6','#475569','#B5851C']} h={210}/>
           </div>
           <div className="card card-pad">
             <SectionHead title="Team Utilization" sub="Capacity used this week" icon="users"/>
             <div style={{display:'flex',flexDirection:'column',gap:12,marginTop:2}}>
               {WORKLOAD.map(w=>{
                 const p=PEOPLE[w.who]; const over=w.load>=90,high=w.load>=75;
-                const c=over?'#F86566':high?'#FF9A4E':'#1FA98A';
+                const c=over?'#DC2626':high?'#B5851C':'#16A34A';
                 return (
                   <div key={w.who} style={{display:'flex',alignItems:'center',gap:12}}>
                     <Avatar id={w.who} size={26}/>
                     <span style={{width:120,fontSize:12.5,fontWeight:550,color:'var(--ink)'}}>{p.name}</span>
-                    <div style={{flex:1,height:8,background:'#EEF2F7',borderRadius:5,overflow:'hidden'}}>
+                    <div style={{flex:1,height:8,background:'#F1F5F9',borderRadius:5,overflow:'hidden'}}>
                       <div style={{width:w.load+'%',height:'100%',background:c,borderRadius:5,transition:'width .8s'}}></div>
                     </div>
-                    <span style={{width:38,textAlign:'right',fontSize:12.5,fontWeight:600,color:over?'#F86566':'var(--ink-2)'}}>{w.load}%</span>
+                    <span style={{width:38,textAlign:'right',fontSize:12.5,fontWeight:600,color:over?'#DC2626':'var(--ink-2)'}}>{w.load}%</span>
                   </div>
                 );
               })}

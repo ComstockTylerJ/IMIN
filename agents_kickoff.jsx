@@ -2,14 +2,14 @@
 
 // request types — each maps to a workflow; agent-backed ones name their agent
 const REQUEST_TYPES = [
-  {id:'review',    label:'Document review',     sub:'First-pass responsiveness & relevance coding', icon:'inbox',       color:'#1D6BD0', agent:'atlas'},
+  {id:'review',    label:'Document review',     sub:'First-pass responsiveness & relevance coding', icon:'inbox',       color:'#0073E6', agent:'atlas'},
   {id:'privilege', label:'Privilege review',    sub:'Flag privilege & build the log',               icon:'shield',      color:'#B5851C', agent:'cassius'},
-  {id:'clearance', label:'Clearance screen',    sub:'Screen a statement or filing for risk',        icon:'megaphone',   color:'#1F9D86', agent:'vesta'},
-  {id:'draft',     label:'Draft a brief or memo',sub:'Generate sections from the record',           icon:'pen',         color:'#E1574F', agent:'solon'},
-  {id:'depo',      label:'Deposition prep',     sub:'Outlines, exhibits & designations',            icon:'mic',         color:'#8A63C4', agent:'juno'},
-  {id:'research',  label:'Research question',   sub:'Ask across the matter & case law',             icon:'bulb',        color:'#1FA98A', agent:'oracle'},
-  {id:'language',  label:'Language / translation',sub:'Translate & adapt for a market',             icon:'route',       color:'#2FB2F3', agent:null},
-  {id:'approval',  label:'Approval / sign-off', sub:'Route to a person for approval',               icon:'check_square',color:'#5568C7', agent:null},
+  {id:'clearance', label:'Clearance screen',    sub:'Screen a statement or filing for risk',        icon:'megaphone',   color:'#16A34A', agent:'vesta'},
+  {id:'dataupload',label:'Data upload',       sub:'Intake forms & bring datasets into the ecosystem', icon:'database', color:'#1D3557', agent:null, page:'upload'},
+  {id:'depo',      label:'Deposition prep',     sub:'Outlines, exhibits & designations',            icon:'mic',         color:'#475569', agent:'juno'},
+  {id:'research',  label:'Research question',   sub:'Ask across the matter & case law',             icon:'bulb',        color:'#16A34A', agent:'oracle'},
+  {id:'language',  label:'Language / translation',sub:'Translate & adapt for a market',             icon:'route',       color:'#0073E6', agent:null},
+  {id:'approval',  label:'Approval / sign-off', sub:'Route to a person for approval',               icon:'check_square',color:'#1D3557', agent:null},
 ];
 
 function ModalShell({ onClose, width=620, children }){
@@ -48,15 +48,10 @@ function NewRequestModal({ onClose, onDelegate, onTeamRequest, glyph='diamond', 
                 border:'1.5px solid '+(on?t.color:'var(--line)'),borderRadius:12,background:on?t.color+'0d':'#fff',cursor:'pointer',transition:'.14s',position:'relative'}}
                 onMouseEnter={e=>{if(!on)e.currentTarget.style.borderColor='var(--line-2)';}}
                 onMouseLeave={e=>{if(!on)e.currentTarget.style.borderColor='var(--line)';}}>
-                <span style={{width:36,height:36,borderRadius:9,background:t.color+'18',color:t.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={18}/></span>
+                <span style={{width:36,height:36,borderRadius:9,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={18}/></span>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontSize:13.5,fontWeight:650,color:'var(--ink)',display:'flex',alignItems:'center',gap:6}}>{t.label}</div>
                   <div className="muted" style={{fontSize:11.5,lineHeight:1.4,marginTop:2}}>{t.sub}</div>
-                  {t.agent &&
-                    <div style={{display:'inline-flex',alignItems:'center',gap:6,marginTop:9,padding:'3px 8px 3px 4px',borderRadius:999,background:AGENTS[t.agent].tint}}>
-                      <AgentToken id={t.agent} size={18} glyph={glyph} flat={flat}/>
-                      <span style={{fontSize:10.5,fontWeight:700,color:AGENTS[t.agent].color,letterSpacing:'.02em'}}>Agent ready · {AGENTS[t.agent].code}</span>
-                    </div>}
                 </div>
                 {on && <span style={{position:'absolute',top:11,right:11,width:18,height:18,borderRadius:'50%',background:t.color,display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={12} sw={3} style={{color:'#fff'}}/></span>}
               </button>
@@ -70,10 +65,12 @@ function NewRequestModal({ onClose, onDelegate, onTeamRequest, glyph='diamond', 
           ? <span style={{fontSize:12,color:'var(--ink-2)',display:'flex',alignItems:'center',gap:7}}>
               <Icon name="sparkle" size={14} style={{color:chosen.color}}/>{AGENTS[chosen.agent].code} can take this now, or assign it to a teammate.
             </span>
-          : <span className="muted" style={{fontSize:12}}>{chosen?'This request routes to a teammate.':'Choose a request type to continue.'}</span>}
+          : <span className="muted" style={{fontSize:12}}>{chosen?(chosen.page?'Opens the '+chosen.label+' workspace.':'This request routes to a teammate.'):'Choose a request type to continue.'}</span>}
         <div style={{flex:1}}></div>
         <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
-        {chosen && !chosen.agent &&
+        {chosen && chosen.page &&
+          <button className="btn btn-primary" onClick={()=>{onClose(); window.__setPage&&window.__setPage(chosen.page);}}>Open {chosen.label}<Icon name="arrow_right" size={15}/></button>}
+        {chosen && !chosen.agent && !chosen.page &&
           <button className="btn btn-primary" onClick={()=>onTeamRequest(chosen)}>Continue<Icon name="arrow_right" size={15}/></button>}
         {chosen && chosen.agent && <>
           <button className="btn btn-secondary" onClick={()=>onTeamRequest(chosen)}><Icon name="user" size={15}/>Assign to team</button>
@@ -186,7 +183,7 @@ function KickoffModal({ onClose, agentId, prefill, launch, glyph='diamond', flat
             </div>
 
             <div style={{display:'flex',alignItems:'flex-start',gap:9,padding:'11px 13px',borderRadius:10,background:'#F0F9F5',border:'1px solid #CDEBDD'}}>
-              <Icon name="shield_check" size={16} sw={2} style={{color:'#1FA98A',flex:'none',marginTop:1}}/>
+              <Icon name="shield_check" size={16} sw={2} style={{color:'#16A34A',flex:'none',marginTop:1}}/>
               <span style={{fontSize:11.5,color:'#1F7A5C',lineHeight:1.45}}>Scoped to <b>Vantage v. Meridian</b>. {a.code} can read & draft but <b>cannot file, serve, or send externally</b>. Every action is logged to the audit trail.</span>
             </div>
           </div>

@@ -2,16 +2,16 @@
 
 // ---- generic board columns (shown for "All tasks") ----
 const GEN_COLS = [
-  { id: 'todo', label: 'To do', accent: '#8C94A3' },
-  { id: 'in_progress', label: 'In progress', accent: '#1D6BD0' },
-  { id: 'blocked', label: 'Blocked / waiting', accent: '#F86566' },
-  { id: 'done', label: 'Done', accent: '#1FA98A', tail: true }];
+  { id: 'todo', label: 'To do', accent: '#64748B' },
+  { id: 'in_progress', label: 'In progress', accent: '#0073E6' },
+  { id: 'blocked', label: 'Blocked / waiting', accent: '#DC2626' },
+  { id: 'done', label: 'Done', accent: '#16A34A', tail: true }];
 
 
 // ---- workflows, each with its own pipeline columns ----
 const WF = {
   press: {
-    label: 'Press clearance', icon: 'megaphone', color: '#1F9D86', tint: '#E4F4F0',
+    label: 'Press clearance', icon: 'megaphone', color: '#16A34A', tint: '#F0FDF4',
     cols: [
     { id: 'intake', label: 'Intake' },
     { id: 'airev', label: 'AI risk review' },
@@ -19,7 +19,7 @@ const WF = {
     { id: 'cleared', label: 'Cleared', tail: true }] },
 
   relevance: {
-    label: 'Relevance coding', icon: 'inbox', color: '#1D6BD0', tint: '#E7EFFB',
+    label: 'Relevance coding', icon: 'inbox', color: '#0073E6', tint: '#EBF4FF',
     cols: [
     { id: 'queue', label: 'Review queue' },
     { id: 'first', label: 'First-level' },
@@ -43,7 +43,7 @@ const WF = {
     { id: 'signed', label: 'Signed off', tail: true }] },
 
   deposition: {
-    label: 'Deposition prep', icon: 'mic', color: '#8A63C4', tint: '#F1EBFA',
+    label: 'Deposition prep', icon: 'mic', color: '#475569', tint: '#F1F5F9',
     cols: [
     { id: 'outline', label: 'Outline' },
     { id: 'exhibits', label: 'Exhibits' },
@@ -62,16 +62,16 @@ const WF = {
 
 const WF_ORDER = ['press', 'relevance', 'brief', 'privilege', 'deposition', 'production'];
 
-const PRI_COLOR = { urgent: '#E1574F', high: '#C58A1E' };
+const PRI_COLOR = { urgent: '#DC2626', high: '#C58A1E' };
 
 // people for this board (name + initials + color)
 const P = {
-  jordan: { name: 'Jordan Cole', initials: 'JC', color: '#1D6BD0' },
-  okafor: { name: 'A. Okafor', initials: 'AO', color: '#8A63C4' },
-  park: { name: 'L. Park', initials: 'LP', color: '#1F9D86' },
-  team: { name: 'Review team', initials: 'RT', color: '#5568C7' },
-  self: { name: 'Self', initials: 'TC', color: '#1D3557' },
-  foster: { name: 'D. Foster', initials: 'DF', color: '#FF9A4E' },
+  jordan: { name: 'Jordan Cole', initials: 'JC', color: '#1D3557' },
+  okafor: { name: 'A. Okafor', initials: 'AO', color: '#1D3557' },
+  park: { name: 'L. Park', initials: 'LP', color: '#1D3557' },
+  team: { name: 'Review team', initials: 'RT', color: '#1D3557' },
+  self: { name: 'Self', initials: 'TC', color: '#0073E6' },
+  foster: { name: 'D. Foster', initials: 'DF', color: '#1D3557' },
   mine: true };
 
 
@@ -159,7 +159,6 @@ function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', fram
         <div className="page" style={{ position: 'relative', zIndex: 1, paddingTop: 30, paddingBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
             <div>
-              <div className="eyebrow" style={{ marginBottom: 6 }}>Workspace · Litigation</div>
               <h1 style={{ fontSize: 25, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--ink)' }}>Tasks</h1>
               <p className="sec" style={{ fontSize: 14, margin: '5px 0 0' }}>{subtitle}</p>
             </div>
@@ -192,7 +191,6 @@ function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', fram
                 cursor: 'pointer', boxShadow: asg === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}><Icon name={ic} size={13}/>{lb}</button>
               )}
             </div>
-            <button className="chip"><Icon name="clock" size={13} />Due date</button>
             <div style={{ flex: 1 }}></div>
             <span className="muted" style={{ fontSize: 12.5 }}>{boardTasks.length} shown</span>
           </div>
@@ -214,7 +212,7 @@ function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', fram
                   color: on ? w.color : 'var(--ink-2)' }}
                 onMouseEnter={(e) => {if (!on) e.currentTarget.style.background = 'var(--hover)';}}
                 onMouseLeave={(e) => {if (!on) e.currentTarget.style.background = '#fff';}}>
-                    <Icon name={w.icon} size={13} sw={2} style={{ color: w.color }} />
+                    <Icon name={w.icon} size={13} sw={2} style={{ color: on ? w.color : 'var(--ink-3)' }} />
                     {w.label}
                     <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: on ? w.color : 'var(--ink-3)' }}>{n}</span>
                   </button>);
@@ -245,9 +243,9 @@ function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor, agentR
   // accent for a pipeline column: gray start → workflow color middle → green tail
   const colAccent = (col, i) => {
     if (col.accent) return col.accent;
-    if (col.tail) return '#1F9D86';
-    if (i === 0) return '#8C94A3';
-    return accentColor || '#1D6BD0';
+    if (col.tail) return '#16A34A';
+    if (i === 0) return '#64748B';
+    return accentColor || '#0073E6';
   };
 
   return (
@@ -266,12 +264,9 @@ function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor, agentR
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 6px 12px' }}>
               <span style={{ width: 9, height: 9, borderRadius: 3, background: accent }}></span>
               <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)' }}>{col.label}</span>
-              <span className="badge" style={{ background: '#EAEEF4', color: 'var(--ink-3)' }}>{total}</span>
               {runs.length>0 && <span title={runs.length+' agent'+(runs.length===1?'':'s')} style={{display:'inline-flex'}}><FleetToken size={15}/></span>}
               <div style={{ flex: 1 }}></div>
-              {col.tail ?
-              <Icon name="check" size={15} sw={2.4} style={{ color: '#1F9D86' }} /> :
-              <button className="btn btn-ghost btn-icon btn-sm" onClick={openCreate} style={{ width: 26, height: 26 }}><Icon name="plus" size={15} /></button>}
+              <span className="badge" style={{ background: '#E2E8F0', color: 'var(--ink-3)' }}>{total}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minHeight: 40 }}>
               {runs.map((r) => <AgentRunCard key={r.id} run={r} glyph={glyph} flat={flat} framing={framing} />)}
@@ -292,14 +287,19 @@ function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor, agentR
 function WFCard({ t, dragId, setDragId, setOverCol }) {
   const w = WF[t.wf];
   const who = P[t.who];
-  const dueColor = t.tone === 'today' || t.tone === 'tomorrow' ? '#E1574F' : 'var(--ink-3)';
+  const dueColor = t.tone === 'today' || t.tone === 'tomorrow' ? '#DC2626' : 'var(--ink-3)';
+  // left edge encodes urgency (attention), not type — keeps the board calm
+  const edge = t.done ? 'var(--line)'
+    : (t.pri === 'urgent' || t.tone === 'today') ? '#DC2626'
+    : (t.pri === 'high' || t.tone === 'tomorrow') ? '#C58A1E'
+    : 'var(--line)';
   return (
     <div className={'kcard' + (dragId === t.id ? ' dragging' : '')} draggable
     onDragStart={() => setDragId(t.id)} onDragEnd={() => {setDragId(null);setOverCol(null);}}
-    style={{ borderLeft: `3px solid ${w.color}`, paddingLeft: 12, opacity: t.done ? 0.92 : 1 }}>
+    style={{ borderLeft: `3px solid ${edge}`, paddingLeft: 12, opacity: t.done ? 0.92 : 1 }}>
       {/* header: workflow + priority */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 9 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: w.color, fontSize: 10, fontWeight: 700, letterSpacing: '.045em', textTransform: 'uppercase' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: 'var(--ink-3)', fontSize: 10, fontWeight: 700, letterSpacing: '.045em', textTransform: 'uppercase' }}>
           <Icon name={w.icon} size={13} sw={2} />{w.label}
         </span>
         {t.pri &&
@@ -361,8 +361,8 @@ function WFCard({ t, dragId, setDragId, setOverCol }) {
 
 function CalendarView({ openTask, openCreate }) {
   const [mode, setMode] = React.useState('month');
-  const tagColor = (t) => TAGS[t] && TAGS[t].color || (t === 'leave' ? '#8C94A3' : t === 'campaign' ? '#1D6BD0' : '#8A63C4');
-  const tagTint = (t) => TAGS[t] && TAGS[t].tint || (t === 'leave' ? '#EFF2F6' : t === 'campaign' ? '#E7EFFB' : '#F1EBFA');
+  const tagColor = (t) => TAGS[t] && TAGS[t].color || (t === 'leave' ? '#64748B' : t === 'campaign' ? '#0073E6' : '#475569');
+  const tagTint = (t) => TAGS[t] && TAGS[t].tint || (t === 'leave' ? '#F1F5F9' : t === 'campaign' ? '#EBF4FF' : '#F1F5F9');
   // June 2026: June 1 is a Monday
   const firstDow = new Date(2026, 5, 1).getDay(); // 1 = Monday
   const daysInMonth = 30;

@@ -9,9 +9,9 @@ const U_CATS = [
   {id:'geo', label:'Geospatial', icon:'globe'},
 ];
 const U_CLS = [
-  {id:'U', label:'Unclassified', color:'#1F8A5B'},
-  {id:'CUI', label:'CUI', color:'#1D6BD0'},
-  {id:'S', label:'Secret // NOFORN', color:'#C24A2E'},
+  {id:'U', label:'Unclassified', color:'#16A34A'},
+  {id:'CUI', label:'CUI', color:'#0073E6'},
+  {id:'S', label:'Secret // NOFORN', color:'#DC2626'},
 ];
 const U_TAGS = ['eastern-sector','ports','northern-terminal','coastal','infrastructure','convoy','baseline','time-sensitive'];
 const U_CAVEATS = ['NOFORN','FOUO / CUI','ORCON (originator controls)','PII present','Releasable to partners'];
@@ -25,8 +25,8 @@ const U_SAMPLE_FILES = [
 function Field({label, req, hint, children, bad}){
   return (
     <div>
-      <label style={{display:'flex',alignItems:'center',gap:6,fontSize:12.5,fontWeight:600,color:bad?'#C24A2E':'var(--ink-2)',marginBottom:7}}>
-        {label}{req && <span style={{color:'#C24A2E'}}>*</span>}
+      <label style={{display:'flex',alignItems:'center',gap:6,fontSize:12.5,fontWeight:600,color:bad?'#DC2626':'var(--ink-2)',marginBottom:7}}>
+        {label}{req && <span style={{color:'#DC2626'}}>*</span>}
         {bad && <span style={{fontSize:11,fontWeight:500}}>· required</span>}
       </label>
       {children}
@@ -92,11 +92,11 @@ function DataUploadWorkspace({setPage, flash}){
               <div style={{display:'flex',flexDirection:'column',gap:18}}>
                 <Field label="Dataset name" req bad={tried&&missing.name}>
                   <input value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Northern Terminal — Q2 Throughput"
-                    style={{...inputStyle,borderColor:tried&&missing.name?'#C24A2E':'var(--line-2)'}}/>
+                    style={{...inputStyle,borderColor:tried&&missing.name?'#DC2626':'var(--line-2)'}}/>
                 </Field>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
                   <Field label="Source system" req bad={tried&&missing.source}>
-                    <select value={source} onChange={e=>setSource(e.target.value)} style={{...inputStyle,borderColor:tried&&missing.source?'#C24A2E':'var(--line-2)',color:source?'var(--ink)':'var(--ink-4)'}}>
+                    <select value={source} onChange={e=>setSource(e.target.value)} style={{...inputStyle,borderColor:tried&&missing.source?'#DC2626':'var(--line-2)',color:source?'var(--ink)':'var(--ink-4)'}}>
                       <option value="">Select a source…</option>
                       {U_SOURCES.map(s=><option key={s} value={s}>{s}</option>)}
                     </select>
@@ -141,7 +141,7 @@ function DataUploadWorkspace({setPage, flash}){
                 </div>
                 <Field label="Description" req bad={tried&&missing.desc}>
                   <textarea value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What is in this dataset, how it was collected, and any limitations…"
-                    style={{...inputStyle,height:96,padding:'11px 13px',lineHeight:1.5,resize:'vertical',borderColor:tried&&missing.desc?'#C24A2E':'var(--line-2)'}}/>
+                    style={{...inputStyle,height:96,padding:'11px 13px',lineHeight:1.5,resize:'vertical',borderColor:tried&&missing.desc?'#DC2626':'var(--line-2)'}}/>
                 </Field>
                 <Field label="Tags" hint="Improves discovery in Explore">
                   <div style={{display:'flex',gap:7,flexWrap:'wrap'}}>
@@ -168,7 +168,7 @@ function DataUploadWorkspace({setPage, flash}){
               <SectionHead title="Files" sub="Upload the dataset files" icon="upload"/>
               <div onDragOver={e=>{e.preventDefault();setOver(true);}} onDragLeave={()=>setOver(false)}
                 onDrop={e=>{e.preventDefault();setOver(false);addFiles();}} onClick={addFiles}
-                style={{border:'1.5px dashed '+(over?'var(--blue)':tried&&missing.files?'#C24A2E':'var(--line-2)'),borderRadius:12,padding:'30px 20px',textAlign:'center',cursor:'pointer',
+                style={{border:'1.5px dashed '+(over?'var(--blue)':tried&&missing.files?'#DC2626':'var(--line-2)'),borderRadius:12,padding:'30px 20px',textAlign:'center',cursor:'pointer',
                   background:over?'var(--blue-t)':'var(--surface-2)',transition:'.15s'}}>
                 <span style={{width:46,height:46,borderRadius:12,background:'#fff',border:'1px solid var(--line)',color:'var(--blue)',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="upload" size={22}/></span>
                 <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',marginTop:11}}>Drag files here, or <span style={{color:'var(--blue)'}}>browse</span></div>
@@ -187,8 +187,8 @@ function DataUploadWorkspace({setPage, flash}){
                             <span className="muted" style={{fontSize:11.5,flex:'none'}}>{f.size}</span>
                           </div>
                           <div style={{display:'flex',alignItems:'center',gap:9,marginTop:6}}>
-                            <div style={{flex:1,height:5,background:'#EEF2F7',borderRadius:3,overflow:'hidden'}}><div style={{width:pct+'%',height:'100%',background:uploading?'var(--blue)':'#1F8A5B',borderRadius:3,transition:'width .18s'}}></div></div>
-                            <span style={{fontSize:11,fontWeight:600,color:uploading?'var(--blue)':'#1F8A5B',flex:'none',width:64,textAlign:'right'}}>{uploading?`${pct}%`:'Uploaded'}</span>
+                            <div style={{flex:1,height:5,background:'#F1F5F9',borderRadius:3,overflow:'hidden'}}><div style={{width:pct+'%',height:'100%',background:uploading?'var(--blue)':'#16A34A',borderRadius:3,transition:'width .18s'}}></div></div>
+                            <span style={{fontSize:11,fontWeight:600,color:uploading?'var(--blue)':'#16A34A',flex:'none',width:64,textAlign:'right'}}>{uploading?`${pct}%`:'Uploaded'}</span>
                           </div>
                         </div>
                         <button className="btn btn-ghost btn-icon btn-sm" onClick={e=>{e.stopPropagation();removeFile(f.id);}}><Icon name="x" size={15}/></button>
@@ -207,7 +207,7 @@ function DataUploadWorkspace({setPage, flash}){
               <div style={{display:'flex',flexDirection:'column',gap:2}}>
                 {[['Dataset name',!missing.name],['Source system',!missing.source],['Category',!missing.cat],['Classification',!missing.cls],['Description',!missing.desc],['At least one file',!missing.files]].map(([l,ok])=>(
                   <div key={l} style={{display:'flex',alignItems:'center',gap:10,padding:'6px 0',fontSize:13,color:ok?'var(--ink-2)':'var(--ink-3)'}}>
-                    <span style={{width:19,height:19,borderRadius:'50%',background:ok?'#E4F4F0':'#EFF2F6',color:ok?'#1F8A5B':'var(--ink-4)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ok?'check':'x'} size={11} sw={3}/></span>
+                    <span style={{width:19,height:19,borderRadius:'50%',background:ok?'#F0FDF4':'#F1F5F9',color:ok?'#16A34A':'var(--ink-4)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ok?'check':'x'} size={11} sw={3}/></span>
                     {l}
                   </div>
                 ))}
@@ -221,7 +221,7 @@ function DataUploadWorkspace({setPage, flash}){
                 <span style={{fontWeight:700,color:U_CLS.find(c=>c.id===cls).color}}>{U_CLS.find(c=>c.id===cls).label}</span>
               </div>}
               <button className="btn btn-primary" style={{width:'100%',marginTop:15,opacity:valid?1:.85}} onClick={submit}><Icon name="database" size={16}/>Submit to ingest</button>
-              {tried && !valid && <div style={{fontSize:11.5,color:'#C24A2E',marginTop:9,textAlign:'center',fontWeight:500}}>Some required fields are missing.</div>}
+              {tried && !valid && <div style={{fontSize:11.5,color:'#DC2626',marginTop:9,textAlign:'center',fontWeight:500}}>Some required fields are missing.</div>}
             </div>
             <div className="card card-pad" style={{background:'var(--surface-2)'}}>
               <div style={{display:'flex',gap:10,alignItems:'flex-start'}}>
@@ -242,7 +242,7 @@ function UploadDone({name, files, onAnother, setPage}){
       <WsHeader name="Data Upload" setPage={setPage}/>
       <div className="page" style={{paddingTop:24,maxWidth:680,margin:'0 auto'}}>
         <div className="card card-pad" style={{textAlign:'center',padding:'40px 28px'}}>
-          <span style={{width:60,height:60,borderRadius:16,background:'#E4F4F0',color:'#1F8A5B',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={30} sw={2.4}/></span>
+          <span style={{width:60,height:60,borderRadius:16,background:'#F0FDF4',color:'#16A34A',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={30} sw={2.4}/></span>
           <h2 style={{fontSize:22,fontWeight:700,letterSpacing:'-.02em',margin:'18px 0 0',color:'var(--ink)'}}>Submitted to the ingest queue</h2>
           <p className="sec" style={{fontSize:14,margin:'8px 0 0',lineHeight:1.55}}><b style={{color:'var(--ink)'}}>{name||'Your dataset'}</b> — {files.length} file{files.length===1?'':'s'} — is now validating against the schema. You'll be notified when it's indexed.</p>
           <div style={{display:'flex',gap:10,justifyContent:'center',marginTop:22}}>

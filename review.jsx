@@ -2,25 +2,25 @@
 
 // ---- file-type presentation ----
 const RV_TYPE = {
-  mail:  { icon: 'mail',  color: '#5F6773' },
-  zip:   { icon: 'files', color: '#8A63C4' },
-  sheet: { icon: 'grid',  color: '#1FA98A' },
-  audio: { icon: 'audio', color: '#8A63C4' },
-  image: { icon: 'image', color: '#E068A7' },
-  video: { icon: 'video', color: '#FF9A4E' },
-  pdf:   { icon: 'file',  color: '#F86566' },
-  doc:   { icon: 'file',  color: '#1D6BD0' },
-  txt:   { icon: 'file',  color: '#8C94A3' },
+  mail:  { icon: 'mail',  color: '#475569' },
+  zip:   { icon: 'files', color: '#475569' },
+  sheet: { icon: 'grid',  color: '#16A34A' },
+  audio: { icon: 'audio', color: '#475569' },
+  image: { icon: 'image', color: '#0EA5E9' },
+  video: { icon: 'video', color: '#B5851C' },
+  pdf:   { icon: 'file',  color: '#DC2626' },
+  doc:   { icon: 'file',  color: '#0073E6' },
+  txt:   { icon: 'file',  color: '#64748B' },
 };
 
 // custodian initials/colors
 const RV_PPL = {
-  Henderson: { initials: 'MH', color: '#1D6BD0' },
-  Brenner:   { initials: 'KB', color: '#1FA98A' },
-  Tran:      { initials: 'DT', color: '#8A63C4' },
-  Anand:     { initials: 'RA', color: '#FF9A4E' },
-  Vasquez:   { initials: 'LV', color: '#E068A7' },
-  Caldwell:  { initials: 'JC', color: '#5568C7' },
+  Henderson: { initials: 'MH', color: '#1D3557' },
+  Brenner:   { initials: 'KB', color: '#1D3557' },
+  Tran:      { initials: 'DT', color: '#1D3557' },
+  Anand:     { initials: 'RA', color: '#1D3557' },
+  Vasquez:   { initials: 'LV', color: '#1D3557' },
+  Caldwell:  { initials: 'JC', color: '#1D3557' },
 };
 
 // ---- the four issues this matter is coded against ----
@@ -112,6 +112,15 @@ const RV_TABS = [
   { id: 'history', label: 'History', icon: 'history' },
 ];
 
+// ---- review-team assignment (me = Tyler; team = Aria/Sam/Priya) ----
+const RV_ASG = {
+  d1: 'tyler', d2: 'tyler', d3: 'aria', d4: 'priya', d5: 'priya', d6: 'sam', d7: 'priya', d8: 'sam',
+  d9: 'aria', d10: 'tyler', d11: 'tyler', d12: 'aria', d13: 'priya', d14: 'priya', d15: 'priya',
+  d16: 'sam', d17: 'tyler', d18: 'aria', d19: 'priya', d20: 'priya', d21: 'aria', d22: 'sam',
+};
+const RV_SCOPES = [{ id: 'me', label: 'Assigned to me' }, { id: 'team', label: 'My team' }, { id: 'all', label: 'All' }];
+function rvScope(d) { return RV_ASG[d.id] === 'tyler' ? 'me' : 'team'; }
+
 // ---- tag pill ----
 function RvTag({ children }) {
   return (
@@ -120,13 +129,55 @@ function RvTag({ children }) {
 }
 
 function RvAvatar({ who, size = 26 }) {
-  const p = RV_PPL[who] || { initials: '?', color: '#8C94A3' };
+  const p = RV_PPL[who] || { initials: '?', color: '#1D3557' };
   return <span className="av" style={{ width: size, height: size, background: p.color, fontSize: Math.round(size * 0.4) }}>{p.initials}</span>;
 }
 
-// ===================== main =====================
+// ===================== entry: datatable of assigned docs =====================
 function ReviewQueue({ setPage, flash, folderName }) {
-  const [selId, setSelId] = React.useState('d1');
+  const [startId, setStartId] = React.useState(null);
+  if (startId) return <RvWorkbench setPage={setPage} flash={flash} folderName={folderName} startId={startId} onBack={() => setStartId(null)} />;
+  return <RvList setPage={setPage} flash={flash} folderName={folderName} onOpen={setStartId} />;
+}
+
+function RvList({ setPage, flash, folderName, onOpen }) {
+  const firstId = RV_DOCS[0].id;
+  const columns = [
+    { label: 'Document', render: (d) => {
+        const t = RV_TYPE[d.type];
+        return <QTitle icon={t.icon} color={t.color} title={d.title} sub={d.archive ? d.archive.length + ' items · ' + d.size : d.source + ' · ' + d.size} />; } },
+    { label: 'Custodian', width: 132, render: (d) => <QPerson av={<RvAvatar who={d.who} size={24} />} name={d.who} /> },
+    { label: 'Reviewer', width: 128, render: (d) => {
+        const a = RV_ASG[d.id];
+        return <QPerson av={<Avatar id={a} size={24} ring={false} />} name={PEOPLE[a].name.split(' ')[0] + (a === 'tyler' ? ' (you)' : '')} />; } },
+    { label: 'Flags', width: 92, render: (d) => (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+          {d.priv && <span title="Privileged" style={{ display: 'inline-flex', color: '#B5851C' }}><Icon name="shield" size={14} /></span>}
+          {d.hot && <span title="Hot / key document" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: '#DC2626', fontSize: 11.5, fontWeight: 600 }}><span style={{ width: 7, height: 7, borderRadius: 2, background: '#DC2626' }}></span>Hot</span>}
+          {!d.priv && !d.hot && <span style={{ color: 'var(--ink-4)' }}>&mdash;</span>}
+        </span>) },
+    { label: 'Coding', width: 120, render: (d) => d.reviewed
+        ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 600, color: 'var(--lime)' }}><Icon name="check" size={14} sw={2.4} />Relevant</span>
+        : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, color: 'var(--ink-3)' }}><span style={{ width: 8, height: 8, borderRadius: '50%', border: '1.5px solid var(--line-2)' }}></span>Pending</span> },
+    { label: 'Date', width: 80, align: 'right', render: (d) => <span style={{ fontSize: 12, color: 'var(--ink-4)', whiteSpace: 'nowrap' }}>{d.date}</span> },
+  ];
+  return (
+    <div className="rise">
+      <WsHeader name="Triage" setPage={setPage}
+        action={
+          <button className="btn btn-primary" onClick={() => onOpen(firstId)}>
+            <Icon name="eye" size={16} />Start review
+          </button>} />
+      <WorkQueue
+        blurb={<React.Fragment>Evidence coding queue for <b style={{ color: 'var(--ink-2)' }}>{folderName || 'Henderson v. Vantage'}</b>. Open a document to code it for relevance, privilege &amp; issues &mdash; one at a time.</React.Fragment>}
+        scopes={RV_SCOPES} scopeOf={rvScope} rows={RV_DOCS} columns={columns} onOpen={onOpen}
+        emptyLabel="No documents in this view." />
+    </div>);
+}
+
+// ===================== single-doc workbench =====================
+function RvWorkbench({ setPage, flash, folderName, startId, onBack }) {
+  const [selId, setSelId] = React.useState(startId || RV_DOCS[0].id);
   const [tab, setTab] = React.useState('coding');
   const [coding, setCoding] = React.useState({});
   const listRef = React.useRef(null);
@@ -175,9 +226,9 @@ function ReviewQueue({ setPage, flash, folderName }) {
       {/* ============ LEFT: queue ============ */}
       <aside style={{ width: 296, flex: 'none', borderRight: '1px solid var(--line)', display: 'flex', flexDirection: 'column', background: 'var(--surface-2)' }}>
         <div style={{ padding: '13px 16px 11px', borderBottom: '1px solid var(--line)' }}>
-          <button onClick={() => setPage('explore')} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: 0, background: 'transparent',
+          <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: 0, background: 'transparent',
             color: 'var(--ink-3)', fontSize: 11.5, fontWeight: 600, cursor: 'pointer', padding: 0, marginBottom: 9 }}>
-            <Icon name="chevron_left" size={13} sw={2.2} />{folderName || 'Henderson v. Vantage'}
+            <Icon name="chevron_left" size={13} sw={2.2} />Triage queue
           </button>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>Review Queue</span>
@@ -205,8 +256,8 @@ function ReviewQueue({ setPage, flash, folderName }) {
                   <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ flex: 1, minWidth: 0, fontSize: 13, fontWeight: isSel ? 600 : 550, color: isSel ? 'var(--primary)' : 'var(--ink)',
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.title}</span>
-                    {d.priv && <Icon name="shield" size={12} style={{ color: '#BC8418', flex: 'none' }} />}
-                    {d.hot && <span style={{ width: 7, height: 7, borderRadius: 2, background: '#F86566', flex: 'none' }}></span>}
+                    {d.priv && <Icon name="shield" size={12} style={{ color: '#B5851C', flex: 'none' }} />}
+                    {d.hot && <span style={{ width: 7, height: 7, borderRadius: 2, background: '#DC2626', flex: 'none' }}></span>}
                   </span>
                   <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-3)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {d.who} &middot; {d.date}
@@ -298,7 +349,7 @@ function RvArchive({ sel, flash }) {
     <div className="card" style={{ borderRadius: 14, overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '20px 22px', borderBottom: '1px solid var(--line)' }}>
         <span style={{ width: 42, height: 42, borderRadius: 11, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: '#F1ECF8', color: '#8A63C4' }}><Icon name="files" size={21} /></span>
+          background: '#F1F5F9', color: '#475569' }}><Icon name="files" size={21} /></span>
         <div>
           <div style={{ fontSize: 15, fontWeight: 650, color: 'var(--ink)' }}>{sel.title}</div>
           <div style={{ fontSize: 12.5, color: 'var(--ink-3)', marginTop: 2 }}>{sel.archive.length} items &middot; {sel.size} compressed</div>
@@ -321,7 +372,7 @@ function RvArchive({ sel, flash }) {
               <span style={{ flex: 1, minWidth: 0 }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                   <span style={{ fontSize: 13.5, fontWeight: 550, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.name}</span>
-                  {f.hot && <span style={{ width: 7, height: 7, borderRadius: 2, background: '#F86566', flex: 'none' }}></span>}
+                  {f.hot && <span style={{ width: 7, height: 7, borderRadius: 2, background: '#DC2626', flex: 'none' }}></span>}
                 </span>
                 <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-4)', marginTop: 2 }}>{f.size}</span>
               </span>
@@ -380,8 +431,8 @@ function RvCoding({ sel, code, decision, setCode, toggleIssue }) {
 
       <SectionLabel main="Flags" />
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}>
-        <FlagRow on={priv} icon="shield" label="Privileged" sub="Attorney-client / work product" k="P" accent="#BC8418" onClick={() => setCode({ priv: !priv })} />
-        <FlagRow on={hot} icon="flame" label="Hot / key document" sub="Flag for the trial team" k="H" accent="#F86566" onClick={() => setCode({ hot: !hot })} />
+        <FlagRow on={priv} icon="shield" label="Privileged" sub="Attorney-client / work product" k="P" accent="#B5851C" onClick={() => setCode({ priv: !priv })} />
+        <FlagRow on={hot} icon="flame" label="Hot / key document" sub="Flag for the trial team" k="H" accent="#DC2626" onClick={() => setCode({ hot: !hot })} />
       </div>
 
       <SectionLabel main="Assign to issue" sub="press 1\u20134" />
@@ -493,4 +544,4 @@ function RvStub({ tab, sel }) {
     </div>);
 }
 
-Object.assign(window, { ReviewQueue });
+Object.assign(window, { ReviewQueue, RvWorkbench, RvList });

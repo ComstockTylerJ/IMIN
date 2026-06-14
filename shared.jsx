@@ -1,7 +1,8 @@
 // shared.jsx — UI primitives & charts
 
 function Logo({size=30}){
-  return <img src="assets/logo-256.png" width={size} height={size} alt="IMIN"
+  const src=(typeof window!=='undefined' && window.__resources && window.__resources.logo) || "assets/logo-256.png";
+  return <img src={src} width={size} height={size} alt="IMIN"
     style={{display:'block', filter:'drop-shadow(0 1px 2px rgba(29,53,87,.12))'}} draggable="false"/>;
 }
 function Brand({size=30, onClick}){
@@ -14,7 +15,7 @@ function Brand({size=30, onClick}){
 }
 
 function Avatar({id, size=26, ring=true, title}){
-  const p = PEOPLE[id] || {initials:'?', color:'#8C94A3', name:''};
+  const p = PEOPLE[id] || {initials:'?', color:'#1D3557', name:''};
   return (
     <span className="av" title={title===false?undefined:(title||p.name)} style={{
       width:size, height:size, background:p.color, fontSize:Math.round(size*0.4),
@@ -27,7 +28,7 @@ function AvatarStack({ids, size=24, max=3}){
   return (
     <div className="av-stack">
       {shown.map(id=> <Avatar key={id} id={id} size={size}/>)}
-      {extra>0 && <span className="av" style={{width:size,height:size,background:'#EAEEF4',color:'var(--ink-3)',fontSize:Math.round(size*0.38)}}>+{extra}</span>}
+      {extra>0 && <span className="av" style={{width:size,height:size,background:'#E2E8F0',color:'var(--ink-3)',fontSize:Math.round(size*0.38)}}>+{extra}</span>}
     </div>
   );
 }
@@ -56,7 +57,7 @@ function smoothPath(pts){
   }
   return d;
 }
-function Sparkline({data, color='#1D6BD0', w=92, h=30, fill=true}){
+function Sparkline({data, color='#0073E6', w=92, h=30, fill=true}){
   const min=Math.min(...data), max=Math.max(...data), pad=3;
   const rng=(max-min)||1;
   const pts=data.map((v,i)=>[pad+i*(w-pad*2)/(data.length-1), h-pad-(v-min)/rng*(h-pad*2)]);
@@ -74,7 +75,7 @@ function Sparkline({data, color='#1D6BD0', w=92, h=30, fill=true}){
   );
 }
 
-function AreaChart({series, labels, color='#1D6BD0', h=220}){
+function AreaChart({series, labels, color='#0073E6', h=220}){
   const w=640; const padL=8, padR=8, padT=14, padB=26;
   const max=Math.max(...series.flat())*1.12;
   const iw=w-padL-padR, ih=h-padT-padB;
@@ -83,7 +84,7 @@ function AreaChart({series, labels, color='#1D6BD0', h=220}){
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width="100%" height={h} preserveAspectRatio="none" style={{display:'block',overflow:'visible'}}>
       {[0,.25,.5,.75,1].map((g,i)=>(
-        <line key={i} x1={padL} x2={w-padR} y1={padT+g*ih} y2={padT+g*ih} stroke="#EEF2F7" strokeWidth="1"/>
+        <line key={i} x1={padL} x2={w-padR} y1={padT+g*ih} y2={padT+g*ih} stroke="#F1F5F9" strokeWidth="1"/>
       ))}
       {series.map((arr,si)=>{
         const pts=toPts(arr), line=smoothPath(pts), c=colors[si%colors.length];
@@ -98,14 +99,14 @@ function AreaChart({series, labels, color='#1D6BD0', h=220}){
         </g>);
       })}
       {labels && labels.map((l,i)=>(
-        <text key={i} x={padL+i*iw/(labels.length-1)} y={h-7} fontSize="10.5" fill="#8C94A3"
+        <text key={i} x={padL+i*iw/(labels.length-1)} y={h-7} fontSize="10.5" fill="#64748B"
           textAnchor={i===0?'start':i===labels.length-1?'end':'middle'} fontWeight="500">{l}</text>
       ))}
     </svg>
   );
 }
 
-function BarChart({data, labels, color='#1D6BD0', h=200, max:mx}){
+function BarChart({data, labels, color='#0073E6', h=200, max:mx}){
   const w=560, padB=26, padT=10, gap=14;
   const max=mx||Math.max(...data)*1.15;
   const ih=h-padB-padT, bw=(w-gap*(data.length-1))/data.length;
@@ -116,14 +117,14 @@ function BarChart({data, labels, color='#1D6BD0', h=200, max:mx}){
         const c=Array.isArray(color)?color[i%color.length]:color;
         return (<g key={i}>
           <rect x={x} y={y} width={bw} height={bh} rx="5" fill={c} opacity="0.92"/>
-          {labels && <text x={x+bw/2} y={h-8} fontSize="10.5" fill="#8C94A3" textAnchor="middle" fontWeight="500">{labels[i]}</text>}
+          {labels && <text x={x+bw/2} y={h-8} fontSize="10.5" fill="#64748B" textAnchor="middle" fontWeight="500">{labels[i]}</text>}
         </g>);
       })}
     </svg>
   );
 }
 
-function Donut({value, size=120, stroke=13, color='#1D6BD0', track='#EEF2F7', label, sub}){
+function Donut({value, size=120, stroke=13, color='#0073E6', track='#F1F5F9', label, sub}){
   const r=(size-stroke)/2, c=2*Math.PI*r, off=c*(1-value/100);
   return (
     <div style={{position:'relative',width:size,height:size}}>
@@ -143,9 +144,9 @@ function Donut({value, size=120, stroke=13, color='#1D6BD0', track='#EEF2F7', la
 
 function TrendBadge({delta, dir, good, bad, neutral}){
   const positive = dir==='up';
-  let color = '#8C94A3';
-  if(!neutral){ color = (good ? '#1FA98A' : bad ? '#F86566' : (positive?'#1FA98A':'#F86566')); }
-  else { color = positive ? '#1FA98A' : '#F86566'; }
+  let color = '#64748B';
+  if(!neutral){ color = (good ? '#16A34A' : bad ? '#DC2626' : (positive?'#16A34A':'#DC2626')); }
+  else { color = positive ? '#16A34A' : '#DC2626'; }
   return (
     <span className="badge" style={{background:'transparent', color, padding:0, gap:3, fontSize:12, fontWeight:600}}>
       <Icon name={positive?'arrow_up':'arrow_down'} size={13} sw={2.4}/>{Math.abs(delta)}
@@ -161,7 +162,7 @@ function HeroPattern({opacity=1}){
         <defs>
           <pattern id="diamonds" width="64" height="64" patternUnits="userSpaceOnUse" patternTransform="rotate(0)">
             <path d="M32 12 C 40 24, 40 24, 52 32 C 40 40, 40 40, 32 52 C 24 40, 24 40, 12 32 C 24 24, 24 24, 32 12 Z"
-              fill="none" stroke="#1D6BD0" strokeWidth="1" opacity="0.05"/>
+              fill="none" stroke="#0073E6" strokeWidth="1" opacity="0.05"/>
           </pattern>
           <radialGradient id="heroFade" cx="50%" cy="0%" r="90%">
             <stop offset="0" stopColor="#fff" stopOpacity="0"/>

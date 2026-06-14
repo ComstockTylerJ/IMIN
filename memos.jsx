@@ -1,11 +1,11 @@
 // memos.jsx — Memos workspace: review, concur & pass memos along a routing chain
 
-const M_SERIF = "'Spectral', Georgia, 'Times New Roman', serif";
+const M_SERIF = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 const M_MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 const M_CLS = {
-  U:   {label:'UNCLASSIFIED',     short:'U',   color:'#1F8A5B', bg:'#1F8A5B'},
-  CUI: {label:'CUI',              short:'CUI', color:'#1D6BD0', bg:'#1D6BD0'},
-  S:   {label:'SECRET // NOFORN', short:'S',   color:'#C24A2E', bg:'#C24A2E'},
+  U:   {label:'UNCLASSIFIED',     short:'U',   color:'#16A34A', bg:'#16A34A'},
+  CUI: {label:'CUI',              short:'CUI', color:'#0073E6', bg:'#0073E6'},
+  S:   {label:'SECRET // NOFORN', short:'S',   color:'#DC2626', bg:'#DC2626'},
 };
 
 // chain step states: done | current | pending
@@ -72,10 +72,10 @@ function memoStage(m){
   return 'review';
 }
 const MEMO_BADGE = {
-  mine:    {label:'Awaiting your concurrence', color:'#1D6BD0', tint:'#E7EFFB'},
-  review:  {label:'In routing', color:'#BC8418', tint:'#F8EFD9'},
-  returned:{label:'Returned for edits', color:'#C24A2E', tint:'#FBEAE8'},
-  passed:  {label:'Passed', color:'#1F8A5B', tint:'#E4F4F0'},
+  mine:    {label:'Awaiting your concurrence', color:'#0073E6', tint:'#EBF4FF'},
+  review:  {label:'In routing', color:'#B5851C', tint:'#F8EFD9'},
+  returned:{label:'Returned for edits', color:'#DC2626', tint:'#FBEAE8'},
+  passed:  {label:'Passed', color:'#16A34A', tint:'#F0FDF4'},
 };
 
 // ============ chain visual ============
@@ -87,11 +87,11 @@ function MemoChain({chain, size=26}){
           <span title={`${PEOPLE[s.who].name} · ${s.role}`} style={{position:'relative',display:'inline-flex',flex:'none'}}>
             <Avatar id={s.who} size={size} ring={false}/>
             <span style={{position:'absolute',inset:-2,borderRadius:'50%',pointerEvents:'none',
-              boxShadow: s.state==='current'?'0 0 0 2px #1D6BD0':'none'}}></span>
-            {s.state==='done' && <span style={{position:'absolute',right:-2,bottom:-2,width:13,height:13,borderRadius:'50%',background:'#1F8A5B',
+              boxShadow: s.state==='current'?'0 0 0 2px #0073E6':'none'}}></span>
+            {s.state==='done' && <span style={{position:'absolute',right:-2,bottom:-2,width:13,height:13,borderRadius:'50%',background:'#16A34A',
               display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 0 2px #fff'}}><Icon name="check" size={8} sw={3.5} style={{color:'#fff'}}/></span>}
           </span>
-          {i<chain.length-1 && <span style={{width:18,height:2,background: s.state==='done'?'#1F8A5B':'var(--line-2)',flex:'none',margin:'0 1px'}}></span>}
+          {i<chain.length-1 && <span style={{width:18,height:2,background: s.state==='done'?'#16A34A':'var(--line-2)',flex:'none',margin:'0 1px'}}></span>}
         </React.Fragment>
       ))}
     </div>
@@ -104,10 +104,10 @@ function ClsTag({cls, sm}){
 }
 
 // ============ workspace ============
+const MEMO_SCOPES = [{ id: 'me', label: 'Assigned to me' }, { id: 'team', label: 'My team' }, { id: 'all', label: 'All' }];
 function MemosWorkspace({setPage, flash}){
   const [memos,setMemos]=React.useState(MEMOS);
   const [openId,setOpenId]=React.useState(null);
-  const [filter,setFilter]=React.useState('mine');
 
   function advance(id){
     setMemos(arr=>arr.map(m=>{
@@ -127,40 +127,28 @@ function MemosWorkspace({setPage, flash}){
   const current=memos.find(m=>m.id===openId);
   if(current) return <MemoDetail m={current} onBack={()=>setOpenId(null)} onAdvance={advance} onReturn={ret}/>;
 
-  const counts={ mine:memos.filter(m=>memoStage(m)==='mine').length, review:memos.filter(m=>memoStage(m)==='review').length,
-    returned:memos.filter(m=>memoStage(m)==='returned').length, passed:memos.filter(m=>memoStage(m)==='passed').length };
-  const tabs=[['mine','Awaiting me'],['review','In routing'],['returned','Returned'],['passed','Passed'],['all','All']];
-  const list = filter==='all'?memos:memos.filter(m=>memoStage(m)===filter);
+  const columns=[
+    {label:'Memo', render:m=>
+      <QTitle icon="route" color="var(--violet)" tint="var(--violet-t)" title={m.title} sub={m.type+' · '+m.id}/>},
+    {label:'Class.', width:128, render:m=><ClsTag cls={m.cls} sm/>},
+    {label:'Waiting on', width:152, render:m=>{
+      const cur=m.chain.find(s=>s.state==='current');
+      if(!cur) return <QPerson av={<Avatar id={m.chain[m.chain.length-1].who} size={24} ring={false}/>} name="Distributed"/>;
+      return <QPerson av={<Avatar id={cur.who} size={24} ring={false}/>} name={PEOPLE[cur.who].name.split(' ')[0]+(cur.who==='tyler'?' (you)':'')}/>;
+    }},
+    {label:'Status', width:188, render:m=>{const b=MEMO_BADGE[memoStage(m)];
+      return <span style={{fontSize:12.5,fontWeight:600,color:b.color,background:b.tint,padding:'5px 11px',borderRadius:999,whiteSpace:'nowrap'}}>{b.label}</span>;}},
+    {label:'Date', width:74, align:'right', render:m=><span style={{fontFamily:M_MONO,fontSize:12,color:'var(--ink-4)'}}>{m.short}</span>},
+  ];
 
   return (
     <div className="rise">
       <WsHeader name="Memos" setPage={setPage}
         action={<button className="btn btn-primary" onClick={()=>setPage('prep')}><Icon name="plus" size={16} sw={2.2}/>New memo</button>}/>
-      <div className="page" style={{paddingTop:24}}>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:22}}>
-          {[['Awaiting your concurrence',counts.mine,'#1D6BD0'],['In routing',counts.review,'#BC8418'],['Returned',counts.returned,'#C24A2E'],['Passed this week',7,'#1F8A5B']].map(([l,v,c])=>(
-            <div key={l} className="card card-pad">
-              <div style={{fontSize:12.5,fontWeight:550,color:'var(--ink-2)',marginBottom:8}}>{l}</div>
-              <div style={{fontSize:26,fontWeight:700,letterSpacing:'-.03em',color:c}}>{v}</div>
-            </div>
-          ))}
-        </div>
-
-        <div style={{display:'flex',gap:3,background:'#EEF1F6',padding:3,borderRadius:9,marginBottom:18,width:'fit-content'}}>
-          {tabs.map(([id,label])=>(
-            <button key={id} onClick={()=>setFilter(id)} style={{display:'flex',alignItems:'center',gap:7,border:0,
-              background:filter===id?'#fff':'transparent',color:filter===id?'var(--ink)':'var(--ink-3)',fontSize:12.5,fontWeight:550,
-              padding:'7px 13px',borderRadius:7,cursor:'pointer',boxShadow:filter===id?'var(--shadow-sm)':'none',transition:'.12s'}}>
-              {label}{id!=='all' && <span style={{fontSize:11,fontWeight:700,color:filter===id?'var(--blue)':'var(--ink-4)'}}>{counts[id]}</span>}
-            </button>
-          ))}
-        </div>
-
-        <div style={{display:'flex',flexDirection:'column',gap:14,paddingBottom:40}}>
-          {list.map(m=><MemoCard key={m.id} m={m} onOpen={()=>setOpenId(m.id)}/>)}
-          {!list.length && <div className="card" style={{padding:'40px',textAlign:'center',color:'var(--ink-3)'}}>Nothing here right now.</div>}
-        </div>
-      </div>
+      <WorkQueue
+        blurb="Memos moving up the routing chain. Concur to pass each to the next reviewer, or return it to the originator for edits."
+        scopes={MEMO_SCOPES} scopeOf={m=>memoStage(m)==='mine'?'me':'team'} rows={memos} columns={columns} onOpen={setOpenId}
+        emptyLabel="No memos in this view."/>
     </div>
   );
 }
@@ -177,7 +165,7 @@ function MemoCard({m, onOpen}){
             <span className="muted" style={{fontSize:11.5,fontWeight:500}}>{m.type}</span>
             <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
             <span className="muted" style={{fontSize:11.5,fontFamily:M_MONO}}>{m.id}</span>
-            {m.priority==='urgent' && <span className="badge" style={{background:'#FEECEC',color:'#F86566',height:18}}>Urgent</span>}
+            {m.priority==='urgent' && <span className="badge" style={{background:'#FEF2F2',color:'#DC2626',height:18}}>Urgent</span>}
           </div>
           <h3 style={{fontFamily:M_SERIF,fontSize:19,fontWeight:600,letterSpacing:'-.01em',margin:0,color:'var(--ink)',lineHeight:1.25}}>{m.title}</h3>
           <p style={{fontSize:13.5,color:'var(--ink-2)',margin:'7px 0 0',lineHeight:1.5,maxWidth:680}}>{m.summary}</p>
@@ -244,8 +232,8 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
                   <div key={i} style={{display:'flex',alignItems:'center',gap:13,padding:'7px 0',position:'relative'}}>
                     <span style={{width:28,height:28,borderRadius:'50%',flex:'none',zIndex:1,boxShadow:'0 0 0 3px #fff',position:'relative'}}>
                       <Avatar id={s.who} size={28} ring={false}/>
-                      {done && <span style={{position:'absolute',right:-2,bottom:-2,width:14,height:14,borderRadius:'50%',background:'#1F8A5B',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 0 2px #fff'}}><Icon name="check" size={8} sw={4} style={{color:'#fff'}}/></span>}
-                      {curr && <span style={{position:'absolute',inset:-3,borderRadius:'50%',boxShadow:'0 0 0 2px #1D6BD0'}}></span>}
+                      {done && <span style={{position:'absolute',right:-2,bottom:-2,width:14,height:14,borderRadius:'50%',background:'#16A34A',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 0 2px #fff'}}><Icon name="check" size={8} sw={4} style={{color:'#fff'}}/></span>}
+                      {curr && <span style={{position:'absolute',inset:-3,borderRadius:'50%',boxShadow:'0 0 0 2px #0073E6'}}></span>}
                     </span>
                     <div style={{minWidth:0,flex:1}}>
                       <div style={{fontSize:13,fontWeight:600,color:done||curr?'var(--ink)':'var(--ink-3)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{PEOPLE[s.who].name}</div>
@@ -258,7 +246,7 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
           </div>
 
           {passed ? (
-            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:9,background:'#E4F4F0',color:'#1F8A5B',fontSize:14,fontWeight:600,padding:'14px',borderRadius:12}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:9,background:'#F0FDF4',color:'#16A34A',fontSize:14,fontWeight:600,padding:'14px',borderRadius:12}}>
               <Icon name="check" size={17} sw={2.4}/>Passed to distribution
             </div>
           ) : mine ? (
@@ -269,7 +257,7 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
               <button className="btn btn-secondary" onClick={()=>onReturn(m.id)}><Icon name="route" size={15}/>Return for edits</button>
             </div>
           ) : (
-            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:9,background:'#F8EFD9',color:'#BC8418',fontSize:13.5,fontWeight:600,padding:'13px',borderRadius:12,textAlign:'center'}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:9,background:'#F8EFD9',color:'#B5851C',fontSize:13.5,fontWeight:600,padding:'13px',borderRadius:12,textAlign:'center'}}>
               <Icon name="route" size={15}/>With {cur?PEOPLE[cur.who].name:'reviewer'}
             </div>
           )}

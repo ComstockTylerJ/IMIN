@@ -4,7 +4,7 @@
 const AGENTS = {
   atlas: {
     id:'atlas', code:'ATLAS', role:'Relevance Coder', wf:'relevance',
-    color:'#1D6BD0', tint:'#E7EFFB', icon:'target',
+    color:'#0073E6', tint:'#EBF4FF', icon:'target',
     skill:'First-pass responsiveness & relevance coding across document sets',
     autonomyDefault:'checkpoint' },
   cassius: {
@@ -14,7 +14,7 @@ const AGENTS = {
     autonomyDefault:'checkpoint' },
   vesta: {
     id:'vesta', code:'VESTA', role:'Clearance Screener', wf:'press',
-    color:'#1F9D86', tint:'#E4F4F0', icon:'megaphone',
+    color:'#16A34A', tint:'#F0FDF4', icon:'megaphone',
     skill:'Screens public statements & filings for Rule 3.6 / privilege risk',
     autonomyDefault:'checkpoint' },
   solon: {
@@ -24,12 +24,12 @@ const AGENTS = {
     autonomyDefault:'copilot' },
   juno: {
     id:'juno', code:'JUNO', role:'Deposition Prep', wf:'deposition',
-    color:'#8A63C4', tint:'#F1EBFA', icon:'mic',
+    color:'#475569', tint:'#F1F5F9', icon:'mic',
     skill:'Builds depo outlines, pulls exhibits & cross-refs the chronology',
     autonomyDefault:'copilot' },
   oracle: {
     id:'oracle', code:'ORACLE', role:'Research Analyst', wf:null,
-    color:'#1FA98A', tint:'#E4F5F0', icon:'bulb',
+    color:'#16A34A', tint:'#F0FDF4', icon:'bulb',
     skill:'Ask-anything research across the matter record & case law',
     autonomyDefault:'auto' },
 };
@@ -37,20 +37,20 @@ const AGENT_ORDER = ['atlas','cassius','vesta','solon','juno','oracle'];
 
 // ---- run lifecycle states ----
 const RUN_STATUS = {
-  running:   {label:'Running',             color:'#1D6BD0', tint:'#E7EFFB', live:true},
+  running:   {label:'Running',             color:'#0073E6', tint:'#EBF4FF', live:true},
   needs_you: {label:'Needs your approval', color:'#E8920C', tint:'#FCF0DC'},
-  ready:     {label:'Output ready',        color:'#8A63C4', tint:'#F1EBFA'},
-  paused:    {label:'Paused',              color:'#8C94A3', tint:'#EFF2F6'},
-  queued:    {label:'Queued',              color:'#5568C7', tint:'#ECEDFB'},
-  blocked:   {label:'Needs input',         color:'#F86566', tint:'#FEECEC'},
-  done:      {label:'Completed',           color:'#1FA98A', tint:'#E4F5F0'},
+  ready:     {label:'Output ready',        color:'#475569', tint:'#F1F5F9'},
+  paused:    {label:'Paused',              color:'#64748B', tint:'#F1F5F9'},
+  queued:    {label:'Queued',              color:'#1D3557', tint:'#EAF0F7'},
+  blocked:   {label:'Needs input',         color:'#DC2626', tint:'#FEF2F2'},
+  done:      {label:'Completed',           color:'#16A34A', tint:'#F0FDF4'},
 };
 
 // autonomy modes
 const AUTONOMY = {
-  auto:      {label:'Autonomous',  icon:'sync',   desc:'Runs to completion, then reports back', color:'#1FA98A'},
+  auto:      {label:'Autonomous',  icon:'sync',   desc:'Runs to completion, then reports back', color:'#16A34A'},
   checkpoint:{label:'Checkpoints', icon:'shield_check', desc:'Pauses at key gates for your sign-off', color:'#E8920C'},
-  copilot:   {label:'Co-pilot',    icon:'hand',   desc:'Proposes every step; you accept each one', color:'#1D6BD0'},
+  copilot:   {label:'Co-pilot',    icon:'hand',   desc:'Proposes every step; you accept each one', color:'#0073E6'},
 };
 
 // ---- the live fleet of agent runs ----
@@ -192,14 +192,14 @@ function boardRunsFor(wfId){ return RUNS.filter(r=>{ const w=AGENTS[r.agent].wf;
 function runCol(run, isWf){ return isWf ? RUN_BOARD_COL[run.id] : RUN_GEN_COL[run.status]; }
 
 const STEP_KIND = {
-  think: {icon:'bulb',     color:'#8A63C4'},
-  read:  {icon:'file',     color:'#1D6BD0'},
-  search:{icon:'search',   color:'#2FB2F3'},
-  act:   {icon:'target',   color:'#1F9D86'},
+  think: {icon:'bulb',     color:'#475569'},
+  read:  {icon:'file',     color:'#0073E6'},
+  search:{icon:'search',   color:'#0073E6'},
+  act:   {icon:'target',   color:'#16A34A'},
   write: {icon:'pen',      color:'#E1574F'},
   gate:  {icon:'shield',   color:'#E8920C'},
-  wait:  {icon:'clock',    color:'#8C94A3'},
-  done:  {icon:'check',    color:'#1FA98A'},
+  wait:  {icon:'clock',    color:'#64748B'},
+  done:  {icon:'check',    color:'#16A34A'},
 };
 
 Object.assign(window, { AGENTS, AGENT_ORDER, RUN_STATUS, AUTONOMY, RUNS, runsByStatus, needsYou, STEP_KIND, WF_AGENT, runForTask, RUN_BOARD_COL, RUN_GEN_COL, boardRunsFor, runCol });

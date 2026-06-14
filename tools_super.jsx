@@ -1,18 +1,18 @@
 // tools_super.jsx — "Tools" catalog (SuperApp pattern): grid · categories · search · favorites · detail drawer
 
 const TOOL_CATS = {
-  language:     {label:'Language',     color:'#1FA98A', tint:'#E4F5F0', icon:'route'},
-  data:         {label:'Data',         color:'#5568C7', tint:'#ECEDFB', icon:'database'},
-  identity:     {label:'Identity',     color:'#1D6BD0', tint:'#E7EFFB', icon:'fingerprint'},
+  language:     {label:'Language',     color:'#16A34A', tint:'#F0FDF4', icon:'route'},
+  data:         {label:'Data',         color:'#1D3557', tint:'#EAF0F7', icon:'database'},
+  identity:     {label:'Identity',     color:'#0073E6', tint:'#EBF4FF', icon:'fingerprint'},
   financial:    {label:'Financial',    color:'#B5851C', tint:'#F8F0DA', icon:'chart'},
-  productivity: {label:'Productivity', color:'#8A63C4', tint:'#F1EBFA', icon:'sparkle'},
+  productivity: {label:'Productivity', color:'#475569', tint:'#F1F5F9', icon:'sparkle'},
 };
 const CAT_ORDER = ['productivity','data','identity','language','financial'];
 
 const BUMP = {
-  major:{label:'Major', color:'#F86566', tint:'#FEECEC'},
-  minor:{label:'Minor', color:'#1D6BD0', tint:'#E7EFFB'},
-  patch:{label:'Patch', color:'#8C94A3', tint:'#EFF2F6'},
+  major:{label:'Major', color:'#DC2626', tint:'#FEF2F2'},
+  minor:{label:'Minor', color:'#0073E6', tint:'#EBF4FF'},
+  patch:{label:'Patch', color:'#64748B', tint:'#F1F5F9'},
 };
 
 // party: 'first_party' (built in-house) | 'third_party' (external vendor)
@@ -138,7 +138,7 @@ function ToolsPage({ setPage, flash }){
                   onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--line-2)'}/>
               </div>
               <button className={'btn btn-sm '+(favOnly?'btn-primary':'btn-secondary')} onClick={()=>setFavOnly(v=>!v)} style={{height:38}}>
-                <Icon name={favOnly?'star_fill':'star'} size={15} style={favOnly?{color:'#fff'}:{color:'#FF9A4E'}}/>Favorites
+                <Icon name={favOnly?'star_fill':'star'} size={15} style={favOnly?{color:'#fff'}:{color:'#B5851C'}}/>Favorites
               </button>
             </div>
           </div>
@@ -174,7 +174,7 @@ function ToolsPage({ setPage, flash }){
               <div style={{display:'flex',alignItems:'center',gap:9,margin:'0 2px 14px'}}>
                 <span style={{width:26,height:26,borderRadius:8,background:c.tint,color:c.color,display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name={c.icon} size={15}/></span>
                 <span style={{fontSize:15,fontWeight:700,letterSpacing:'-.01em',color:'var(--ink)'}}>{c.label}</span>
-                <span className="badge" style={{background:'#EFF2F6',color:'var(--ink-3)'}}>{list.length}</span>
+                <span className="badge" style={{background:'#F1F5F9',color:'var(--ink-3)'}}>{list.length}</span>
               </div>
               <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:14}}>
                 {list.map(t=><ToolCard key={t.id} t={t} fav={favs.has(t.id)} toggleFav={toggleFav} onOpen={()=>setSel(t.id)} flash={flash}/>)}
@@ -192,7 +192,7 @@ function ToolsPage({ setPage, flash }){
 function PartyBadge({ party, sm }){
   const first = party==='first_party';
   return (
-    <span className="badge" style={{background:first?'#E7EFFB':'#FFF1E4',color:first?'#1D6BD0':'#C58A1E',height:sm?18:20,fontSize:sm?10:10.5,letterSpacing:'.02em',whiteSpace:'nowrap'}}>
+    <span className="badge" style={{background:first?'#EBF4FF':'#FFFBEB',color:first?'#0073E6':'#C58A1E',height:sm?18:20,fontSize:sm?10:10.5,letterSpacing:'.02em',whiteSpace:'nowrap'}}>
       <Icon name={first?'shield_check':'globe'} size={sm?10:11}/>{first?'1st\u2011party':'3rd\u2011party'}
     </span>
   );
@@ -213,7 +213,7 @@ function ToolCard({ t, fav, toggleFav, onOpen, flash }){
             <span style={{fontFamily:"ui-monospace,Menlo,monospace",fontSize:10.5,color:'var(--ink-3)',fontWeight:500}}>v{t.version}</span>
           </div>
         </div>
-        <button onClick={e=>{e.stopPropagation();toggleFav(t.id);}} className="btn btn-ghost btn-icon btn-sm" title="Favorite" style={{flex:'none',color:fav?'#FF9A4E':'var(--ink-4)'}}>
+        <button onClick={e=>{e.stopPropagation();toggleFav(t.id);}} className="btn btn-ghost btn-icon btn-sm" title="Favorite" style={{flex:'none',color:fav?'#B5851C':'var(--ink-4)'}}>
           <Icon name={fav?'star_fill':'star'} size={17}/>
         </button>
       </div>
@@ -239,7 +239,7 @@ function ToolDrawer({ t, fav, toggleFav, onClose, setPage, flash }){
     ['Category', <span style={{display:'inline-flex',alignItems:'center',gap:6,color:c.color,fontWeight:600}}><Icon name={c.icon} size={13}/>{c.label}</span>],
     ['Version', <span style={{fontFamily:"ui-monospace,Menlo,monospace",fontWeight:600}}>v{t.version}</span>],
     ['Access level', t.access],
-    ['Audit log', t.audit ? <span style={{display:'inline-flex',alignItems:'center',gap:5,color:'#1FA98A',fontWeight:600}}><Icon name="shield_check" size={13}/>Enabled</span> : <span className="muted">Off</span>],
+    ['Audit log', t.audit ? <span style={{display:'inline-flex',alignItems:'center',gap:5,color:'#16A34A',fontWeight:600}}><Icon name="shield_check" size={13}/>Enabled</span> : <span className="muted">Off</span>],
     ['Launches', (t.launch==='external'?'New tab (external)':'In-app')],
   ];
   return (
@@ -249,7 +249,7 @@ function ToolDrawer({ t, fav, toggleFav, onClose, setPage, flash }){
         {/* header */}
         <div style={{padding:'18px 20px',borderBottom:'1px solid var(--line)'}}>
           <div style={{display:'flex',justifyContent:'flex-end',gap:4,marginBottom:6}}>
-            <button onClick={()=>toggleFav(t.id)} className="btn btn-ghost btn-icon btn-sm" title="Favorite" style={{color:fav?'#FF9A4E':'var(--ink-4)'}}><Icon name={fav?'star_fill':'star'} size={17}/></button>
+            <button onClick={()=>toggleFav(t.id)} className="btn btn-ghost btn-icon btn-sm" title="Favorite" style={{color:fav?'#B5851C':'var(--ink-4)'}}><Icon name={fav?'star_fill':'star'} size={17}/></button>
             <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon name="x" size={17}/></button>
           </div>
           <div style={{display:'flex',alignItems:'flex-start',gap:13}}>
@@ -267,7 +267,7 @@ function ToolDrawer({ t, fav, toggleFav, onClose, setPage, flash }){
           <div>
             <div className="eyebrow" style={{marginBottom:10}}>Maintainer</div>
             <div className="card" style={{padding:'13px 14px',display:'flex',alignItems:'center',gap:12}}>
-              <span style={{width:38,height:38,borderRadius:10,background:t.party==='first_party'?'var(--primary-tint)':'#FFF1E4',color:t.party==='first_party'?'var(--primary)':'#C58A1E',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.party==='first_party'?'users':'globe'} size={18}/></span>
+              <span style={{width:38,height:38,borderRadius:10,background:t.party==='first_party'?'var(--primary-tint)':'#FFFBEB',color:t.party==='first_party'?'var(--primary)':'#C58A1E',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.party==='first_party'?'users':'globe'} size={18}/></span>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)'}}>{t.team}</div>
                 <div className="muted" style={{fontSize:11.5}}>{t.party==='first_party'?'Internal team':'Third-party vendor'} · {t.contact}</div>

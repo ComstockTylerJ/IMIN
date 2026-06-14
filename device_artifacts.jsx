@@ -4,7 +4,7 @@
 function _aSeed(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
 function _aRng(seed){ return function(){ let t=seed+=0x6D2B79F5; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; }
 const _aPick=(r,a)=>a[Math.floor(r()*a.length)];
-const _aPal=['#1D6BD0','#8A63C4','#1FA98A','#FF9A4E','#E068A7','#2FB2F3','#7FC457','#5568C7'];
+const _aPal=['#0073E6','#475569','#16A34A','#B5851C','#0EA5E9','#0073E6','#16A34A','#1D3557'];
 
 const _FIRST=['James','Maria','Wei','Omar','Sofia','Liam','Aisha','Noah','Yuki','Ivan','Elena','Carlos','Fatima','Hassan','Grace','Tomas','Nadia','Ravi','Lena','Marcus','Priya','Dmitri','Sara','Kofi','Mei','Andre','Zoe','Pavel','Layla','Sean'];
 const _LAST=['Okonkwo','Petrov','Nguyen','Al‑Rashid','Moreno','Carter','Khan','Bauer','Tanaka','Volkov','Reyes','Haddad','Lindqvist','Osei','Cohen','Romano','Park','Silva','Novak','Abbas','Chen','Ferreira','Kowalski','Mbeki','Hofer','Diaz','Walsh','Ito','Brandt','Mensah'];
@@ -31,7 +31,7 @@ const _PW_SVC=[
   {s:'NordVPN',t:'Security'},{s:'Amazon',t:'Shopping'},{s:'Dropbox',t:'Storage'},{s:'Office Portal',t:'Work'},
   {s:'Telegram',t:'Messaging'},{s:'PayPal',t:'Finance'},{s:'Router admin',t:'Network'},{s:'GitHub',t:'Dev'},
 ];
-const _PW_STR=[{l:'Weak',c:'#F86566'},{l:'Fair',c:'#FF9A4E'},{l:'Strong',c:'#1FA98A'}];
+const _PW_STR=[{l:'Weak',c:'#DC2626'},{l:'Fair',c:'#B5851C'},{l:'Strong',c:'#16A34A'}];
 const _SITES=[
   {t:'Marine traffic — live map',u:'marinetraffic.com/en/ais'},{t:'Currency converter',u:'xe.com/currencyconverter'},
   {t:'Encrypted email login',u:'mail.proton.me/login'},{t:'Flight status — BA0249',u:'flightaware.com/live'},
@@ -76,7 +76,7 @@ function genArtifacts(d){
 function ACirc({init,color,size=30}){
   return <span style={{width:size,height:size,borderRadius:'50%',background:color,color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:size*0.36,fontWeight:600,flex:'none'}}>{init}</span>;
 }
-const CALL_DIR={in:{ic:'arrow_down',c:'#1FA98A',l:'Incoming'},out:{ic:'arrow_up',c:'#1D6BD0',l:'Outgoing'},missed:{ic:'x',c:'#F86566',l:'Missed'}};
+const CALL_DIR={in:{ic:'arrow_down',c:'#16A34A',l:'Incoming'},out:{ic:'arrow_up',c:'#0073E6',l:'Outgoing'},missed:{ic:'x',c:'#DC2626',l:'Missed'}};
 
 function ArtRow({children, onLeave}){
   return <div style={{display:'flex',alignItems:'center',gap:12,padding:'11px 14px',borderTop:'1px solid var(--line)'}}>{children}</div>;
@@ -246,7 +246,7 @@ function DeviceArtifacts({device, flash}){
         {tab==='media' && (<div style={{padding:14}}>
           <div style={{display:'grid',gridTemplateColumns:'repeat(6,1fr)',gap:8}}>
             {Array.from({length:24}).map((_,i)=>(
-              <div key={i} style={{aspectRatio:'1',borderRadius:8,background:`repeating-linear-gradient(135deg, var(--surface-2), var(--surface-2) 7px, #EEF2F7 7px, #EEF2F7 14px)`,border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ink-4)'}}>
+              <div key={i} style={{aspectRatio:'1',borderRadius:8,background:`repeating-linear-gradient(135deg, var(--surface-2), var(--surface-2) 7px, #F1F5F9 7px, #F1F5F9 14px)`,border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ink-4)'}}>
                 <Icon name={i%5===0?'video':'image'} size={16}/>
               </div>
             ))}

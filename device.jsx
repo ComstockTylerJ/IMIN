@@ -2,19 +2,19 @@
 
 // content categories present on a device, scaled to its file count
 const DEV_CATS = [
-  {key:'photos',   label:'Photos & Video', icon:'image', color:'#E068A7', w:0.34},
-  {key:'messages', label:'Messages',       icon:'message', color:'#1D6BD0', w:0.22},
-  {key:'docs',     label:'Documents',      icon:'file', color:'#1FA98A', w:0.14},
-  {key:'apps',     label:'App Data',       icon:'apps', color:'#8A63C4', w:0.12},
-  {key:'browser',  label:'Browser & Web',  icon:'globe', color:'#FF9A4E', w:0.09},
-  {key:'calls',    label:'Call Logs',      icon:'phone', color:'#5568C7', w:0.05},
-  {key:'mail',     label:'Email',          icon:'mail', color:'#3EC0D7', w:0.04},
+  {key:'photos',   label:'Photos & Video', icon:'image', color:'#0EA5E9', w:0.34},
+  {key:'messages', label:'Messages',       icon:'message', color:'#0073E6', w:0.22},
+  {key:'docs',     label:'Documents',      icon:'file', color:'#16A34A', w:0.14},
+  {key:'apps',     label:'App Data',       icon:'apps', color:'#475569', w:0.12},
+  {key:'browser',  label:'Browser & Web',  icon:'globe', color:'#B5851C', w:0.09},
+  {key:'calls',    label:'Call Logs',      icon:'phone', color:'#1D3557', w:0.05},
+  {key:'mail',     label:'Email',          icon:'mail', color:'#0EA5E9', w:0.04},
 ];
 
 function DevStat({value, label, icon, color}){
   return (
     <div className="card card-pad" style={{display:'flex',alignItems:'center',gap:13}}>
-      <span style={{width:38,height:38,borderRadius:10,background:(color||'#1D6BD0')+'1a',color:color||'#1D6BD0',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={19}/></span>
+      <span style={{width:38,height:38,borderRadius:10,background:(color||'#0073E6')+'1a',color:color||'#0073E6',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={19}/></span>
       <div style={{minWidth:0}}>
         <div style={{fontSize:21,fontWeight:700,color:'var(--ink)',letterSpacing:'-.02em',lineHeight:1,whiteSpace:'nowrap'}}>{value}</div>
         <div className="muted" style={{fontSize:11.5,marginTop:3,fontWeight:500}}>{label}</div>
@@ -161,10 +161,10 @@ function DeviceDetail({id, setPage, openPerson, flash}){
       <div className="page" style={{paddingTop:24,display:'flex',flexDirection:'column',gap:20}}>
         {/* stat tiles */}
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14}}>
-          <DevStat value={locked?'—':d.files.toLocaleString()} label="Items extracted" icon="files" color="#1D6BD0"/>
-          <DevStat value={d.size} label={`of ${d.cap} used`} icon="harddrive" color="#1FA98A"/>
-          <DevStat value={locked?'—':d.apps} label="Applications" icon="apps" color="#8A63C4"/>
-          <DevStat value={d.last} label="Last activity" icon="clock" color="#FF9A4E"/>
+          <DevStat value={locked?'—':d.files.toLocaleString()} label="Items extracted" icon="files" color="#0073E6"/>
+          <DevStat value={d.size} label={`of ${d.cap} used`} icon="harddrive" color="#16A34A"/>
+          <DevStat value={locked?'—':d.apps} label="Applications" icon="apps" color="#475569"/>
+          <DevStat value={d.last} label="Last activity" icon="clock" color="#B5851C"/>
         </div>
 
         {/* artifacts — centerpiece, full width */}

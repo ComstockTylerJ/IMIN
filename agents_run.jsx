@@ -192,8 +192,8 @@ function GateCard({ run, agent, onApprove, flash }){
                   <div style={{fontSize:12.5,color:'var(--ink)',fontWeight:550,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.basis}</div>
                   <div className="muted" style={{fontSize:11}}>{r.from} → {r.to}</div>
                 </div>
-                <span className="badge" style={{background: r.conf>=.9?'#E4F5F0':'#FFF1E4', color:r.conf>=.9?'#1FA98A':'#C58A1E',flex:'none'}}>{Math.round(r.conf*100)}%</span>
-                <button onClick={()=>setApproved(p=>({...p,[i]:!on}))} className="btn btn-ghost btn-icon btn-sm" title={on?'Exclude':'Include'} style={{flex:'none',color:on?'#1FA98A':'var(--ink-4)'}}>
+                <span className="badge" style={{background: r.conf>=.9?'#F0FDF4':'#FFFBEB', color:r.conf>=.9?'#16A34A':'#C58A1E',flex:'none'}}>{Math.round(r.conf*100)}%</span>
+                <button onClick={()=>setApproved(p=>({...p,[i]:!on}))} className="btn btn-ghost btn-icon btn-sm" title={on?'Exclude':'Include'} style={{flex:'none',color:on?'#16A34A':'var(--ink-4)'}}>
                   <Icon name={on?'check_square':'square'} size={17}/>
                 </button>
               </div>
@@ -202,7 +202,7 @@ function GateCard({ run, agent, onApprove, flash }){
           <div style={{padding:'9px 13px',borderTop:'1px solid var(--line)',fontSize:11.5,color:'var(--ink-3)',background:'var(--surface-2)'}}>+ {g.more} more entries with confidence ≥ 0.82</div>
         </div>
         <div style={{display:'flex',gap:9,marginTop:15,alignItems:'center'}}>
-          <button className="btn" style={{background:'#1FA98A',color:'#fff'}} onClick={onApprove}><Icon name="check" size={16} sw={2.4}/>Approve & write to log</button>
+          <button className="btn btn-primary" onClick={onApprove}><Icon name="check" size={16} sw={2.4}/>Approve & write to log</button>
           <button className="btn btn-secondary"><Icon name="pen" size={15}/>Edit entries</button>
           <div style={{flex:1}}></div>
           <button className="btn btn-ghost" style={{color:'var(--coral)'}}>Reject all</button>
@@ -214,11 +214,11 @@ function GateCard({ run, agent, onApprove, flash }){
 
 // ---- output review (VESTA clearance findings) ----
 function FindingsCard({ run, agent, flash, setStatus }){
-  const SEV={high:{label:'High risk',color:'#F86566',tint:'#FEECEC'},low:{label:'Minor',color:'#C58A1E',tint:'#FFF7E6'}};
+  const SEV={high:{label:'High risk',color:'#DC2626',tint:'#FEF2F2'},low:{label:'Minor',color:'#C58A1E',tint:'#FFF7E6'}};
   return (
     <div className="card" style={{overflow:'hidden',borderColor:'#E3D6F2'}}>
       <div style={{padding:'15px 18px',display:'flex',alignItems:'center',gap:11,borderBottom:'1px solid var(--line)',background:'#FAF7FE'}}>
-        <span style={{width:34,height:34,borderRadius:9,background:'#EFE6FA',color:'#8A63C4',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="megaphone" size={17}/></span>
+        <span style={{width:34,height:34,borderRadius:9,background:'#EFE6FA',color:'#475569',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="megaphone" size={17}/></span>
         <div style={{flex:1}}>
           <div style={{fontSize:14,fontWeight:700,color:'var(--ink)'}}>Clearance findings — {agent.code} flagged {run.findings.length}</div>
           <div style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}>Review each before clearing the statement for release</div>
@@ -242,7 +242,7 @@ function FindingsCard({ run, agent, flash, setStatus }){
           <button className="btn btn-primary" onClick={()=>{setStatus('done');flash&&flash('Redlines accepted — statement updated');}}><Icon name="check" size={16} sw={2.2}/>Accept all redlines</button>
           <button className="btn btn-secondary" onClick={()=>flash&&flash('Sent back to '+agent.code)}><Icon name="sync" size={15}/>Send back with notes</button>
           <div style={{flex:1}}></div>
-          <button className="btn btn-secondary" style={{color:'#1FA98A',borderColor:'#BFE6D9'}} onClick={()=>{setStatus('done');flash&&flash('Statement cleared for release');}}>Clear for release</button>
+          <button className="btn btn-secondary" style={{color:'#16A34A',borderColor:'#BFE6D9'}} onClick={()=>{setStatus('done');flash&&flash('Statement cleared for release');}}>Clear for release</button>
         </div>
       </div>
     </div>
@@ -282,12 +282,12 @@ function RunMetaCard({ run, agent, status }){
 
 function ArtifactsCard({ run, agent }){
   const map={
-    cassius:[['Privilege log draft','12 new entries','shield','#B5851C'],['Excluded duplicates','19 already logged','files','#8C94A3']],
-    atlas:[['Coded documents','2,981 tagged','target','#1D6BD0'],['Hot docs for review','41 escalated','flame','#F86566']],
-    vesta:[['Findings report','5 findings · 2 high','megaphone','#1F9D86'],['Suggested redlines','3 inline edits','pen','#E1574F']],
-    solon:[['Draft — § III argument','2 of 5 sections','pen','#E1574F'],['Authorities cited','22 sources','book','#1D6BD0']],
-    juno:[['Cross outline','Topics 1–4','mic','#8A63C4'],['Exhibits linked','14 to chronology','files','#1D6BD0']],
-    oracle:[['Research memo','3 pages · 9 cites','file','#1FA98A'],['Authority table','controlling + persuasive','book','#1D6BD0']],
+    cassius:[['Privilege log draft','12 new entries','shield','#B5851C'],['Excluded duplicates','19 already logged','files','#64748B']],
+    atlas:[['Coded documents','2,981 tagged','target','#0073E6'],['Hot docs for review','41 escalated','flame','#DC2626']],
+    vesta:[['Findings report','5 findings · 2 high','megaphone','#16A34A'],['Suggested redlines','3 inline edits','pen','#E1574F']],
+    solon:[['Draft — § III argument','2 of 5 sections','pen','#E1574F'],['Authorities cited','22 sources','book','#0073E6']],
+    juno:[['Cross outline','Topics 1–4','mic','#475569'],['Exhibits linked','14 to chronology','files','#0073E6']],
+    oracle:[['Research memo','3 pages · 9 cites','file','#16A34A'],['Authority table','controlling + persuasive','book','#0073E6']],
   };
   const arts=map[run.agent]||[];
   return (
@@ -323,7 +323,7 @@ function GuardrailsCard({ run, agent }){
       <div style={{display:'flex',flexDirection:'column',gap:9}}>
         {rails.map(([t],i)=>(
           <div key={i} style={{display:'flex',alignItems:'flex-start',gap:9,fontSize:12.5,color:'var(--ink-2)',lineHeight:1.4}}>
-            <Icon name="shield_check" size={15} sw={2} style={{color:'#1FA98A',flex:'none',marginTop:1}}/>{t}
+            <Icon name="shield_check" size={15} sw={2} style={{color:'#16A34A',flex:'none',marginTop:1}}/>{t}
           </div>
         ))}
       </div>

@@ -1,6 +1,6 @@
 // clearance.jsx — Clearance workspace: screen public statements & route to counsel
 
-const SERIF = "'Spectral', Georgia, 'Times New Roman', serif";
+const SERIF = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif";
 const CL_MONO = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace";
 const PAPER = '#F4F7FC';
 const CL_LINE = 'var(--line)';
@@ -9,14 +9,14 @@ const INK_BTN = 'var(--primary)';
 // severity palette
 const SEV = {
   high: { label: 'High', color: '#D24B43', tint: '#FBEAE8', mark: '#F4D7D3' },
-  med: { label: 'Medium', color: '#BC8418', tint: '#F8EFD9', mark: '#F2E2BD' },
-  low: { label: 'Low', color: '#1D6BD0', tint: '#E7EFFB', mark: '#D4E4F8' } };
+  med: { label: 'Medium', color: '#B5851C', tint: '#F8EFD9', mark: '#F2E2BD' },
+  low: { label: 'Low', color: '#0073E6', tint: '#EBF4FF', mark: '#D4E4F8' } };
 
 
 // people for clearance
 const CLP = {
-  jordan: { name: 'Jordan Cole', initials: 'JC', color: '#1D6BD0' },
-  mensah: { name: 'R. Mensah', initials: 'RM', color: '#1F9D86' } };
+  jordan: { name: 'Jordan Cole', initials: 'JC', color: '#1D3557' },
+  mensah: { name: 'R. Mensah', initials: 'RM', color: '#1D3557' } };
 
 
 // ---- finding factory ----
@@ -149,22 +149,22 @@ const CL_STEPS = [
 { id: 'attorney', label: 'Attorney Review', ic: 'gavel' },
 { id: 'cleared', label: 'Cleared', ic: 'check' }];
 
-const GREEN = '#1F9D86', GRAY = '#CBD2DC', BLUE = '#1D6BD0', RED = '#D24B43';
+const GREEN = '#16A34A', GRAY = '#CBD2DC', BLUE = '#0073E6', RED = '#D24B43';
 // returns {done, act, actC, badge, bC, bT}
 function stageMeta(stage) {
   switch (stage) {
-    case 'awaiting':return { done: 0, act: 0, actC: BLUE, badge: 'Awaiting screen', bC: '#8C94A3', bT: '#F2F5F9' };
+    case 'awaiting':return { done: 0, act: 0, actC: BLUE, badge: 'Awaiting screen', bC: '#64748B', bT: '#F2F5F9' };
     case 'flagged':return { done: 1, act: 1, actC: RED, badge: 'Issues flagged', bC: RED, bT: '#FBEAE8' };
-    case 'ready':return { done: 2, act: -1, actC: GREEN, badge: 'Ready to route', bC: GREEN, bT: '#E4F4F0' };
-    case 'attorney':return { done: 2, act: 2, actC: BLUE, badge: 'Attorney review', bC: '#BC8418', bT: '#F8EFD9' };
-    case 'cleared':return { done: 3, act: 3, actC: BLUE, badge: 'Cleared for release', bC: GREEN, bT: '#E4F4F0' };
-    default:return { done: 0, act: 0, actC: BLUE, badge: '', bC: '#8C94A3', bT: '#F2F5F9' };}
+    case 'ready':return { done: 2, act: -1, actC: GREEN, badge: 'Ready to route', bC: GREEN, bT: '#F0FDF4' };
+    case 'attorney':return { done: 2, act: 2, actC: BLUE, badge: 'Attorney review', bC: '#B5851C', bT: '#F8EFD9' };
+    case 'cleared':return { done: 3, act: 3, actC: BLUE, badge: 'Cleared for release', bC: GREEN, bT: '#F0FDF4' };
+    default:return { done: 0, act: 0, actC: BLUE, badge: '', bC: '#64748B', bT: '#F2F5F9' };}
 
 }
 function nodeColor(i, m) {return i < m.done ? GREEN : i === m.act ? m.actC : GRAY;}
 
 function ClAvatar({ id, size = 26 }) {
-  const p = CLP[id] || { initials: '?', color: '#8C94A3' };
+  const p = CLP[id] || { initials: '?', color: '#64748B' };
   return <span className="av" style={{ width: size, height: size, background: p.color, fontSize: Math.round(size * 0.38) }}>{p.initials}</span>;
 }
 
@@ -196,31 +196,45 @@ function ClearanceWorkspace({ setPage, flash }) {
 
 }
 
-// =================== List view ===================
+// =================== List view (datatable) ===================
+const CL_SCOPES = [{ id: 'me', label: 'Assigned to me' }, { id: 'team', label: 'My team' }, { id: 'all', label: 'All' }];
+function clScope(s) {
+  const stage = stageOf(s);
+  return stage === 'attorney' || stage === 'cleared' ? 'team' : 'me';
+}
+
 function ClList({ stmts, setPage, onOpen, flash }) {
+  const columns = [
+    { label: 'Statement', render: (s) =>
+        <QTitle icon="megaphone" color="#16A34A" tint="#F0FDF4" title={s.title} sub={s.kind + (s.location ? ' · ' + s.location : '')} /> },
+    { label: 'Stage', width: 168, render: (s) => {
+        const m = stageMeta(stageOf(s));
+        return <span style={{ fontSize: 12.5, fontWeight: 600, color: m.bC, background: m.bT, padding: '5px 11px', borderRadius: 999, whiteSpace: 'nowrap' }}>{m.badge}</span>; } },
+    { label: 'Owner', width: 150, render: (s) => <QPerson av={<ClAvatar id={s.author} size={24} />} name={CLP[s.author].name} /> },
+    { label: 'Findings', width: 118, render: (s) => {
+        const o = openCount(s), stage = stageOf(s);
+        if (!s.screened) return <span style={{ fontSize: 12.5, color: 'var(--ink-4)' }}>Not screened</span>;
+        if (o) return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 600, color: RED }}><Icon name="pen" size={13} sw={2} />{o} open</span>;
+        return <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 600, color: GREEN }}><Icon name="check" size={14} sw={2.4} />Clear</span>; } },
+    { label: 'Date', width: 92, align: 'right', render: (s) => <span style={{ fontFamily: CL_MONO, fontSize: 12, color: 'var(--ink-4)' }}>{s.short}</span> },
+  ];
   return (
     <React.Fragment>
       <WsHeader name="Clearance" setPage={setPage}
         action={
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <button className="btn btn-secondary" onClick={() => window.__openKickoff && window.__openKickoff('vesta', { label: 'Clearance screen' })}>
-              <Icon name="sparkle" size={16} style={{ color: '#1F9D86' }} />Screen with VESTA
+              <Icon name="sparkle" size={16} style={{ color: '#16A34A' }} />Screen with VESTA
             </button>
             <button className="btn btn-primary" onClick={() => flash && flash('Upload a statement to begin screening')}>
               <Icon name="plus" size={16} sw={2.2} />New statement
             </button>
           </div>} />
-      <div className="page" style={{ paddingTop: 24, maxWidth: 1180 }}>
-        <p style={{ fontSize: 14.5, margin: 0, color: 'var(--ink-3)', maxWidth: 620, lineHeight: 1.5 }}>
-          Upload a statement &mdash; AI screens it against the case&rsquo;s privileged &amp; confidential materials, then routes it to counsel for clearance.
-        </p>
-
-        <ClStepper />
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, marginTop: 22, paddingBottom: 50 }}>
-          {stmts.map((s) => <ClStatementCard key={s.id} s={s} onOpen={() => onOpen(s.id)} />)}
-        </div>
-      </div>
+      <WorkQueue
+        blurb="Statements queued for screening &amp; clearance. AI screens each against the case&rsquo;s privileged &amp; confidential materials, then routes it to counsel."
+        lead={<ClStepper />}
+        scopes={CL_SCOPES} scopeOf={clScope} rows={stmts} columns={columns} onOpen={onOpen}
+        emptyLabel="No statements in this view." />
     </React.Fragment>);
 
 }
@@ -273,7 +287,7 @@ function ClStatementCard({ s, onOpen }) {
   let foot = null;
   const footBase = { display: 'inline-flex', alignItems: 'center', gap: 6, fontWeight: 600, fontSize: 13, whiteSpace: 'nowrap', flex: 'none' };
   if (stage === 'flagged') foot = <span style={{ ...footBase, color: RED }}><Icon name="pen" size={14} sw={2} />{open} open finding{open === 1 ? '' : 's'}</span>;else
-  if (stage === 'attorney') foot = <span style={{ ...footBase, color: '#BC8418' }}><Icon name="pen" size={14} sw={2} />{open} open finding{open === 1 ? '' : 's'}</span>;else
+  if (stage === 'attorney') foot = <span style={{ ...footBase, color: '#B5851C' }}><Icon name="pen" size={14} sw={2} />{open} open finding{open === 1 ? '' : 's'}</span>;else
   if (stage === 'ready') foot = <span style={{ ...footBase, color: GREEN }}><Icon name="check" size={14} sw={2.4} />All findings resolved</span>;else
   if (stage === 'cleared') foot = <span style={{ ...footBase, color: GREEN }}><Icon name="check" size={15} sw={2.4} />Cleared</span>;
 
@@ -283,7 +297,7 @@ function ClStatementCard({ s, onOpen }) {
     onMouseEnter={(e) => {e.currentTarget.style.transform = 'translateY(-2px)';e.currentTarget.style.boxShadow = '0 10px 30px rgba(29,53,87,.10)';}}
     onMouseLeave={(e) => {e.currentTarget.style.transform = 'none';e.currentTarget.style.boxShadow = '0 1px 2px rgba(29,53,87,.04)';}}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
-        <span style={{ width: 44, height: 44, borderRadius: 12, background: '#E4F4F0', color: '#1F9D86', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', marginTop: 2 }}>
+        <span style={{ width: 44, height: 44, borderRadius: 12, background: '#F0FDF4', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', marginTop: 2 }}>
           <Icon name="megaphone" size={21} />
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -328,7 +342,7 @@ function ClReview({ s, onBack, onApply, onDismiss, onReopen, onRoute, onRunScree
             <Icon name="chevron_left" size={15} sw={2.2} />Press
           </button>
           <span style={{ width: 1, height: 26, background: CL_LINE }}></span>
-          <span style={{ width: 30, height: 30, borderRadius: 8, background: '#E4F4F0', color: '#1F9D86', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
+          <span style={{ width: 30, height: 30, borderRadius: 8, background: '#F0FDF4', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}>
             <Icon name="megaphone" size={16} />
           </span>
           <div style={{ minWidth: 0, flex: 1 }}>
@@ -354,7 +368,7 @@ function ClReview({ s, onBack, onApply, onDismiss, onReopen, onRoute, onRunScree
               </div>
               {s.findings.length === 0 &&
             <div style={{ background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 14, padding: '26px 18px', textAlign: 'center' }}>
-                  <span style={{ width: 40, height: 40, borderRadius: 11, background: '#E4F4F0', color: GREEN, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={20} sw={2.4} /></span>
+                  <span style={{ width: 40, height: 40, borderRadius: 11, background: '#F0FDF4', color: GREEN, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><Icon name="check" size={20} sw={2.4} /></span>
                   <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)', marginTop: 10 }}>No issues found</div>
                   <div style={{ fontSize: 12.5, color: 'var(--ink-3)', marginTop: 3 }}>This statement screened clean against the case&rsquo;s privileged &amp; confidential materials.</div>
                 </div>}
@@ -369,11 +383,11 @@ function ClReview({ s, onBack, onApply, onDismiss, onReopen, onRoute, onRunScree
               </div>
 
               {s.status === 'cleared' ?
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, background: '#E4F4F0', color: GREEN, fontSize: 14, fontWeight: 600, padding: '14px', borderRadius: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, background: '#F0FDF4', color: GREEN, fontSize: 14, fontWeight: 600, padding: '14px', borderRadius: 12 }}>
                   <Icon name="check" size={17} sw={2.4} />Cleared for release
                 </div> :
             routed ?
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, background: '#F8EFD9', color: '#BC8418', fontSize: 14, fontWeight: 600, padding: '14px', borderRadius: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 9, background: '#F8EFD9', color: '#B5851C', fontSize: 14, fontWeight: 600, padding: '14px', borderRadius: 12 }}>
                   <Icon name="gavel" size={16} />With {CLP[s.counsel].name} for clearance
                 </div> :
 
@@ -420,7 +434,7 @@ function ClDoc({ s, active, setActive }) {
   const byId = Object.fromEntries(s.findings.map((f) => [f.id, f]));
   return (
     <div style={{ background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 18, padding: '54px 64px 60px', boxShadow: '0 1px 3px rgba(29,53,87,.05)', minHeight: 200 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.14em', color: '#1F9D86', textTransform: 'uppercase', marginBottom: 22 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.14em', color: '#16A34A', textTransform: 'uppercase', marginBottom: 22 }}>
         {s.forRelease ? 'For Immediate Release' : 'Internal \u2014 Not For Release'}
       </div>
       <h1 style={{ fontFamily: SERIF, fontSize: 30, fontWeight: 700, letterSpacing: '-.015em', color: 'var(--ink)', lineHeight: 1.18, margin: 0 }}>{s.title}</h1>
@@ -479,7 +493,7 @@ function ClFinding({ f, active, onEnter, onLeave, onApply, onDismiss, onReopen }
     return (
       <div style={{ background: '#fff', border: `1px solid ${CL_LINE}`, borderRadius: 13, padding: '12px 14px', display: 'flex', alignItems: 'center', gap: 11, opacity: .92 }}>
         <span style={{ width: 26, height: 26, borderRadius: 8, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: applied ? '#E4F4F0' : 'var(--hover)', color: applied ? GREEN : 'var(--ink-3)' }}>
+          background: applied ? '#F0FDF4' : 'var(--hover)', color: applied ? GREEN : 'var(--ink-3)' }}>
           <Icon name={applied ? 'check' : 'x'} size={15} sw={2.4} />
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>

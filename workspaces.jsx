@@ -33,7 +33,7 @@ function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
         action={<button className="btn btn-primary" onClick={openCreate}><Icon name="plus" size={16} sw={2.2}/>New item</button>}/>
       <div className="page" style={{paddingTop:24}}>
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:22}}>
-          {[['Active items',w.active,w.color],['Due today',w.today,'#F86566'],['Completed (wk)',Math.round(w.active*0.7),'#1FA98A'],['Avg cycle','2.4d','#8A63C4']].map(([l,v,c])=>(
+          {[['Active items',w.active,w.color],['Due today',w.today,'#DC2626'],['Completed (wk)',Math.round(w.active*0.7),'#16A34A'],['Avg cycle','2.4d','#475569']].map(([l,v,c])=>(
             <div key={l} className="card card-pad">
               <div style={{fontSize:12.5,fontWeight:550,color:'var(--ink-2)',marginBottom:8}}>{l}</div>
               <div style={{fontSize:26,fontWeight:700,letterSpacing:'-.03em',color:c}}>{v}</div>
@@ -67,10 +67,14 @@ function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
 
 // ---------------- Content workspace (search + browse + folders) ----------------
 function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed, openPerson, openDevice, openTopic}){
-  const [ai,setAi]=React.useState(true);
+  const [ai,setAi]=React.useState(false);
   const [browse,setBrowse]=React.useState('Collections');
   const [query,setQuery]=React.useState('');
   const [filter,setFilter]=React.useState('');
+  const [gv,setGv]=React.useState('card');
+  const [favOnly,setFavOnly]=React.useState(false);
+  const [favs,setFavs]=React.useState(()=>{const o={};FOLDERS.forEach(f=>{if(f.fav)o[f.id]=true;});return o;});
+  const toggleFav=id=>setFavs(s=>({...s,[id]:!s[id]}));
   const tryChips=['Q3 campaign','Brand assets','Hero video'];
   const go=()=>onSearch&&onSearch(query);
 
@@ -137,6 +141,18 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed, openP
               ))}
             </div>
             <div style={{flex:1}}></div>
+            <button onClick={()=>setFavOnly(v=>!v)} className="chip" style={favOnly?{background:'#FFFBEB',borderColor:'#E6C975',color:'#92600A'}:undefined}>
+              <Icon name={favOnly?'star_fill':'star'} size={13} style={{color:favOnly?'#B5851C':'var(--ink-3)'}}/>Favorites
+            </button>
+            <div style={{display:'flex',gap:3,background:'#EEF1F6',padding:3,borderRadius:9}}>
+              {[['card','grid','Card view'],['list','list','List view']].map(([id,ic,lb])=>(
+                <button key={id} onClick={()=>setGv(id)} title={lb}
+                  style={{display:'flex',alignItems:'center',justifyContent:'center',width:32,height:28,border:0,
+                    background:gv===id?'#fff':'transparent',color:gv===id?'var(--ink)':'var(--ink-3)',
+                    borderRadius:7,cursor:'pointer',boxShadow:gv===id?'var(--shadow-sm)':'none',transition:'.12s'}}>
+                  <Icon name={ic} size={15}/></button>
+              ))}
+            </div>
             <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 12px',width:230,border:'1px solid var(--line-2)',background:'#fff',borderRadius:8}}>
               <Icon name="search" size={15} style={{color:'var(--ink-3)'}}/>
               <input value={filter} onChange={e=>setFilter(e.target.value)} placeholder={`Filter ${browse.toLowerCase()}…`}
@@ -144,47 +160,61 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed, openP
             </div>
           </div>
 
-          {browse==='Collections' && <FolderGrid filter={filter} setPage={setPage} flash={flash}/>}
-          {browse==='Topics' && <TopicsGrid filter={filter} openTopic={openTopic}/>}
-          {browse==='Devices' && <DeviceGrid filter={filter} flash={flash} openDevice={openDevice}/>}
-          {browse==='People' && <PeopleGrid filter={filter} flash={flash} openPerson={openPerson}/>}
+          {browse==='Collections' && <FolderGrid filter={filter} setPage={setPage} flash={flash} view={gv} favOnly={favOnly} favs={favs} toggleFav={toggleFav}/>}
+          {browse==='Topics' && <TopicsGrid filter={filter} openTopic={openTopic} view={gv} favOnly={favOnly} favs={favs} toggleFav={toggleFav}/>}
+          {browse==='Devices' && <DeviceGrid filter={filter} flash={flash} openDevice={openDevice} view={gv} favOnly={favOnly} favs={favs} toggleFav={toggleFav}/>}
+          {browse==='People' && <PeopleGrid filter={filter} flash={flash} openPerson={openPerson} view={gv} favOnly={favOnly} favs={favs} toggleFav={toggleFav}/>}
         </div>
       </div>
     </div>
   );
 }
 
-function FolderGrid({filter, setPage, flash}){
-  const [favs,setFavs]=React.useState(()=>Object.fromEntries(FOLDERS.map(f=>[f.id,f.fav])));
+function FolderGrid({filter, setPage, flash, view='card', favOnly=false, favs={}, toggleFav=()=>{}}){
   const [detail,setDetail]=React.useState(null);
-  const list=FOLDERS.filter(f=>f.name.toLowerCase().includes(filter.toLowerCase()));
-  if(!list.length) return <Empty label="No collections match your filter."/>;
+  const list=FOLDERS.filter(f=>f.name.toLowerCase().includes(filter.toLowerCase()) && (!favOnly || favs[f.id]));
+  if(!list.length) return <Empty label={favOnly?"No favorite collections yet.":"No collections match your filter."}/>;
+  const star=(f)=><FavStar on={!!favs[f.id]} onToggle={()=>toggleFav(f.id)}/>;
+  const open=(f)=>{window.__reviewFolder=f.name;setPage('review');};
   return (
     <React.Fragment>
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
-      {list.map(f=>(
-        <div key={f.id} className="card card-hover" style={{padding:'15px 16px 14px',display:'flex',flexDirection:'column',gap:10}}>
-          <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
-            <button onClick={()=>setFavs(s=>({...s,[f.id]:!s[f.id]}))} title={favs[f.id]?'Unfavorite':'Favorite'} style={{border:0,background:'transparent',padding:0,marginTop:1,cursor:'pointer',color:favs[f.id]?'#FF9A4E':'var(--ink-4)',flex:'none'}}>
-              <Icon name={favs[f.id]?'star_fill':'star'} size={18}/>
-            </button>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</div>
-              <div className="muted" style={{fontSize:11.5,marginTop:1}}>Updated {f.updated}</div>
+    {view==='list' ? (
+      <div className="card" style={{padding:0,overflow:'hidden'}}>
+        {list.map((f,i)=>(
+          <div key={f.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',borderTop:i?'1px solid var(--line)':0}}>
+            {star(f)}
+            <div style={{width:230,flex:'none',minWidth:0}}>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</div>
+              <div className="muted" style={{fontSize:11.5}}>Updated {f.updated}</div>
             </div>
+            <div style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:8,fontSize:12,color:'var(--ink-3)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+              <Icon name="files" size={13}/>{f.files} files<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.size}<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.types}
+            </div>
+            <CardActions stacked viewLabel="View Files" viewIcon="files" onView={()=>open(f)} onDetails={()=>setDetail(f)}/>
           </div>
-          <div style={{display:'flex',alignItems:'center',gap:8,fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}>
-            <span style={{display:'flex',alignItems:'center',gap:4}}><Icon name="files" size={13}/>{f.files} files</span>
-            <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.size}
-            <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.types}
+        ))}
+      </div>
+    ) : (
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
+        {list.map(f=>(
+          <div key={f.id} className="card card-hover" style={{padding:'15px 16px 14px',display:'flex',flexDirection:'column',gap:10}}>
+            <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</div>
+                <div className="muted" style={{fontSize:11.5,marginTop:1}}>Updated {f.updated}</div>
+              </div>
+              {star(f)}
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:8,fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}>
+              <span style={{display:'flex',alignItems:'center',gap:4}}><Icon name="files" size={13}/>{f.files} files</span>
+              <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.size}
+              <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.types}
+            </div>
+            <CardActions viewLabel="View Files" viewIcon="files" onView={()=>open(f)} onDetails={()=>setDetail(f)}/>
           </div>
-          <div style={{display:'flex',gap:8,marginTop:2}}>
-            <button className="btn btn-primary btn-sm" style={{flex:1}} onClick={()=>{window.__reviewFolder=f.name;setPage('review');}}><Icon name="files" size={14}/>View Files</button>
-            <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--line-2)'}} onClick={()=>setDetail(f)}>Details</button>
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    )}
     {detail && <CollectionDetails folder={detail} onClose={()=>setDetail(null)} onOpen={()=>{window.__reviewFolder=detail.name;setPage('review');}}/>}
     </React.Fragment>
   );
@@ -192,14 +222,14 @@ function FolderGrid({filter, setPage, flash}){
 
 // ---- file-type presentation for composition ----
 const FT_META = {
-  MP4:{label:'Video',color:'#FF9A4E',icon:'video'}, MOV:{label:'Video',color:'#FF9A4E',icon:'video'},
+  MP4:{label:'Video',color:'#B5851C',icon:'video'}, MOV:{label:'Video',color:'#B5851C',icon:'video'},
   AE:{label:'After Effects',color:'#7A5BD0',icon:'video'}, PR:{label:'Premiere',color:'#7A5BD0',icon:'video'},
-  PDF:{label:'PDF',color:'#F86566',icon:'file'}, AI:{label:'Illustrator',color:'#FF9A4E',icon:'pen'},
-  PSD:{label:'Photoshop',color:'#1D6BD0',icon:'image'}, PNG:{label:'Image',color:'#E068A7',icon:'image'},
-  JPG:{label:'Image',color:'#E068A7',icon:'image'}, DOCX:{label:'Document',color:'#1D6BD0',icon:'file'},
-  SRT:{label:'Captions',color:'#8A63C4',icon:'text'}, XLSX:{label:'Spreadsheet',color:'#1FA98A',icon:'grid'},
+  PDF:{label:'PDF',color:'#DC2626',icon:'file'}, AI:{label:'Illustrator',color:'#B5851C',icon:'pen'},
+  PSD:{label:'Photoshop',color:'#0073E6',icon:'image'}, PNG:{label:'Image',color:'#0EA5E9',icon:'image'},
+  JPG:{label:'Image',color:'#0EA5E9',icon:'image'}, DOCX:{label:'Document',color:'#0073E6',icon:'file'},
+  SRT:{label:'Captions',color:'#475569',icon:'text'}, XLSX:{label:'Spreadsheet',color:'#16A34A',icon:'grid'},
 };
-function ftMeta(t){ return FT_META[t.toUpperCase()] || {label:t.toUpperCase(),color:'#8C94A3',icon:'file'}; }
+function ftMeta(t){ return FT_META[t.toUpperCase()] || {label:t.toUpperCase(),color:'#64748B',icon:'file'}; }
 
 // deterministic small hash from a string
 function hashStr(s){ let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return h; }
@@ -231,7 +261,7 @@ function CollectionDetails({folder:f, onClose, onOpen}){
     window.addEventListener('keydown',esc); return ()=>window.removeEventListener('keydown',esc);
   },[]);
 
-  const owner = PEOPLE[f.owner] || {name:f.owner,initials:'?',color:'#8C94A3'};
+  const owner = PEOPLE[f.owner] || {name:f.owner,initials:'?',color:'#64748B'};
   const types = f.types.split(',').map(s=>s.trim()).filter(Boolean);
   // distribute file count across types using deterministic weights
   const seed = hashStr(f.name);
@@ -391,20 +421,40 @@ function CollectionDetails({folder:f, onClose, onOpen}){
   );
 }
 
-function DeviceGrid({filter, flash, openDevice}){
+function DeviceGrid({filter, flash, openDevice, view='card', favs={}, toggleFav=()=>{}, favOnly=false}){
   const f=filter.toLowerCase();
-  const list=DEVICES.filter(d=>d.name.toLowerCase().includes(f) || d.ev.toLowerCase().includes(f) || DEVICE_TYPE[d.type].label.toLowerCase().includes(f));
-  if(!list.length) return <Empty label="No devices match your filter."/>;
+  const list=DEVICES.filter(d=>(d.name.toLowerCase().includes(f) || d.ev.toLowerCase().includes(f) || DEVICE_TYPE[d.type].label.toLowerCase().includes(f)) && (!favOnly || favs[d.id]));
+  const [detail,setDetail]=React.useState(null);
+  if(!list.length) return <Empty label={favOnly?"No favorite devices yet.":"No devices match your filter."}/>;
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
-      {list.map(d=>{
-        const ty=DEVICE_TYPE[d.type], stt=DEVICE_STATUS[d.status];
-        return (
-          <div key={d.id} className="card card-hover card-pad" onClick={()=>openDevice&&openDevice(d.id)}
-            style={{display:'flex',flexDirection:'column',gap:12,cursor:'pointer'}}>
-            <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:8}}>
-              <span style={{width:38,height:38,borderRadius:10,background:d.color+'1a',color:d.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={19}/></span>
-              <span className="badge" style={{background:stt.tint,color:stt.color,height:21,fontSize:11,fontWeight:600}}><span style={{width:5.5,height:5.5,borderRadius:'50%',background:stt.color}}></span>{stt.label}</span>
+    <React.Fragment>
+    {view==='list' ? (
+      <div className="card" style={{padding:0,overflow:'hidden'}}>
+        {list.map((d,i)=>{ const ty=DEVICE_TYPE[d.type], stt=DEVICE_STATUS[d.status];
+          return (
+          <div key={d.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',borderTop:i?'1px solid var(--line)':0}}>
+            <FavStar on={!!favs[d.id]} onToggle={()=>toggleFav(d.id)} size={16}/>
+            <span style={{width:36,height:36,borderRadius:9,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={18}/></span>
+            <div style={{width:200,flex:'none',minWidth:0}}>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{d.name}</div>
+              <div className="muted" style={{fontSize:11.5,display:'flex',alignItems:'center',gap:6,whiteSpace:'nowrap'}}><span style={{fontFamily:'ui-monospace,Menlo,monospace'}}>{d.ev}</span><span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{ty.label}</div>
+            </div>
+            <span className="badge" style={{background:stt.tint,color:stt.color,height:21,fontSize:11,fontWeight:600,flex:'none'}}>{stt.label}</span>
+            <div style={{flex:1,minWidth:0,fontSize:12,color:'var(--ink-3)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+              {d.status==='locked'?'Not imaged':`${d.files?d.files.toLocaleString()+' files · ':''}${d.os}`}
+            </div>
+            <CardActions stacked viewLabel="View" onView={()=>openDevice&&openDevice(d.id)} onDetails={()=>setDetail(d)}/>
+          </div>);
+        })}
+      </div>
+    ) : (
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
+        {list.map(d=>{ const ty=DEVICE_TYPE[d.type], stt=DEVICE_STATUS[d.status];
+          return (
+          <div key={d.id} className="card card-hover card-pad" style={{display:'flex',flexDirection:'column',gap:12}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8}}>
+              <span style={{width:38,height:38,borderRadius:10,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={19}/></span>
+              <FavStar on={!!favs[d.id]} onToggle={()=>toggleFav(d.id)}/>
             </div>
             <div>
               <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{d.name}</div>
@@ -414,58 +464,88 @@ function DeviceGrid({filter, flash, openDevice}){
                 {d.encrypted && <Icon name="lock" size={11} style={{color:'var(--ink-4)'}}/>}
               </div>
             </div>
-            {/* capacity bar */}
-            <div>
-              <div style={{height:5,borderRadius:3,background:'var(--surface-2)',overflow:'hidden'}}>
-                <div style={{width:Math.max(4,d.used)+'%',height:'100%',background:d.color,borderRadius:3}}></div>
-              </div>
-              <div style={{display:'flex',justifyContent:'space-between',marginTop:5,fontSize:11,color:'var(--ink-3)',fontWeight:500}}>
-                <span>{d.status==='locked'?'Locked — not imaged':`${d.size} of ${d.cap}`}</span>
-                <span>{d.os}</span>
-              </div>
+            <div style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500,display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
+              <Icon name="files" size={13} style={{color:'var(--ink-4)'}}/>{d.files?`${d.files.toLocaleString()} files`:'Not imaged'}<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{d.os}
             </div>
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',paddingTop:10,borderTop:'1px solid var(--line)'}}>
-              <span style={{display:'flex',alignItems:'center',gap:7,fontSize:12,color:'var(--ink-2)'}}>
-                <Avatar id={d.custodian} size={20}/>{PEOPLE[d.custodian].name.split(' ')[0]}
-              </span>
-              <span style={{fontSize:12,color:'var(--ink-3)',fontWeight:500}}>{d.files? <><b style={{color:'var(--ink)'}}>{d.files.toLocaleString()}</b> files</> : '—'}</span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
+            <CardActions viewLabel="View" onView={()=>openDevice&&openDevice(d.id)} onDetails={()=>setDetail(d)}/>
+          </div>);
+        })}
+      </div>
+    )}
+    {detail && <DeviceQuickDetails d={detail} onClose={()=>setDetail(null)} onView={()=>{setDetail(null);openDevice&&openDevice(detail.id);}}/>}
+    </React.Fragment>
   );
 }
 
-function PeopleGrid({filter, flash, openPerson}){
-  const f=filter.toLowerCase();
-  const list=PL.filter(p=>p.name.toLowerCase().includes(f) || p.role.toLowerCase().includes(f) || (p.company||'').toLowerCase().includes(f) || (p.relType||'').toLowerCase().includes(f));
-  if(!list.length) return <Empty label="No people match your filter."/>;
+function DeviceQuickDetails({d, onClose, onView}){
+  const ty=DEVICE_TYPE[d.type], stt=DEVICE_STATUS[d.status], cust=PEOPLE[d.custodian];
   return (
-    <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
-      {list.map(p=>{
-        const ps=PERSON_STATUS[p.status], rs=REL_STATUS[p.rel]||REL_STATUS.active;
-        const owner=p.owner?PEOPLE[p.owner]:null;
-        const days=daysUntil(p.contractEnd);
-        return (
-          <div key={p.id} className="card card-hover card-pad" onClick={()=>openPerson&&openPerson(p.id)}
-            style={{display:'flex',flexDirection:'column',gap:13,cursor:'pointer'}}>
+    <InfoModal title={d.name} sub={ty.label+' · '+d.model} icon={ty.icon} onClose={onClose} onView={onView} viewLabel="Open device" viewIcon="arrow_right">
+      <InfoSection title="Status"><span className="badge" style={{background:stt.tint,color:stt.color,height:24}}><span style={{width:6,height:6,borderRadius:'50%',background:stt.color}}></span>{stt.label}</span></InfoSection>
+      <InfoSection title="Details">
+        <InfoRows rows={[
+          ['Evidence #', d.ev],
+          ['Files extracted', d.files?d.files.toLocaleString():'—'],
+          ['Storage', d.status==='locked'?'—':`${d.size} of ${d.cap} (${d.used}%)`],
+          ['Operating system', d.os],
+          d.apps ? ['Apps', d.apps] : null,
+          ['Encryption', d.encrypted?'Encrypted':'Not encrypted'],
+          ['Serial', d.serial],
+          ['Custodian', cust?cust.name:'—'],
+          ['Location', d.loc],
+          ['Acquired', d.acquired],
+          ['Last activity', d.last],
+        ]}/>
+      </InfoSection>
+    </InfoModal>
+  );
+}
+
+function PeopleGrid({filter, flash, openPerson, view='card', favs={}, toggleFav=()=>{}, favOnly=false}){
+  const f=filter.toLowerCase();
+  const list=PL.filter(p=>(p.name.toLowerCase().includes(f) || p.role.toLowerCase().includes(f) || (p.company||'').toLowerCase().includes(f) || (p.relType||'').toLowerCase().includes(f)) && (!favOnly || favs[p.id]));
+  const [detail,setDetail]=React.useState(null);
+  if(!list.length) return <Empty label={favOnly?"No favorite people yet.":"No people match your filter."}/>;
+  // content people (not app users) → flat disabled-gray avatar, no presence indicator
+  const gAv=(p,size)=>(
+    <span className="av" style={{width:size,height:size,background:'#E2E8F0',color:'#64748B',fontSize:Math.round(size*0.38),boxShadow:'none',flex:'none'}}>{p.initials}</span>
+  );
+  return (
+    <React.Fragment>
+    {view==='list' ? (
+      <div className="card" style={{padding:0,overflow:'hidden'}}>
+        {list.map((p,i)=>{ const rs=REL_STATUS[p.rel]||REL_STATUS.active;
+          return (
+          <div key={p.id} style={{display:'flex',alignItems:'center',gap:14,padding:'12px 16px',borderTop:i?'1px solid var(--line)':0}}>
+            <FavStar on={!!favs[p.id]} onToggle={()=>toggleFav(p.id)} size={16}/>
+            {gAv(p,36)}
+            <div style={{width:200,flex:'none',minWidth:0}}>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
+              <div className="muted" style={{fontSize:11.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.relType} · {p.company}</div>
+            </div>
+            <span className="badge" style={{background:rs.tint,color:rs.color,height:20,fontSize:10.5,fontWeight:600,flex:'none'}}>{rs.label}</span>
+            <div style={{flex:1,minWidth:0,fontSize:12,color:'var(--ink-3)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+              {p.value||'—'} · {p.meetings} meetings · next {p.next}
+            </div>
+            <CardActions stacked viewLabel="View" onView={()=>openPerson&&openPerson(p.id)} onDetails={()=>setDetail(p)}/>
+          </div>);
+        })}
+      </div>
+    ) : (
+      <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,paddingBottom:8}}>
+        {list.map(p=>{
+          const rs=REL_STATUS[p.rel]||REL_STATUS.active;
+          const days=daysUntil(p.contractEnd);
+          return (
+          <div key={p.id} className="card card-hover card-pad" style={{display:'flex',flexDirection:'column',gap:13}}>
             <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
-              <span style={{position:'relative',flex:'none'}}>
-                <Avatar id={p.id} size={44} ring={false}/>
-                <span title={ps.label} style={{position:'absolute',right:-1,bottom:-1,width:12,height:12,borderRadius:'50%',background:ps.color,boxShadow:'0 0 0 2.5px #fff'}}></span>
-              </span>
+              {gAv(p,44)}
               <div style={{flex:1,minWidth:0}}>
                 <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.relType} · {p.company}</div>
               </div>
               <span className="badge" style={{background:rs.tint,color:rs.color,height:20,fontSize:10.5,fontWeight:600,flex:'none'}}><span style={{width:5,height:5,borderRadius:'50%',background:rs.color}}></span>{rs.label}</span>
-            </div>
-            <div style={{display:'flex',flexDirection:'column',gap:6,fontSize:11.5,color:'var(--ink-3)'}}>
-              <span style={{display:'flex',alignItems:'center',gap:7,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
-                {owner ? <><Avatar id={owner.id} size={16}/>Managed by {owner.name.split(' ')[0]}</> : <><Icon name="shield" size={13} style={{color:'var(--ink-4)'}}/>In‑house · {p.dept}</>}
-              </span>
-              <span style={{display:'flex',alignItems:'center',gap:7}}><Icon name="calendar" size={13} style={{color:'var(--ink-4)',flex:'none'}}/>Next meeting {p.next}</span>
+              <FavStar on={!!favs[p.id]} onToggle={()=>toggleFav(p.id)}/>
             </div>
             <div style={{display:'flex',gap:0,paddingTop:11,borderTop:'1px solid var(--line)'}}>
               <div style={{flex:1,textAlign:'center',minWidth:0}}>
@@ -483,10 +563,42 @@ function PeopleGrid({filter, flash, openPerson}){
                 <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Meetings</div>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+            <CardActions viewLabel="View" onView={()=>openPerson&&openPerson(p.id)} onDetails={()=>setDetail(p)}/>
+          </div>);
+        })}
+      </div>
+    )}
+    {detail && <PersonQuickDetails p={detail} onClose={()=>setDetail(null)} onView={()=>{setDetail(null);openPerson&&openPerson(detail.id);}}/>}
+    </React.Fragment>
+  );
+}
+
+function PersonQuickDetails({p, onClose, onView}){
+  const rs=REL_STATUS[p.rel]||REL_STATUS.active, owner=p.owner?PEOPLE[p.owner]:null;
+  const days=daysUntil(p.contractEnd);
+  return (
+    <InfoModal title={p.name} sub={p.role+' · '+p.company} icon="user" onClose={onClose} onView={onView} viewLabel="Open profile" viewIcon="user">
+      <InfoSection title="Relationship">
+        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+          <span className="badge" style={{background:rs.tint,color:rs.color,height:24}}><span style={{width:6,height:6,borderRadius:'50%',background:rs.color}}></span>{rs.label}</span>
+          <span className="badge" style={{background:'var(--hover)',color:'var(--ink-2)',height:24}}>{p.relType}</span>
+        </div>
+      </InfoSection>
+      <InfoSection title="Details">
+        <InfoRows rows={[
+          ['Role', p.role],
+          ['Department', p.dept],
+          ['Company', p.company],
+          ['Contract value', p.value||'—'],
+          p.contractEnd ? ['Renewal', `${p.contractEnd}${days!=null?` · in ${days}d`:''}`] : null,
+          ['Managed by', owner?owner.name:'In‑house'],
+          ['Meetings logged', p.meetings],
+          ['Next meeting', p.next],
+          ['Location', p.location],
+          ['Email', p.email],
+        ]}/>
+      </InfoSection>
+    </InfoModal>
   );
 }
 

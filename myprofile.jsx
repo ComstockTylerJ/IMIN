@@ -18,7 +18,7 @@ function MyProfileStat({value, label, icon, color, onClick}){
       style={{display:'flex',alignItems:'center',gap:13,cursor:onClick?'pointer':'default'}}
       onMouseEnter={e=>{if(onClick)e.currentTarget.style.background='var(--surface-2)';}}
       onMouseLeave={e=>{if(onClick)e.currentTarget.style.background='';}}>
-      <span style={{width:38,height:38,borderRadius:10,background:(color||'#1D6BD0')+'1a',color:color||'#1D6BD0',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={19}/></span>
+      <span style={{width:38,height:38,borderRadius:10,background:(color||'#0073E6')+'1a',color:color||'#0073E6',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={19}/></span>
       <div style={{minWidth:0}}>
         <div style={{fontSize:21,fontWeight:700,color:'var(--ink)',letterSpacing:'-.02em',lineHeight:1}}>{value}</div>
         <div className="muted" style={{fontSize:11.5,marginTop:3,fontWeight:500}}>{label}</div>
@@ -54,7 +54,7 @@ function MyProfile({setPage, openTask, openDevice, flash}){
               <div style={{minWidth:0}}>
                 <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
                   <h1 style={{fontSize:25,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)'}}>{p.name}</h1>
-                  <span className="badge" style={{background:'#E7EFFB',color:'var(--blue)',height:21,fontWeight:600}}>You</span>
+                  <span className="badge" style={{background:'#EBF4FF',color:'var(--blue)',height:21,fontWeight:600}}>You</span>
                 </div>
                 <div style={{fontSize:14,color:'var(--ink-2)',fontWeight:550,marginTop:5}}>{p.role} · {p.dept}</div>
                 <div style={{display:'flex',alignItems:'center',gap:9,marginTop:6,fontSize:12.5,color:'var(--ink-3)',flexWrap:'wrap'}}>
@@ -80,10 +80,10 @@ function MyProfile({setPage, openTask, openDevice, flash}){
           {/* MAIN */}
           <div style={{display:'flex',flexDirection:'column',gap:20,minWidth:0}}>
             <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14}}>
-              <MyProfileStat value={st.active} label="Active tasks" icon="check_square" color="#1D6BD0" onClick={()=>setPage('tasks')}/>
-              <MyProfileStat value={openReqs} label="Open requests" icon="inbox" color="#FF9A4E" onClick={()=>setPage('requests')}/>
-              <MyProfileStat value={st.collections} label="Collections" icon="folder" color="#8A63C4"/>
-              <MyProfileStat value={st.devices.length} label="Devices in custody" icon="phone" color="#1FA98A"/>
+              <MyProfileStat value={st.active} label="Active tasks" icon="check_square" color="#0073E6" onClick={()=>setPage('tasks')}/>
+              <MyProfileStat value={openReqs} label="Open requests" icon="inbox" color="#B5851C" onClick={()=>setPage('requests')}/>
+              <MyProfileStat value={st.collections} label="Collections" icon="folder" color="#475569"/>
+              <MyProfileStat value={st.devices.length} label="Devices in custody" icon="phone" color="#16A34A"/>
             </div>
 
             {/* my requests */}
@@ -96,7 +96,7 @@ function MyProfile({setPage, openTask, openDevice, flash}){
                     style={{display:'flex',alignItems:'center',gap:12,padding:'11px 8px',margin:'0 -8px',borderTop:i?'1px solid var(--line)':0,cursor:'pointer',borderRadius:8,transition:'.12s'}}
                     onMouseEnter={e=>e.currentTarget.style.background='var(--surface-2)'}
                     onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                    <span style={{width:30,height:30,borderRadius:8,background:(REQ_TYPE[r.type]||'#8C94A3')+'1a',color:REQ_TYPE[r.type]||'#8C94A3',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="file" size={15}/></span>
+                    <span style={{width:30,height:30,borderRadius:8,background:(REQ_TYPE[r.type]||'#64748B')+'1a',color:REQ_TYPE[r.type]||'#64748B',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="file" size={15}/></span>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.name}</div>
                       <div style={{display:'flex',alignItems:'center',gap:8,marginTop:3,fontSize:11,color:'var(--ink-3)'}}>
@@ -162,7 +162,7 @@ function MyProfile({setPage, openTask, openDevice, flash}){
             <div className="card card-pad">
               <div className="eyebrow" style={{marginBottom:11}}>Security</div>
               <div style={{display:'flex',alignItems:'center',gap:11,fontSize:12.5,color:'var(--ink-2)'}}>
-                <Icon name="shield_check" size={16} style={{color:'var(--lime,#7FC457)',flex:'none'}}/>
+                <Icon name="shield_check" size={16} style={{color:'var(--lime,#16A34A)',flex:'none'}}/>
                 <span>Two‑factor authentication is <b style={{color:'var(--ink)'}}>on</b></span>
               </div>
               <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--line-2)',width:'100%',marginTop:12,color:'var(--coral)'}} onClick={()=>flash&&flash('Signed out')}><Icon name="external" size={14}/>Sign out</button>

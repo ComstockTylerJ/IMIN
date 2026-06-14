@@ -162,9 +162,9 @@ function DrawerHistory(){
 }
 function DrawerAttachments({task}){
   const files=[
-    {n:'hero-cut-v4.mp4',s:'248 MB',c:'#8A63C4'},
-    {n:'color-grade-ref.png',s:'4.2 MB',c:'#2FB2F3'},
-    {n:'brief-final.pdf',s:'820 KB',c:'#F86566'},
+    {n:'hero-cut-v4.mp4',s:'248 MB',c:'#475569'},
+    {n:'color-grade-ref.png',s:'4.2 MB',c:'#0073E6'},
+    {n:'brief-final.pdf',s:'820 KB',c:'#DC2626'},
   ].slice(0, Math.max(1,Math.min(3,task.attachments||1)));
   return (
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:22}}>
@@ -186,7 +186,7 @@ function RelatedWork(){
     <div>
       <div className="eyebrow" style={{marginBottom:10}}>Related work</div>
       <div style={{display:'flex',flexDirection:'column',gap:8}}>
-        {[['R-84','Q3 Hero Cut — Legal Review','Review','#1D6BD0'],['R-90','Style Guide — Final Approval','Approval','#8A63C4']].map(([id,n,ty,c])=>(
+        {[['R-84','Q3 Hero Cut — Legal Review','Review','#0073E6'],['R-90','Style Guide — Final Approval','Approval','#475569']].map(([id,n,ty,c])=>(
           <div key={id} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',border:'1px solid var(--line)',borderRadius:10,cursor:'pointer'}}>
             <span style={{width:7,height:7,borderRadius:'50%',background:c}}></span>
             <span style={{fontSize:12.5,fontWeight:550,color:'var(--ink)',flex:1}}>{n}</span>

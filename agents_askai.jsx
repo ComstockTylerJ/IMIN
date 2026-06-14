@@ -24,7 +24,7 @@ function AskAIDrawer({ onClose, openRun, glyph='diamond', flat=false, framing='c
           <FleetToken size={36}/>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:15.5,fontWeight:700,letterSpacing:'-.02em',display:'flex',alignItems:'center',gap:7}}>Ask AI
-              <span className="badge" style={{background:'#E7EFFB',color:'#1D6BD0',height:17,fontSize:9.5,letterSpacing:'.04em'}}>COPILOT</span></div>
+              <span className="badge" style={{background:'#EBF4FF',color:'#0073E6',height:17,fontSize:9.5,letterSpacing:'.04em'}}>COPILOT</span></div>
             <div className="muted" style={{fontSize:11.5}}>Scoped to <b style={{fontWeight:600,color:'var(--ink-2)'}}>Vantage v. Meridian</b></div>
           </div>
           <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon name="x" size={17}/></button>
@@ -101,7 +101,7 @@ function AskChat({ glyph, flat, framing, goRun }){
                 {(m.cta) &&
                   <button onClick={()=> m.run ? goRun(m.run) : (window.__openKickoff && window.__openKickoff(m.delegate))}
                     className="btn btn-secondary btn-sm" style={{marginTop:8}}>
-                    {m.run ? <Icon name="arrow_right" size={13}/> : <Icon name="sparkle" size={13} style={{color:'#1D6BD0'}}/>}{m.cta}</button>}
+                    {m.run ? <Icon name="arrow_right" size={13}/> : <Icon name="sparkle" size={13} style={{color:'#0073E6'}}/>}{m.cta}</button>}
               </div>
             </div>
           ))}
@@ -172,7 +172,7 @@ function AskAgents({ glyph, flat, framing, goRun, onClose }){
       {running.length>0 && <div>
         <div style={{display:'flex',alignItems:'center',gap:8,margin:'0 2px 10px'}}>
           <span style={{fontSize:12.5,fontWeight:700,color:'var(--ink)'}}>Working now</span>
-          <span className="badge" style={{background:'#E7EFFB',color:'#1D6BD0'}}>{running.length}</span>
+          <span className="badge" style={{background:'#EBF4FF',color:'#0073E6'}}>{running.length}</span>
         </div>
         <div style={{display:'flex',flexDirection:'column',gap:10}}>{running.map(r=><Row key={r.id} r={r}/>)}</div>
       </div>}
@@ -185,11 +185,11 @@ function AskAgents({ glyph, flat, framing, goRun, onClose }){
 // ---------- Activity tab (audit trail) ----------
 const AI_AUDIT = [
   {agent:'cassius', icon:'shield', txt:'Drafted 12 privilege-log entries — holding for approval', t:'3m ago', tone:'#B5851C'},
-  {agent:'atlas',   icon:'target', txt:'Coded 2,981 / 4,820 docs · flagged 41 hot for review', t:'8m ago', tone:'#1D6BD0'},
-  {who:'tyler',     icon:'check',  txt:'You approved 8 privilege entries from CASSIUS', t:'22m ago', tone:'#1FA98A'},
-  {agent:'vesta',   icon:'megaphone', txt:'Finished screening the MSJ press release — 5 findings', t:'1h ago', tone:'#1F9D86'},
-  {agent:'oracle',  icon:'bulb',   txt:'Filed spoliation research memo to Knowledge', t:'1h ago', tone:'#1FA98A'},
-  {who:'tyler',     icon:'sparkle',txt:'You delegated “Henderson outline” to JUNO', t:'3h ago', tone:'#8A63C4'},
+  {agent:'atlas',   icon:'target', txt:'Coded 2,981 / 4,820 docs · flagged 41 hot for review', t:'8m ago', tone:'#0073E6'},
+  {who:'tyler',     icon:'check',  txt:'You approved 8 privilege entries from CASSIUS', t:'22m ago', tone:'#16A34A'},
+  {agent:'vesta',   icon:'megaphone', txt:'Finished screening the MSJ press release — 5 findings', t:'1h ago', tone:'#16A34A'},
+  {agent:'oracle',  icon:'bulb',   txt:'Filed spoliation research memo to Knowledge', t:'1h ago', tone:'#16A34A'},
+  {who:'tyler',     icon:'sparkle',txt:'You delegated “Henderson outline” to JUNO', t:'3h ago', tone:'#475569'},
   {agent:'solon',   icon:'pen',    txt:'Drafted § III.A — accepted by A. Okafor', t:'4h ago', tone:'#E1574F'},
 ];
 function AskActivity({ glyph, flat, framing, goRun }){
