@@ -146,7 +146,6 @@ function MemosWorkspace({setPage, flash}){
       <WsHeader name="Memos" setPage={setPage}
         action={<button className="btn btn-primary" onClick={()=>setPage('prep')}><Icon name="plus" size={16} sw={2.2}/>New memo</button>}/>
       <WorkQueue
-        blurb="Memos moving up the routing chain. Concur to pass each to the next reviewer, or return it to the originator for edits."
         scopes={MEMO_SCOPES} scopeOf={m=>memoStage(m)==='mine'?'me':'team'} rows={memos} columns={columns} onOpen={setOpenId}
         emptyLabel="No memos in this view."/>
     </div>

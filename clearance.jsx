@@ -231,8 +231,6 @@ function ClList({ stmts, setPage, onOpen, flash }) {
             </button>
           </div>} />
       <WorkQueue
-        blurb="Statements queued for screening &amp; clearance. AI screens each against the case&rsquo;s privileged &amp; confidential materials, then routes it to counsel."
-        lead={<ClStepper />}
         scopes={CL_SCOPES} scopeOf={clScope} rows={stmts} columns={columns} onOpen={onOpen}
         emptyLabel="No statements in this view." />
     </React.Fragment>);
@@ -410,9 +408,9 @@ function ClStepPills({ stage }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 0, flex: 'none' }}>
       {CL_STEPS.map((st, i) => {
-        const c = nodeColor(i, m);
         const isActive = i === m.act;
         const done = i < m.done;
+        const c = done ? 'var(--primary)' : isActive ? 'var(--accent)' : GRAY;
         return (
           <React.Fragment key={st.id}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 4px' }}>
@@ -422,7 +420,7 @@ function ClStepPills({ stage }) {
               </span>
               <span style={{ fontSize: 12, fontWeight: isActive ? 700 : 500, color: done || isActive ? 'var(--ink)' : 'var(--ink-4)', whiteSpace: 'nowrap' }}>{st.label}</span>
             </span>
-            {i < 3 && <span style={{ width: 16, height: 2, borderRadius: 2, background: i < m.done ? GREEN : 'var(--line)', margin: '0 2px' }}></span>}
+            {i < 3 && <span style={{ width: 16, height: 2, borderRadius: 2, background: i < m.done ? 'var(--primary)' : 'var(--line)', margin: '0 2px' }}></span>}
           </React.Fragment>);
 
       })}
@@ -513,22 +511,22 @@ function ClFinding({ f, active, onEnter, onLeave, onApply, onDismiss, onReopen }
         <span style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--ink)' }}>{f.cat}</span>
         <span style={{ fontSize: 10.5, fontWeight: 700, color: sv.color, background: sv.tint, padding: '2px 7px', borderRadius: 5 }}>{sv.label}</span>
         <div style={{ flex: 1 }}></div>
-        <span style={{ fontFamily: CL_MONO, fontSize: 11, color: 'var(--ink-4)' }}>{f.rule}</span>
+        <span style={{ fontFamily: CL_MONO, fontSize: 11, color: 'var(--ink-2)' }}>{f.rule}</span>
       </div>
       <div style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.5, borderLeft: `3px solid ${sv.color}`, paddingLeft: 12, marginBottom: 11 }}>
         &ldquo;{f.quote}&rdquo;
       </div>
       <div style={{ fontSize: 12.5, color: 'var(--ink-2)', lineHeight: 1.5, marginBottom: 12 }}>{f.why}</div>
 
-      <div style={{ background: '#EEF6F1', border: '1px solid #D2E8DD', borderRadius: 10, padding: '11px 12px', marginBottom: 12 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: GREEN, marginBottom: 6 }}>
+      <div style={{ background: 'var(--accent-subtle)', border: '1px solid #CBDDF5', borderRadius: 10, padding: '11px 12px', marginBottom: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: 6 }}>
           <Icon name="pen" size={12} sw={2} />Suggested revision
         </div>
-        <div style={{ fontSize: 13, color: '#27483C', lineHeight: 1.5 }}>{f.rev}</div>
+        <div style={{ fontSize: 13, color: '#1A3A5C', lineHeight: 1.5 }}>{f.rev}</div>
       </div>
 
       <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={onApply} style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, border: 0, background: GREEN, color: '#fff',
+        <button onClick={onApply} style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, border: 0, background: 'var(--primary)', color: '#fff',
           fontSize: 13, fontWeight: 600, padding: '10px', borderRadius: 9, cursor: 'pointer' }}>
           <Icon name="check" size={15} sw={2.4} />Apply revision
         </button>

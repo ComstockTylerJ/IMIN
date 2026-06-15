@@ -169,7 +169,6 @@ function RvList({ setPage, flash, folderName, onOpen }) {
             <Icon name="eye" size={16} />Start review
           </button>} />
       <WorkQueue
-        blurb={<React.Fragment>Evidence coding queue for <b style={{ color: 'var(--ink-2)' }}>{folderName || 'Henderson v. Vantage'}</b>. Open a document to code it for relevance, privilege &amp; issues &mdash; one at a time.</React.Fragment>}
         scopes={RV_SCOPES} scopeOf={rvScope} rows={RV_DOCS} columns={columns} onOpen={onOpen}
         emptyLabel="No documents in this view." />
     </div>);

@@ -255,14 +255,14 @@ function GlossaryIndex({onOpen, flash}){
             <div key={g.id} onClick={()=>onOpen(g)} className="card card-hover" style={{padding:0,overflow:'hidden',cursor:'pointer',display:'flex',flexDirection:'column'}}>
               <div style={{padding:'17px 18px 15px',display:'flex',flexDirection:'column',gap:11,flex:1}}>
                 <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:10}}>
-                  <span style={{width:42,height:42,borderRadius:11,background:g.color+'18',color:g.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={g.icon} size={21}/></span>
+                  <span style={{width:42,height:42,borderRadius:11,background:'var(--surface-2)',color:'var(--ink-3)',border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={g.icon} size={21}/></span>
                   <span style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,color:'var(--ink-3)',letterSpacing:'.03em',background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:999,padding:'3px 9px'}}>
                     {g.pair[0]}<Icon name="arrow_right" size={11} sw={2} style={{opacity:.6}}/>{g.pair[1]}
                   </span>
                 </div>
                 <div>
                   <div style={{fontFamily:TB_SERIF,fontSize:17,fontWeight:650,letterSpacing:'-.01em',color:'var(--ink)'}}>{g.name}</div>
-                  <div className="muted" style={{fontSize:11.5,fontWeight:600,marginTop:2,color:g.color}}>{g.domain}</div>
+                  <div className="muted" style={{fontSize:11.5,fontWeight:600,marginTop:2,color:'var(--accent)'}}>{g.domain}</div>
                 </div>
                 <p style={{fontSize:12.5,color:'var(--ink-2)',lineHeight:1.5,margin:0,flex:1}}>{g.desc}</p>
                 <div style={{display:'flex',alignItems:'center',gap:9,flexWrap:'wrap'}}>

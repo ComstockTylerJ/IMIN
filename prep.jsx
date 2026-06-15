@@ -10,12 +10,18 @@ const PREP_TEMPLATES = [
   {id:'assess', name:'Assessment', icon:'chart', color:'#B5851C', tint:'#FFFBEB', sections:['Key judgments','Evidence','Confidence','Gaps'], desc:'Analytic assessment with confidence'},
 ];
 const PREP_DRAFTS = [
-  {id:'D-118', title:'Eastern Sector — Activity Trend', tmpl:'intel', cls:'CUI', progress:72, edited:'4m ago', words:640, collab:['maya','noah']},
-  {id:'D-114', title:'Reallocation Follow-on — 30 Day', tmpl:'decision', cls:'S', progress:45, edited:'1h ago', words:310, collab:['sam']},
-  {id:'D-109', title:'Coastal Sensor Coverage Gaps', tmpl:'assess', cls:'CUI', progress:88, edited:'3h ago', words:910, collab:['priya','diego']},
-  {id:'D-103', title:'Weekly Sync — Coordination Points', tmpl:'talking', cls:'U', progress:30, edited:'yesterday', words:180, collab:['tyler']},
+  {id:'D-118', title:'Eastern Sector — Activity Trend', tmpl:'intel', cls:'CUI', status:'coord', progress:72, edited:'4m ago', words:640, collab:['maya','noah']},
+  {id:'D-114', title:'Reallocation Follow-on — 30 Day', tmpl:'decision', cls:'S', status:'draft', progress:45, edited:'1h ago', words:310, collab:['sam']},
+  {id:'D-109', title:'Coastal Sensor Coverage Gaps', tmpl:'assess', cls:'CUI', status:'released', progress:88, edited:'3h ago', words:910, collab:['priya','diego']},
+  {id:'D-103', title:'Weekly Sync — Coordination Points', tmpl:'talking', cls:'U', status:'prep', progress:30, edited:'yesterday', words:180, collab:['tyler']},
 ];
 const P_CLS = {U:{label:'UNCLASSIFIED',color:'#16A34A'}, CUI:{label:'CUI',color:'#0073E6'}, S:{label:'SECRET // NOFORN',color:'#DC2626'}};
+const P_STATUS = {
+  prep:     {label:'In prep',  color:'#475569', tint:'#F1F5F9'},
+  draft:    {label:'In draft', color:'#0073E6', tint:'#EBF4FF'},
+  coord:    {label:'In coord', color:'#B5851C', tint:'#FFFBEB'},
+  released: {label:'Released',  color:'#16A34A', tint:'#F0FDF4'},
+};
 
 const P_SCOPES = [{ id: 'me', label: 'Assigned to me' }, { id: 'team', label: 'My team' }, { id: 'all', label: 'All' }];
 
@@ -31,11 +37,8 @@ function PrepWorkspace({setPage, flash}){
       return <QTitle icon={t.icon} color={t.color} tint={t.tint} title={d.title} sub={t.name+' · '+d.id}/>;}},
     {label:'Class.', width:120, render:d=>{const c=P_CLS[d.cls];
       return <span style={{fontSize:12,fontWeight:700,color:c.color}}>{c.label}</span>;}},
-    {label:'Draft progress', width:160, render:d=>(
-      <div style={{display:'flex',alignItems:'center',gap:9}}>
-        <div style={{flex:1,height:6,background:'#F1F5F9',borderRadius:4,overflow:'hidden'}}><div style={{width:d.progress+'%',height:'100%',background:'var(--logo-grad)',borderRadius:4}}></div></div>
-        <span style={{fontSize:11.5,fontWeight:600,color:'var(--ink-2)',width:30,textAlign:'right'}}>{d.progress}%</span>
-      </div>)},
+    {label:'Status', width:128, render:d=>{const s=P_STATUS[d.status];
+      return <span style={{fontSize:12.5,fontWeight:600,color:s.color,background:s.tint,padding:'5px 11px',borderRadius:999,whiteSpace:'nowrap'}}>{s.label}</span>;}},
     {label:'Collaborators', width:118, render:d=><AvatarStack ids={d.collab} size={24} max={3}/>},
     {label:'Edited', width:96, align:'right', render:d=><span style={{fontSize:12,color:'var(--ink-4)'}}>{d.edited}</span>},
   ];
@@ -45,7 +48,6 @@ function PrepWorkspace({setPage, flash}){
       <WsHeader name="Prep" setPage={setPage}
         action={<button className="btn btn-primary" onClick={()=>newDraft(PREP_TEMPLATES[0])}><Icon name="plus" size={16} sw={2.2}/>New draft</button>}/>
       <WorkQueue
-        blurb="Drafts in progress &mdash; pick up where you or your team left off. Each routes cleanly into Memos when it&rsquo;s ready for review."
         scopes={P_SCOPES} scopeOf={d=>d.collab.includes('tyler')?'me':'team'} rows={PREP_DRAFTS} columns={columns}
         onOpen={id=>openDraft(PREP_DRAFTS.find(d=>d.id===id))} emptyLabel="No drafts in this view."/>
 
