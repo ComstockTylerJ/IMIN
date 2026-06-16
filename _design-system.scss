@@ -1,0 +1,3036 @@
+// ============================================================
+// _design-system.scss  →  globals.css (React/shadcn/ui)
+// IMIN Design System v2.1
+//
+// Stack: React · shadcn/ui · Tailwind CSS v4 · OKLCH tokens
+//
+// In a React/shadcn project this file compiles to globals.css.
+// CSS custom properties are the source of truth.
+// SCSS variables below are kept as compile-time references for
+// any SCSS utilities — Tailwind classes are preferred in components.
+//
+// Dark mode: .dark class on <html>  (Tailwind darkMode: "class")
+// Token format: OKLCH — perceptually uniform, wide-gamut ready
+// Naming: shadcn/ui convention — --primary, --background, etc.
+// ============================================================
+
+// ── SCSS VARIABLES (compile-time reference) ──────────────────
+// These mirror the CSS custom property values below.
+// Use var(--token) in component CSS; use $var in SCSS mixins only.
+
+// Brand — light mode values
+$color-primary:        #1D3557;   // oklch(0.328 0.068 257.3)
+$color-primary-hover:  #162840;
+$color-primary-active: #0f1e30;
+$color-accent:         #0073E6;   // oklch(0.569 0.195 256.1)
+$color-accent-hover:   #005DC0;
+$color-accent-active:  #004899;
+$color-accent-subtle:  #EBF4FF;
+
+// Semantic
+$color-success:        #16A34A;   // oklch(0.627 0.170 149.2)
+$color-success-subtle: #F0FDF4;
+$color-info:           #0EA5E9;   // oklch(0.685 0.148 237.3)
+$color-info-subtle:    #F0F9FF;
+$color-warning:        #EABA1C;   // oklch(0.809 0.160 89.2)
+$color-warning-subtle: #FFFBEB;
+$color-danger:         #DC2626;   // oklch(0.577 0.215 27.3)
+$color-danger-subtle:  #FEF2F2;
+$color-disabled:       #CBD5E1;
+
+// ── CHART TOKENS ─────────────────────────────────────────────
+// CRITICAL: Never reuse $color-primary or $color-accent in charts.
+// These tokens exist exclusively for data visualization.
+// Using brand colors for chart series creates false semantic meaning.
+
+// Categorical palette — for comparing distinct series
+$chart-cat-1: #3B82F6;  // blue  — distinct from $color-accent (#0073E6)
+$chart-cat-2: #10B981;  // emerald
+$chart-cat-3: #F59E0B;  // amber
+$chart-cat-4: #EF4444;  // red
+$chart-cat-5: #8B5CF6;  // purple
+$chart-cat-6: #EC4899;  // pink
+$chart-cat-7: #14B8A6;  // teal
+$chart-cat-8: #F97316;  // orange
+
+// IMIN semantic chart colors — map to IMIN decision types
+// Use these whenever charting relevance decision breakdowns
+$chart-relevant-a: #10B981;  // green  — Type A Relevant
+$chart-relevant-b: #3B82F6;  // blue   — Type B Relevant
+$chart-relevant-c: #8B5CF6;  // purple — Type C Relevant
+$chart-not-rel:    #EF4444;  // red    — Not Relevant
+$chart-no-dec:     #94A3B8;  // gray   — No Decision
+
+// Chart surface tokens
+$chart-grid-line:   #F1F5F9;  // = $surface-subtle
+$chart-axis-text:   #64748B;  // = $text-tertiary (corrected)
+$chart-tooltip-bg:  #1E293B;  // = $neutral-800
+
+// Text
+$text-primary:   #24272D;
+$text-secondary: #475569;
+$text-tertiary:  #64748B;  // corrected from #94A3B8 — was 2.48:1, fails WCAG AA. Now 4.84:1.
+$text-inverse:   #FFFFFF;
+$text-accent:    #0073E6;
+$text-danger:    #DC2626;
+$text-success:   #16A34A;
+$text-warning:   #92600A;
+
+// Neutral scale
+$neutral-0:   #FFFFFF;   $neutral-50:  #F8FAFC;  $neutral-100: #F1F5F9;
+$neutral-200: #E2E8F0;   $neutral-300: #CBD5E1;  $neutral-400: #94A3B8;
+$neutral-500: #64748B;   $neutral-600: #475569;  $neutral-700: #334155;
+$neutral-800: #1E293B;   $neutral-900: #0F172A;  $neutral-950: #020617;
+
+// Surface & border
+$surface-page:   #F8FAFC;
+$surface-base:   #FFFFFF;
+$surface-subtle: #F1F5F9;
+$border-default: #E2E8F0;
+$border-strong:  #CBD5E1;
+
+// Typography
+$font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+$font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+// Radius
+$radius-sm:   4px;
+$radius-md:   6px;
+$radius-lg:   9px;
+$radius-xl:   12px;
+$radius-pill: 9999px;
+
+// Elevation
+$shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+$shadow-md: 0 4px 12px rgba(15, 23, 42, 0.10);
+$shadow-lg: 0 12px 24px rgba(15, 23, 42, 0.14);
+
+// Motion
+$duration-fast: 120ms;
+$duration-base: 180ms;
+$duration-slow: 240ms;
+$ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+
+// Spacing map
+$spacing: (
+  0:  0,
+  1:  4px,
+  2:  8px,
+  3:  12px,
+  4:  16px,
+  5:  20px,
+  6:  24px,
+  8:  32px,
+  10: 40px,
+  12: 48px,
+  14: 56px,
+  16: 64px,
+  18: 72px,
+  20: 80px,
+  24: 96px,
+);
+
+
+// ── CSS CUSTOM PROPERTIES — shadcn/ui OKLCH convention ──────
+// These are the runtime tokens. Component CSS always uses var(--token).
+// Tailwind maps these via tailwind.config.ts → bg-primary, text-foreground, etc.
+
+:root {
+  // ── shadcn/ui Core Tokens ──────────────────────────────────
+  --background:             oklch(0.984 0.004 248.6);  // #F8FAFC
+  --foreground:             oklch(0.272 0.012 264.4);  // #24272D
+
+  --card:                   oklch(1.000 0.000 271.2);  // #FFFFFF
+  --card-foreground:        oklch(0.272 0.012 264.4);
+
+  --popover:                oklch(1.000 0.000 271.2);
+  --popover-foreground:     oklch(0.272 0.012 264.4);
+
+  --primary:                oklch(0.328 0.068 257.3);  // #1D3557
+  --primary-foreground:     oklch(1.000 0.000 271.2);  // #FFFFFF
+
+  --secondary:              oklch(0.968 0.007 248.3);  // #F1F5F9
+  --secondary-foreground:   oklch(0.446 0.037 257.3);  // #475569
+
+  --muted:                  oklch(0.968 0.007 248.3);
+  --muted-foreground:       oklch(0.554 0.041 257.4);  // #64748B
+
+  --accent:                 oklch(0.569 0.195 256.1);  // #0073E6
+  --accent-foreground:      oklch(1.000 0.000 271.2);
+
+  --destructive:            oklch(0.577 0.215 27.3);   // #DC2626
+  --destructive-foreground: oklch(1.000 0.000 271.2);
+
+  --border:                 oklch(0.929 0.013 255.6);  // #E2E8F0
+  --input:                  oklch(0.929 0.013 255.6);
+  --ring:                   oklch(0.569 0.195 256.1);  // #0073E6 — focus rings
+  --radius:                 0.5rem;
+
+  // ── IMIN Extensions (no shadcn/ui equivalent) ──────────────
+  --success:                oklch(0.627 0.170 149.2);  // #16A34A
+  --success-foreground:     oklch(1.000 0.000 271.2);
+  --warning:                oklch(0.809 0.160 89.2);   // #EABA1C
+  --warning-foreground:     oklch(0.328 0.068 257.3);  // dark text for contrast
+  --info:                   oklch(0.685 0.148 237.3);  // #0EA5E9
+  --info-foreground:        oklch(1.000 0.000 271.2);
+
+  // Subtle fills — callouts, row highlights, badge backgrounds
+  --accent-subtle:          oklch(0.950 0.030 256.1);  // #EBF4FF
+  --success-subtle:         oklch(0.971 0.029 149.2);  // #F0FDF4
+  --warning-subtle:         oklch(0.987 0.030 89.2);   // #FFFBEB
+  --destructive-subtle:     oklch(0.981 0.025 27.3);   // #FEF2F2
+  --info-subtle:            oklch(0.971 0.030 237.3);  // #F0F9FF
+
+  // shadcn chart tokens — standard 5-slot palette
+  --chart-1:  oklch(0.569 0.195 256.1);  // accent blue
+  --chart-2:  oklch(0.627 0.170 149.2);  // success green
+  --chart-3:  oklch(0.809 0.160 89.2);   // warning amber
+  --chart-4:  oklch(0.577 0.215 27.3);   // destructive red
+  --chart-5:  oklch(0.685 0.148 237.3);  // info cyan
+
+  // Chart tokens (IMIN categorical + semantic)
+  --chart-cat-1: #{$chart-cat-1};
+  --chart-cat-2: #{$chart-cat-2};
+  --chart-cat-3: #{$chart-cat-3};
+  --chart-cat-4: #{$chart-cat-4};
+  --chart-cat-5: #{$chart-cat-5};
+  --chart-cat-6: #{$chart-cat-6};
+  --chart-relevant-a: #{$chart-relevant-a};
+  --chart-relevant-b: #{$chart-relevant-b};
+  --chart-relevant-c: #{$chart-relevant-c};
+  --chart-not-rel:    #{$chart-not-rel};
+  --chart-no-dec:     #{$chart-no-dec};
+  --chart-grid-line:  #{$chart-grid-line};
+  --chart-axis-text:  #{$chart-axis-text};
+  --chart-tooltip-bg: #{$chart-tooltip-bg};
+
+  // ── Backward-compat aliases ─────────────────────────────────
+  // Map old IMIN token names → new shadcn names.
+  // Remove in v3 once all component code migrates to shadcn names.
+  --color-primary:         var(--primary);
+  --color-primary-hover:   #{$color-primary-hover};
+  --color-accent:          var(--accent);
+  --color-accent-hover:    #{$color-accent-hover};
+  --color-accent-subtle:   var(--accent-subtle);
+  --color-success:         var(--success);
+  --color-success-subtle:  var(--success-subtle);
+  --color-info:            var(--info);
+  --color-info-subtle:     var(--info-subtle);
+  --color-warning:         var(--warning);
+  --color-warning-subtle:  var(--warning-subtle);
+  --color-danger:          var(--destructive);
+  --color-danger-subtle:   var(--destructive-subtle);
+  --text-primary:          var(--foreground);
+  --text-secondary:        var(--secondary-foreground);
+  --text-tertiary:         var(--muted-foreground);
+  --text-inverse:          var(--primary-foreground);
+  --text-accent:           var(--accent);
+  --text-danger:           var(--destructive);
+  --text-success:          var(--success);
+  --surface-page:          var(--background);
+  --surface-base:          var(--card);
+  --surface-subtle:        var(--secondary);
+  --border-default:        var(--border);
+  --border-strong:         oklch(0.821 0.022 256.1);  // neutral-300
+  --border-accent:         var(--accent);
+  --border-danger:         var(--destructive);
+  --border-success:        var(--success);
+}
+
+// ── SEMANTIC ALIAS TOKENS ─────────────────────────────────────
+// Layer 3: maps semantic roles to shadcn base tokens.
+// Changing a base token propagates everywhere.
+// Changing an alias token affects only that specific role.
+:root {
+  // Action — buttons and primary CTAs
+  --action-primary-bg:       var(--primary);
+  --action-primary-text:     var(--primary-foreground);
+  --action-secondary-bg:     transparent;
+  --action-secondary-border: var(--border);
+  --action-danger-bg:        var(--destructive);
+  --action-danger-text:      var(--destructive-foreground);
+
+  // Interactive — links, focus rings, selected states
+  --interactive-default:       var(--accent);
+  --interactive-focus:         var(--ring);
+  --interactive-selected-bg:   var(--accent-subtle);
+  --interactive-selected-text: var(--accent);
+
+  // Navigation
+  --nav-active-indicator: var(--accent);
+  --nav-active-bg:        var(--accent-subtle);
+  --nav-active-text:      var(--accent);
+
+  // Forms
+  --form-focus-ring:         var(--ring);
+  --form-error:              var(--destructive);
+  --form-success:            var(--success);
+  --form-label-color:        var(--foreground);
+  --form-placeholder-color:  var(--muted-foreground);
+
+  // Surfaces
+  --surface-overlay: rgba(15, 23, 42, 0.5);
+  --surface-card:    var(--card);
+  --surface-input:   var(--card);
+}
+
+// ── Dark mode — .dark class on <html> ────────────────────────
+// Matches Tailwind darkMode: "class" and shadcn/ui convention.
+// Add .dark to <html> to activate — zero component changes needed.
+.dark {
+  --background:             oklch(0.180 0.032 266.6);  // #0B1120
+  --foreground:             oklch(0.968 0.007 248.3);  // #F1F5F9
+
+  --card:                   oklch(0.279 0.037 260.0);  // #1E293B
+  --card-foreground:        oklch(0.968 0.007 248.3);
+
+  --popover:                oklch(0.279 0.037 260.0);
+  --popover-foreground:     oklch(0.968 0.007 248.3);
+
+  --primary:                oklch(0.809 0.096 251.8);  // #93C5FD — 8.11:1 AAA
+  --primary-foreground:     oklch(0.208 0.040 265.8);  // #0F172A — dark text
+
+  --secondary:              oklch(0.334 0.044 257.9);  // #28374D
+  --secondary-foreground:   oklch(0.711 0.035 256.8);  // #94A3B8
+
+  --muted:                  oklch(0.308 0.040 260.4);  // #243044
+  --muted-foreground:       oklch(0.554 0.041 257.4);
+
+  --accent:                 oklch(0.714 0.143 254.6);  // #60A5FA — 5.75:1 AA
+  --accent-foreground:      oklch(0.208 0.040 265.8);
+
+  --destructive:            oklch(0.637 0.208 25.3);   // #EF4444
+  --destructive-foreground: oklch(1.000 0.000 271.2);
+
+  --border:                 oklch(0.372 0.039 257.3);  // #334155
+  --input:                  oklch(0.372 0.039 257.3);
+  --ring:                   oklch(0.714 0.143 254.6);  // #60A5FA
+
+  // IMIN extensions — dark
+  --success:            oklch(0.627 0.170 149.2);
+  --success-foreground: oklch(1.000 0.000 271.2);
+  --warning:            oklch(0.809 0.160 89.2);
+  --warning-foreground: oklch(0.208 0.040 265.8);
+  --info:               oklch(0.685 0.148 237.3);
+  --info-foreground:    oklch(0.208 0.040 265.8);
+
+  // Subtle fills — low-opacity tints on dark surfaces
+  --accent-subtle:      rgba(0, 115, 230, 0.18);
+  --success-subtle:     rgba(16, 185, 129, 0.14);
+  --warning-subtle:     rgba(234, 186, 28, 0.14);
+  --destructive-subtle: rgba(220, 38, 38, 0.14);
+  --info-subtle:        rgba(14, 165, 233, 0.14);
+
+  // Chart grid/axis adapt to dark surfaces
+  --chart-grid-line:  oklch(0.334 0.044 257.9);  // #28374D
+  --chart-axis-text:  oklch(0.554 0.041 257.4);  // #64748B
+}
+
+
+// ── BASE RESET ───────────────────────────────────────────────
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: $font-sans;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--surface-page);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--text-accent);
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+img, svg { display: block; }
+
+input, button, select, textarea {
+  font-family: inherit;
+}
+
+// Screen-reader only
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+// ── UTILITY CLASSES ──────────────────────────────────────────
+
+// Spacing utilities (generated from $spacing map)
+@each $key, $value in $spacing {
+  .p-#{$key}   { padding: $value !important; }
+  .px-#{$key}  { padding-left: $value !important; padding-right: $value !important; }
+  .py-#{$key}  { padding-top: $value !important; padding-bottom: $value !important; }
+  .pt-#{$key}  { padding-top: $value !important; }
+  .pr-#{$key}  { padding-right: $value !important; }
+  .pb-#{$key}  { padding-bottom: $value !important; }
+  .pl-#{$key}  { padding-left: $value !important; }
+  .m-#{$key}   { margin: $value !important; }
+  .mx-#{$key}  { margin-left: $value !important; margin-right: $value !important; }
+  .my-#{$key}  { margin-top: $value !important; margin-bottom: $value !important; }
+  .mt-#{$key}  { margin-top: $value !important; }
+  .mr-#{$key}  { margin-right: $value !important; }
+  .mb-#{$key}  { margin-bottom: $value !important; }
+  .ml-#{$key}  { margin-left: $value !important; }
+  .gap-#{$key} { gap: $value !important; }
+  .gap-x-#{$key} { column-gap: $value !important; }
+  .gap-y-#{$key} { row-gap: $value !important; }
+}
+
+// mx-auto / ml-auto / mr-auto
+.mx-auto { margin-left: auto !important; margin-right: auto !important; }
+.ml-auto { margin-left: auto !important; }
+.mr-auto { margin-right: auto !important; }
+
+// Display
+.flex         { display: flex !important; }
+.inline-flex  { display: inline-flex !important; }
+.grid         { display: grid !important; }
+.block        { display: block !important; }
+.inline-block { display: inline-block !important; }
+.inline       { display: inline !important; }
+.hidden       { display: none !important; }
+
+// Flex
+.flex-col     { flex-direction: column !important; }
+.flex-row     { flex-direction: row !important; }
+.flex-wrap    { flex-wrap: wrap !important; }
+.flex-nowrap  { flex-wrap: nowrap !important; }
+.flex-1       { flex: 1 1 0% !important; }
+.flex-auto    { flex: 1 1 auto !important; }
+.flex-none    { flex: none !important; }
+.flex-shrink-0 { flex-shrink: 0 !important; }
+.flex-grow    { flex-grow: 1 !important; }
+
+// Align / Justify
+.items-start    { align-items: flex-start !important; }
+.items-center   { align-items: center !important; }
+.items-end      { align-items: flex-end !important; }
+.items-baseline { align-items: baseline !important; }
+.items-stretch  { align-items: stretch !important; }
+.justify-start   { justify-content: flex-start !important; }
+.justify-center  { justify-content: center !important; }
+.justify-end     { justify-content: flex-end !important; }
+.justify-between { justify-content: space-between !important; }
+.justify-around  { justify-content: space-around !important; }
+.self-start  { align-self: flex-start !important; }
+.self-center { align-self: center !important; }
+.self-end    { align-self: flex-end !important; }
+
+// Grid columns
+@for $i from 1 through 12 {
+  .grid-cols-#{$i}  { grid-template-columns: repeat($i, 1fr) !important; }
+  .col-span-#{$i}   { grid-column: span $i / span $i !important; }
+}
+.grid-cols-auto { grid-template-columns: repeat(auto-fill, minmax(0, 1fr)) !important; }
+
+// Width / Height
+.w-full   { width: 100% !important; }
+.w-auto   { width: auto !important; }
+.w-screen { width: 100vw !important; }
+.h-full   { height: 100% !important; }
+.h-screen { height: 100vh !important; }
+.h-auto   { height: auto !important; }
+.min-w-0  { min-width: 0 !important; }
+.min-h-0  { min-height: 0 !important; }
+.max-w-sm    { max-width: 384px !important; }
+.max-w-md    { max-width: 448px !important; }
+.max-w-lg    { max-width: 512px !important; }
+.max-w-xl    { max-width: 576px !important; }
+.max-w-2xl   { max-width: 672px !important; }
+.max-w-prose { max-width: 65ch !important; }
+
+// Overflow
+.overflow-hidden  { overflow: hidden !important; }
+.overflow-auto    { overflow: auto !important; }
+.overflow-visible { overflow: visible !important; }
+.overflow-x-auto  { overflow-x: auto !important; }
+.overflow-y-auto  { overflow-y: auto !important; }
+.truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+// Position
+.relative { position: relative !important; }
+.absolute { position: absolute !important; }
+.fixed    { position: fixed !important; }
+.sticky   { position: sticky !important; }
+.inset-0  { inset: 0 !important; }
+.top-0    { top: 0 !important; }
+.right-0  { right: 0 !important; }
+.bottom-0 { bottom: 0 !important; }
+.left-0   { left: 0 !important; }
+
+// ── Z-INDEX LAYER SYSTEM ─────────────────────────────────────
+// Named semantic layers. Never use raw z-index values in component CSS —
+// always reference a layer variable.
+// Tooltip always wins — it must render above modals (e.g. tooltip on a button inside a modal).
+// Popover is interactive (click-triggered); Tooltip is non-interactive (hover-triggered).
+$z-base:    0;
+$z-sticky:  100;   // sticky headers, fixed top nav
+$z-dropdown:200;   // dropdown menus, contextual menus
+$z-popover: 300;   // interactive overlays (click-triggered, contains focusable elements)
+$z-overlay: 400;   // modal backdrop / scrim
+$z-modal:   500;   // modals, dialogs
+$z-toast:   600;   // toast notifications
+$z-tooltip: 700;   // tooltips — always highest (must appear above modals)
+
+// Utility classes — use these in markup when SCSS variables aren't available
+.z-sticky   { z-index: $z-sticky   !important; }
+.z-dropdown { z-index: $z-dropdown !important; }
+.z-popover  { z-index: $z-popover  !important; }
+.z-overlay  { z-index: $z-overlay  !important; }
+.z-modal    { z-index: $z-modal    !important; }
+.z-toast    { z-index: $z-toast    !important; }
+.z-tooltip  { z-index: $z-tooltip  !important; }
+
+// ── TYPOGRAPHY ROLES ─────────────────────────────────────────
+// Semantic roles — use these in all new component and page code.
+// Engineers reference what the text IS, not what size it happens to be.
+// Size utilities below are kept as implementation internals.
+//
+// IMPORTANT: Form labels use .t-body (14px), not .t-label (12px).
+// Enterprise users live in forms. 14px labels improve scannability
+// and pass WCAG SC 1.4.4 at 200% zoom without layout breakage.
+
+.t-display {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.t-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.t-body {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.t-body-small {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.t-label {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.t-caption {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--text-tertiary);
+}
+
+// Size utilities — kept for internal component use and legacy compatibility.
+// Do not use in new page-level markup; use role classes above instead.
+// Typography sizes
+.text-hero  { font-size: 58px !important; font-weight: 800; line-height: 1.04; letter-spacing: -0.04em; }
+.text-4xl   { font-size: 40px !important; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+.text-3xl   { font-size: 32px !important; font-weight: 700; line-height: 1.2;  letter-spacing: -0.02em; }
+.text-2xl   { font-size: 24px !important; font-weight: 600; line-height: 1.3;  letter-spacing: -0.01em; }
+.text-xl    { font-size: 20px !important; font-weight: 600; line-height: 1.4;  }
+.text-lg    { font-size: 16px !important; line-height: 1.6; }
+.text-md    { font-size: 15px !important; line-height: 1.65; }
+.text-base  { font-size: 14px !important; line-height: 1.6; }
+.text-sm    { font-size: 13px !important; line-height: 1.5; }
+.text-xs    { font-size: 12px !important; line-height: 1.5; }
+.text-label { font-size: 11px !important; font-weight: 600; line-height: 1.4; }
+.text-mono  { font-family: $font-mono !important; font-size: 13px; }
+
+// Font weights
+.font-thin       { font-weight: 100 !important; }
+.font-light      { font-weight: 300 !important; }
+.font-normal     { font-weight: 400 !important; }
+.font-medium     { font-weight: 500 !important; }
+.font-semibold   { font-weight: 600 !important; }
+.font-bold       { font-weight: 700 !important; }
+.font-extrabold  { font-weight: 800 !important; }
+
+// Line height
+.leading-tight   { line-height: 1.1 !important; }
+.leading-snug    { line-height: 1.3 !important; }
+.leading-normal  { line-height: 1.5 !important; }
+.leading-relaxed { line-height: 1.6 !important; }
+.leading-loose   { line-height: 1.7 !important; }
+
+// Letter spacing
+.tracking-tight   { letter-spacing: -0.025em !important; }
+.tracking-normal  { letter-spacing: 0 !important; }
+.tracking-wide    { letter-spacing: 0.05em !important; }
+.tracking-wider   { letter-spacing: 0.07em !important; }
+.tracking-widest  { letter-spacing: 0.1em !important; }
+
+// Text transform
+.uppercase    { text-transform: uppercase !important; }
+.lowercase    { text-transform: lowercase !important; }
+.capitalize   { text-transform: capitalize !important; }
+.normal-case  { text-transform: none !important; }
+
+// Text align
+.text-left   { text-align: left !important; }
+.text-center { text-align: center !important; }
+.text-right  { text-align: right !important; }
+
+// Misc text
+.italic          { font-style: italic !important; }
+.underline       { text-decoration: underline !important; }
+.no-underline    { text-decoration: none !important; }
+.whitespace-nowrap { white-space: nowrap !important; }
+.break-words     { word-break: break-word !important; }
+
+// Text colors
+.text-primary   { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-tertiary  { color: var(--text-tertiary) !important; }
+.text-inverse   { color: var(--text-inverse) !important; }
+.text-accent    { color: var(--text-accent) !important; }
+.text-success   { color: var(--text-success) !important; }
+.text-warning   { color: $text-warning !important; }
+.text-danger    { color: var(--text-danger) !important; }
+.text-muted     { color: var(--text-tertiary) !important; }
+
+// Background colors
+.bg-white         { background-color: $surface-base !important; }
+.bg-surface       { background-color: var(--surface-base) !important; }
+.bg-subtle        { background-color: var(--surface-subtle) !important; }
+.bg-page          { background-color: var(--surface-page) !important; }
+.bg-primary       { background-color: $color-primary !important; }
+.bg-accent        { background-color: $color-accent !important; }
+.bg-accent-subtle { background-color: var(--color-accent-subtle) !important; }
+.bg-success-subtle { background-color: var(--color-success-subtle) !important; }
+.bg-warning-subtle { background-color: var(--color-warning-subtle) !important; }
+.bg-danger-subtle  { background-color: var(--color-danger-subtle) !important; }
+.bg-info-subtle    { background-color: var(--color-info-subtle) !important; }
+.bg-transparent    { background-color: transparent !important; }
+
+// Border
+.border    { border: 1px solid var(--border-default) !important; }
+.border-0  { border: none !important; }
+.border-t  { border-top: 1px solid var(--border-default) !important; }
+.border-r  { border-right: 1px solid var(--border-default) !important; }
+.border-b  { border-bottom: 1px solid var(--border-default) !important; }
+.border-l  { border-left: 1px solid var(--border-default) !important; }
+.border-strong  { border-color: var(--border-strong) !important; }
+.border-accent  { border-color: var(--color-accent) !important; }
+.border-danger  { border-color: var(--color-danger) !important; }
+.border-success { border-color: var(--color-success) !important; }
+.divide-y > * + * { border-top: 1px solid var(--border-default); }
+.divide-x > * + * { border-left: 1px solid var(--border-default); }
+
+// Border radius
+.rounded-none { border-radius: 0 !important; }
+.rounded-sm   { border-radius: $radius-sm !important; }
+.rounded-md   { border-radius: $radius-md !important; }
+.rounded-lg   { border-radius: $radius-lg !important; }
+.rounded-xl   { border-radius: $radius-xl !important; }
+.rounded-full { border-radius: $radius-pill !important; }
+
+// Shadow
+.shadow-none { box-shadow: none !important; }
+.shadow-sm   { box-shadow: $shadow-sm !important; }
+.shadow-md   { box-shadow: $shadow-md !important; }
+.shadow-lg   { box-shadow: $shadow-lg !important; }
+
+// Cursor
+.cursor-pointer { cursor: pointer !important; }
+.cursor-default { cursor: default !important; }
+.cursor-not-allowed { cursor: not-allowed !important; }
+
+// Opacity
+.opacity-0   { opacity: 0 !important; }
+.opacity-50  { opacity: 0.5 !important; }
+.opacity-75  { opacity: 0.75 !important; }
+.opacity-100 { opacity: 1 !important; }
+
+// Pointer events
+.pointer-events-none { pointer-events: none !important; }
+
+
+// ── MIXINS ───────────────────────────────────────────────────
+
+// Focus ring (apply to all interactive elements)
+@mixin focus-ring($color: $color-accent) {
+  &:focus-visible {
+    outline: 2px solid $color;
+    outline-offset: 2px;
+  }
+}
+
+// Card base
+@mixin card-base {
+  background: var(--surface-base);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-xl;
+  box-shadow: $shadow-sm;
+}
+
+// Transition base
+@mixin transition($props...) {
+  transition-property: #{$props};
+  transition-duration: $duration-base;
+  transition-timing-function: $ease-out;
+}
+
+// Skeleton shimmer
+@mixin skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    $neutral-100 25%,
+    $neutral-200 50%,
+    $neutral-100 75%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+
+// ── ANIMATIONS ───────────────────────────────────────────────
+
+@keyframes shimmer {
+  0%   { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+
+// ── COMPONENT: BUTTONS ───────────────────────────────────────
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: $font-sans;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: $radius-md;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  @include transition(background-color, border-color, box-shadow, opacity);
+  @include focus-ring;
+
+  &:disabled,
+  &[disabled],
+  &[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Loading state
+  &.is-loading {
+    cursor: wait;
+    pointer-events: none;
+  }
+
+  // Sizes
+  &--sm { height: 28px; padding: 0 10px; font-size: 12px; border-radius: $radius-sm; }
+  &--lg { height: 42px; padding: 0 18px; }
+  &--icon { padding: 0; width: 36px; &.btn--sm { width: 28px; } &.btn--lg { width: 42px; } }
+
+  // Variants
+  &--primary {
+    background: $color-primary; color: #fff; border-color: $color-primary;
+    &:hover:not(:disabled) { background: $color-primary-hover; border-color: $color-primary-hover; }
+    &:active:not(:disabled) { background: $color-primary-active; }
+  }
+  &--secondary {
+    background: var(--surface-base); color: var(--text-primary); border-color: var(--border-default);
+    &:hover:not(:disabled) { background: var(--surface-subtle); border-color: var(--border-strong); }
+    &:active:not(:disabled) { background: $neutral-100; }
+  }
+  &--outline {
+    background: transparent; color: $color-primary; border-color: var(--border-strong);
+    &:hover:not(:disabled) { background: var(--surface-subtle); border-color: $color-primary; }
+  }
+  &--ghost {
+    background: transparent; color: var(--text-secondary); border-color: transparent;
+    &:hover:not(:disabled) { background: var(--surface-subtle); color: var(--text-primary); }
+  }
+  &--danger {
+    background: $color-danger; color: #fff; border-color: $color-danger;
+    &:hover:not(:disabled) { background: #B91C1C; }
+  }
+  &--link {
+    background: transparent; color: var(--text-accent); border-color: transparent;
+    height: auto; padding: 0; font-weight: 400;
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+
+  // Spinner
+  &__spinner {
+    width: 14px; height: 14px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 600ms linear infinite;
+  }
+}
+
+
+// ── COMPONENT: BADGES ────────────────────────────────────────
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+  line-height: 1;
+
+  &--pill    { border-radius: $radius-pill; }
+  &--neutral { background: $neutral-100; color: $neutral-700; }
+  &--primary { background: var(--color-accent-subtle); color: var(--color-accent); }
+  &--success { background: var(--color-success-subtle); color: $color-success; }
+  &--info    { background: var(--color-info-subtle); color: $color-info; }
+  &--warning { background: var(--color-warning-subtle); color: $text-warning; }
+  &--danger  { background: var(--color-danger-subtle); color: $color-danger; }
+}
+
+
+// ── COMPONENT: FORMS ─────────────────────────────────────────
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &--error {
+    .input, .select, .textarea { border-color: $color-danger; box-shadow: 0 0 0 3px rgba(220,38,38,.10); }
+  }
+
+  &__label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+  &__required { color: $color-danger; margin-left: 2px; }
+  &__hint     { font-size: 12px; color: var(--text-tertiary); line-height: 1.4; }
+  &__error    { font-size: 12px; color: $text-danger; display: flex; align-items: center; gap: 4px; line-height: 1.4; }
+}
+
+%input-base {
+  display: block;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  font-family: $font-sans;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--surface-base);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-md;
+  appearance: none;
+  outline: none;
+  @include transition(border-color, box-shadow);
+
+  &::placeholder { color: var(--text-tertiary); }
+  &:hover:not(:disabled)  { border-color: var(--border-strong); }
+  &:focus { border-color: $color-accent; box-shadow: 0 0 0 3px $color-accent-subtle; }
+  &:disabled { background: var(--surface-subtle); color: var(--text-tertiary); cursor: not-allowed; }
+  &--error { border-color: $color-danger !important; box-shadow: 0 0 0 3px rgba(220,38,38,.10) !important; }
+  &--sm  { height: 28px; font-size: 12px; padding: 0 10px; }
+  &--lg  { height: 42px; font-size: 15px; padding: 0 14px; }
+}
+
+.input    { @extend %input-base; }
+.textarea {
+  @extend %input-base;
+  height: auto;
+  min-height: 88px;
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.select-wrap { position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--text-tertiary);
+    pointer-events: none;
+  }
+}
+.select { @extend %input-base; padding-right: 32px; cursor: pointer; }
+
+.checkbox-wrap,
+.radio-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.checkbox,
+.radio {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: $radius-sm;
+  background: var(--surface-base);
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  @include transition(border-color, background);
+  @include focus-ring;
+
+  &:checked {
+    background: $color-accent;
+    border-color: $color-accent;
+    &::after {
+      content: '';
+      position: absolute;
+      left: 4px; top: 1px;
+      width: 5px; height: 9px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(42deg);
+    }
+  }
+}
+.radio { border-radius: 50%; &:checked { border-width: 5px; &::after { display: none; } } }
+
+.switch-wrap { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.switch {
+  position: relative; width: 36px; height: 20px; flex-shrink: 0;
+  input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+  &__track {
+    position: absolute; inset: 0;
+    background: var(--border-strong); border-radius: $radius-pill;
+    @include transition(background);
+  }
+  &__thumb {
+    position: absolute; top: 2px; left: 2px;
+    width: 16px; height: 16px; background: #fff; border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    @include transition(transform);
+  }
+  input:checked + .switch__track { background: $color-accent; }
+  input:checked ~ .switch__thumb { transform: translateX(16px); }
+}
+
+.input-icon-wrap {
+  position: relative;
+  .input-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 16px; height: 16px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+  }
+  .input { padding-left: 36px; }
+  .input--sm { padding-left: 30px;
+    + .input-icon, ~ .input-icon { left: 8px; width: 14px; height: 14px; }
+  }
+}
+
+
+// ── COMPONENT: CARDS ─────────────────────────────────────────
+
+.card {
+  @include card-base;
+  padding: 17px 18px 16px;
+  min-height: 168px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &--clickable {
+    cursor: pointer;
+    @include transition(transform, box-shadow, border-color);
+    &:hover { transform: translateY(-2px); box-shadow: $shadow-md; border-color: var(--border-strong); }
+    &:focus-visible { outline: 2px solid $color-accent; outline-offset: 2px; }
+  }
+
+  &__header { display: flex; align-items: center; gap: 12px; }
+  &__logo {
+    width: 38px; height: 38px; border-radius: $radius-lg; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: #fff; overflow: hidden;
+  }
+  &__title    { font-size: 15px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+  &__subtitle { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+  &__body     { font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1; }
+  &__footer   {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border-default);
+  }
+  &__meta { font-size: 11px; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; }
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+
+// ── COMPONENT: DATA TABLE ────────────────────────────────────
+
+.data-table-wrap {
+  @include card-base;
+  overflow: hidden;
+}
+
+.data-table-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-default);
+
+  &__title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  &__actions { display: flex; gap: 8px; }
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--surface-subtle);
+    white-space: nowrap;
+  }
+
+  tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-default);
+    color: var(--text-primary);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody tr {
+    @include transition(background);
+    &:hover td { background: var(--surface-subtle); }
+    &.row--selected td { background: $color-accent-subtle; }
+    &.row--disabled td { opacity: 0.5; pointer-events: none; }
+    &.row--skeleton td { background: transparent; pointer-events: none; }
+  }
+
+  .col-check { width: 44px; padding-left: 16px; padding-right: 8px; }
+  .col-num   { text-align: right; font-feature-settings: 'tnum'; font-variant-numeric: tabular-nums; }
+  .col-date  { text-align: right; white-space: nowrap; }
+  .col-action { text-align: right; white-space: nowrap; width: 1%; }
+
+  .col-sortable {
+    cursor: pointer;
+    user-select: none;
+    &:hover { color: var(--text-primary); }
+    &--asc  .sort-icon { transform: rotate(0deg); }
+    &--desc .sort-icon { transform: rotate(180deg); }
+  }
+
+  .sort-icon {
+    width: 12px; height: 12px;
+    display: inline-block; vertical-align: middle;
+    margin-left: 4px; opacity: 0.5;
+    @include transition(transform);
+  }
+}
+
+.data-table-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-default);
+  background: var(--surface-subtle);
+}
+
+.table-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+
+// ── COMPONENT: PAGINATION ────────────────────────────────────
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  &__btn {
+    min-width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 6px;
+    font-size: 13px; font-family: $font-sans;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: $radius-md;
+    cursor: pointer;
+    @include transition(background, border-color, color);
+    @include focus-ring;
+
+    &:hover:not(:disabled) { background: var(--surface-subtle); border-color: var(--border-default); color: var(--text-primary); }
+    &:disabled { opacity: 0.4; cursor: not-allowed; }
+    &--active {
+      background: $color-primary; color: #fff; border-color: $color-primary;
+      font-weight: 600;
+      &:hover { background: $color-primary-hover; }
+    }
+  }
+
+  &__ellipsis {
+    min-width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 13px; color: var(--text-tertiary);
+  }
+}
+
+
+// ── COMPONENT: STAT CARDS ────────────────────────────────────
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  @include card-base;
+  padding: 20px 24px;
+  min-height: 0;
+  gap: 0;
+  display: block;
+
+  &__label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+  &__value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  &__delta {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    svg { width: 14px; height: 14px; }
+    &--up      { color: $color-success; }
+    &--down    { color: $color-danger; }
+    &--neutral { color: var(--text-tertiary); }
+  }
+
+  &--featured {
+    border-color: $color-accent;
+    border-width: 2px;
+    .stat-card__value { color: $color-primary; }
+  }
+}
+
+
+// ── COMPONENT: FILTER BAR ────────────────────────────────────
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px 0;
+
+  &__search  { flex: 1; min-width: 200px; max-width: 320px; }
+  &__filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  &__actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+}
+
+
+// ── COMPONENT: PAGE HEADER ───────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+
+  &__main  { flex: 1; min-width: 0; }
+  &__actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding-top: 4px; }
+}
+
+.page-title { font-size: 26px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
+.page-desc  { font-size: 14px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+
+.breadcrumb { margin-bottom: 6px; }
+.breadcrumb__list { display: flex; align-items: center; gap: 4px; list-style: none; }
+.breadcrumb__item { font-size: 12px; color: var(--text-tertiary); display: flex; align-items: center; gap: 4px; }
+.breadcrumb__link { color: var(--text-secondary); &:hover { color: var(--text-primary); text-decoration: none; } }
+.breadcrumb__item--current { color: var(--text-primary); font-weight: 500; }
+
+
+// ── COMPONENT: CALLOUTS ──────────────────────────────────────
+
+.callout {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 0 $radius-md $radius-md 0;
+  border-left: 3px solid;
+
+  &__icon { flex-shrink: 0; margin-top: 1px; width: 16px; height: 16px; }
+  &__body { flex: 1; }
+  &__title { display: block; font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+  p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+
+  &--info    { background: var(--color-info-subtle);    border-left-color: $color-info;    .callout__icon { color: $color-info; } }
+  &--success { background: var(--color-success-subtle); border-left-color: $color-success; .callout__icon { color: $color-success; } }
+  &--warning { background: var(--color-warning-subtle); border-left-color: $color-warning; .callout__icon { color: $color-warning; } }
+  &--danger  { background: var(--color-danger-subtle);  border-left-color: $color-danger;  .callout__icon { color: $color-danger; } }
+}
+
+
+// ── COMPONENT: MODALS ────────────────────────────────────────
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  @include transition(opacity);
+
+  &.is-open { opacity: 1; pointer-events: all; }
+}
+
+.modal {
+  background: var(--surface-base);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: $shadow-lg, 0 0 0 1px rgba(15,23,42,.06);
+  transform: translateY(-8px) scale(.98);
+  @include transition(transform);
+
+  .modal-overlay.is-open & { transform: none; }
+
+  &--sm   { max-width: 480px; }
+  &--lg   { max-width: 720px; }
+  &--xl   { max-width: 960px; }
+
+  &__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border-default);
+  }
+  &__title  { font-size: 17px; font-weight: 600; color: var(--text-primary); }
+  &__body   { padding: 20px 24px; font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+  &__footer {
+    display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-default);
+  }
+}
+
+
+// ── COMPONENT: EMPTY STATE ───────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 48px 24px;
+
+  &__icon {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface-subtle);
+    border-radius: $radius-xl;
+    color: var(--text-tertiary);
+    margin-bottom: 16px;
+    svg { width: 24px; height: 24px; }
+  }
+  &__title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+  &__desc  { font-size: 14px; color: var(--text-secondary); line-height: 1.6; max-width: 360px; margin-bottom: 20px; }
+
+  &--table { padding: 32px 24px; }
+}
+
+
+// ── COMPONENT: SKELETON ──────────────────────────────────────
+
+.skeleton {
+  &__line {
+    height: 14px; border-radius: $radius-sm; margin-bottom: 8px;
+    @include skeleton-shimmer;
+
+    &--title  { height: 20px; width: 60%; }
+    &--short  { width: 40%; }
+    &--label  { height: 10px; width: 50%; margin-bottom: 12px; }
+    &--value  { height: 32px; width: 70%; margin-bottom: 6px; }
+  }
+
+  &__block {
+    border-radius: $radius-sm;
+    @include skeleton-shimmer;
+    &--sm    { height: 20px; width: 20px; border-radius: $radius-sm; }
+    &--badge { height: 22px; width: 64px; border-radius: $radius-pill; }
+    &--avatar { height: 32px; width: 32px; border-radius: 50%; }
+    &--btn   { height: 32px; width: 80px; border-radius: $radius-md; }
+  }
+}
+
+
+// ── COMPONENT: TABS ──────────────────────────────────────────
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.tab {
+  padding: 10px 16px;
+  font-family: $font-sans; font-size: 14px; font-weight: 400;
+  color: var(--text-secondary);
+  background: transparent; border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer; margin-bottom: -1px;
+  @include transition(color, border-bottom-color);
+  white-space: nowrap;
+
+  &:hover { color: var(--text-primary); }
+  &--active { color: $color-accent; font-weight: 500; border-bottom-color: $color-accent; }
+  @include focus-ring;
+}
+
+.tab-panel { display: none; padding: 20px 0; &--active { display: block; } }
+
+
+// ── COMPONENT: SEGMENTED CONTROL ─────────────────────────────
+
+.seg-control {
+  display: inline-flex;
+  background: var(--surface-subtle);
+  border-radius: $radius-pill;
+  padding: 3px;
+  gap: 2px;
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-family: $font-sans;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: $radius-pill;
+    cursor: pointer;
+    white-space: nowrap;
+    @include transition(color, background, box-shadow);
+    @include focus-ring;
+
+    &:hover:not(#{&}--active) { color: var(--text-primary); }
+
+    &--active {
+      background: var(--surface-base);
+      color: var(--text-primary);
+      font-weight: 500;
+      box-shadow: 0 1px 3px rgba(15,23,42,.12), 0 0 0 1px rgba(15,23,42,.06);
+    }
+
+    // AI agent item — accent color when active
+    &--agent#{&}--active { color: $color-accent; }
+  }
+
+  // Small — for toolbar / card queue header use
+  &--sm {
+    .seg-control__item {
+      padding: 4px 10px;
+      font-size: 12px;
+    }
+  }
+}
+
+
+// ── COMPONENT: CARD QUEUE ─────────────────────────────────────
+
+.card-queue-wrap {
+  @include card-base;
+  overflow: hidden;
+}
+
+.card-queue-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-default);
+
+  &__title   { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  &__actions { display: flex; align-items: center; gap: 8px; }
+}
+
+.card-queue-table-wrap { padding: 0 12px 12px; }
+
+.card-queue {
+  width: 100%;
+  border-collapse: separate;  // required — gives row gaps + card borders
+  border-spacing: 0 6px;      // 6px vertical gap between card rows
+  font-size: 14px;
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    padding: 4px 16px 6px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    @include transition(color);
+    &:hover { color: var(--text-secondary); }
+
+    .sort-icon {
+      width: 11px; height: 11px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 3px;
+      opacity: .5;
+    }
+  }
+
+  tbody {
+    td {
+      padding: 14px 16px;
+      background: var(--surface-base);
+      vertical-align: middle;
+      border-top: 1px solid var(--border-default);
+      border-bottom: 1px solid var(--border-default);
+      @include transition(background, border-color);
+    }
+
+    // Border-radius on first/last cell creates the card shape
+    td:first-child {
+      border-left: 1px solid var(--border-default);
+      border-radius: 10px 0 0 10px;
+    }
+    td:last-child {
+      border-right: 1px solid var(--border-default);
+      border-radius: 0 10px 10px 0;
+    }
+
+    tr {
+      box-shadow: $shadow-sm;
+      cursor: pointer;
+      @include transition(transform, box-shadow);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: $shadow-md;
+
+        td {
+          background: $neutral-50;
+          border-color: var(--border-strong);
+        }
+      }
+    }
+  }
+}
+
+.card-queue-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 20px 16px;
+}
+
+
+// ── COMPONENT: TOASTS ────────────────────────────────────────
+
+.toast-container {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: $z-tooltip;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 380px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--surface-base);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  animation: slide-in-right $duration-slow $ease-out;
+
+  &__icon  { width: 18px; height: 18px; flex-shrink: 0; }
+  &__message { flex: 1; font-size: 14px; color: var(--text-primary); }
+  &__close { color: var(--text-tertiary); padding: 2px; }
+
+  &--success { border-left: 3px solid $color-success; .toast__icon { color: $color-success; } }
+  &--info    { border-left: 3px solid $color-info;    .toast__icon { color: $color-info; } }
+  &--warning { border-left: 3px solid $color-warning; .toast__icon { color: $color-warning; } }
+  &--error   { border-left: 3px solid $color-danger;  .toast__icon { color: $color-danger; } }
+}
+
+
+// ── COMPONENT: AVATAR ────────────────────────────────────────
+// Two states only:
+// Default (others): muted gray background, dark text
+// --current: accent background, white text — reserved for the authenticated user
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 600;
+  color: $neutral-700;          // dark text on gray
+  background: $neutral-200;     // muted gray — all users except current
+  flex-shrink: 0;
+  font-size: 13px;
+  width: 32px; height: 32px;
+
+  &--current {
+    background: $color-accent;  // accent blue — current authenticated user only
+    color: #fff;
+  }
+
+  &--sm { width: 24px; height: 24px; font-size: 10px; }
+  &--lg { width: 40px; height: 40px; font-size: 15px; }
+  &--xl { width: 56px; height: 56px; font-size: 20px; }
+
+  img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+}
+
+
+// ── COMPONENT: DROPDOWN / CONTEXTUAL MENU ────────────────────
+// General-purpose action menu. Triggered by a button (usually .btn--icon).
+// Right-aligned by default. Use .dropdown__menu--left to flip.
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 180px;
+    background: var(--surface-base);
+    border: 1px solid var(--border-default);
+    border-radius: $radius-xl;
+    box-shadow: $shadow-lg;
+    z-index: $z-dropdown;
+    overflow: hidden;
+    padding: 4px 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    @include transition(opacity, transform);
+
+    &.is-open { opacity: 1; pointer-events: all; transform: translateY(0); }
+    &--left    { right: auto; left: 0; }
+  }
+
+  &__label {
+    display: block;
+    padding: 6px 14px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-family: $font-sans;
+    white-space: nowrap;
+    @include transition(background);
+    @include focus-ring;
+
+    svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--text-tertiary); }
+
+    &:hover { background: var(--surface-subtle); }
+
+    &--danger {
+      color: $color-danger;
+      svg { color: $color-danger; }
+      &:hover { background: $color-danger-subtle; }
+    }
+
+    &--disabled {
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  &__divider { height: 1px; background: var(--border-default); margin: 4px 0; }
+}
+
+
+// ── COMPONENT: TOGGLE / SWITCH ───────────────────────────────
+// Binary on/off control. Use instead of a checkbox when the
+// action takes effect immediately (no form submit required).
+// Use a checkbox when the selection is part of a form submission.
+// Always uses role="switch" + aria-checked on the input.
+
+.toggle {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+
+  // Visually hidden native input — keyboard/screen reader accessible
+  &__input {
+    position: absolute;
+    width: 1px; height: 1px;
+    opacity: 0;
+    pointer-events: none;
+
+    // Focus ring on the track (visible when input is focused)
+    &:focus-visible ~ .toggle__track {
+      outline: 2px solid var(--form-focus-ring);
+      outline-offset: 2px;
+    }
+
+    // Checked state
+    &:checked ~ .toggle__track {
+      background: $color-accent;
+      .toggle__thumb { transform: translateX(16px); }
+    }
+
+    // Disabled
+    &:disabled ~ .toggle__track { opacity: .45; cursor: not-allowed; }
+    &:disabled ~ .toggle__content { opacity: .45; }
+  }
+
+  &__track {
+    position: relative;
+    width: 40px; height: 24px;
+    background: $neutral-300;
+    border-radius: $radius-pill;
+    flex-shrink: 0;
+    margin-top: 1px;
+    @include transition(background);
+  }
+
+  &__thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+    @include transition(transform);
+  }
+
+  &__content { display: flex; flex-direction: column; gap: 2px; }
+  &__label   { font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.4; }
+  &__hint    { font-size: 12px; color: var(--text-tertiary); line-height: 1.4; }
+
+  // Small variant
+  &--sm {
+    .toggle__track  { width: 32px; height: 20px; }
+    .toggle__thumb  { width: 14px; height: 14px; }
+    .toggle__input:checked ~ .toggle__track .toggle__thumb { transform: translateX(12px); }
+    .toggle__label  { font-size: 13px; }
+  }
+
+  // Full-width row variant (label left, toggle right)
+  &--row {
+    width: 100%;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+  }
+}
+
+
+// ── COMPONENT: TOOLTIP ───────────────────────────────────────
+// Non-interactive contextual label. Hover/focus triggered.
+// Always uses z-index: $z-tooltip (700 — above modals).
+// Never put interactive content inside a tooltip — use Popover instead.
+// Suppress entirely on touch devices: @media (hover: none).
+
+.tooltip {
+  position: absolute;
+  z-index: $z-tooltip;
+  background: $neutral-900;
+  color: #F1F5F9;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  padding: 5px 9px;
+  border-radius: $radius-md;
+  max-width: 220px;
+  white-space: normal;
+  word-break: break-word;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  visibility: hidden;
+  @include transition(opacity);
+
+  &.is-visible { opacity: 1; visibility: visible; }
+
+  // Arrow — top position (default)
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: $neutral-900;
+    border-bottom: none;
+  }
+
+  // Bottom position
+  &--bottom::after {
+    top: -5px; bottom: auto;
+    border-top: none;
+    border-bottom: 5px solid $neutral-900;
+  }
+
+  // Right position
+  &--right {
+    &::after {
+      top: 50%; left: -5px; bottom: auto;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-right-color: $neutral-900;
+      border-left: none;
+    }
+  }
+
+  // Left position
+  &--left {
+    &::after {
+      top: 50%; right: -5px; left: auto; bottom: auto;
+      transform: translateY(-50%);
+      border: 5px solid transparent;
+      border-left-color: $neutral-900;
+      border-right: none;
+    }
+  }
+}
+
+// Suppress on touch devices — tooltip content must exist in the UI itself
+@media (hover: none) {
+  .tooltip { display: none !important; }
+}
+
+
+// ── LAYOUT: FILE REVIEW ───────────────────────────────────────
+// Split panel layout for file review workflow.
+// Left: file list panel. Right: file viewer + decision component.
+// Both panels scroll independently. Top nav remains fixed above.
+
+.file-review-layout {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+// ── LEFT PANEL: File list ─────────────────────────────────────
+
+.file-list-panel {
+  width: 300px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-default);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-base);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border-default);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px 0;
+  }
+
+  &__footer {
+    padding: 12px;
+    border-top: 1px solid var(--border-default);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    background: var(--surface-base);
+  }
+}
+
+.file-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: $font-sans;
+  border-left: 2px solid transparent;
+  @include transition(background, border-color);
+  @include focus-ring;
+
+  &:hover { background: var(--surface-subtle); }
+
+  &--active {
+    background: $color-accent-subtle;
+    border-left-color: $color-accent;
+  }
+
+  &__content { flex: 1; min-width: 0; }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.3;
+  }
+
+  &__meta {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__status {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg { width: 14px; height: 14px; }
+
+    &--pending  { color: $neutral-300; }
+    &--relevant { color: $color-success; }
+    &--not-rel  { color: $color-danger; }
+    &--partial  { color: $color-warning; }
+  }
+}
+
+// ── RIGHT PANEL: File viewer ──────────────────────────────────
+
+.file-viewer-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface-page);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--surface-base);
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 32px;
+  }
+
+  &__decision {
+    flex-shrink: 0;
+    max-height: 50vh;
+    overflow-y: auto;
+    border-top: 2px solid var(--border-default);
+    background: var(--surface-page);
+  }
+}
+
+
+// ── COMPONENT: RELEVANCE DECISION ────────────────────────────
+// Core product component. Sits at the bottom of .file-viewer-panel.
+// One .relevance-account card per account the user has access to.
+// Auto-saves on every selection — no submit button required.
+
+.relevance-decision {
+  padding: 12px 20px 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  &__scope {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+}
+
+// Per-account decision card
+.relevance-account {
+  border: 1px solid var(--border-default);
+  border-radius: $radius-xl;
+  overflow: hidden;
+  background: var(--surface-base);
+  margin-bottom: 10px;
+
+  &:last-child { margin-bottom: 0; }
+
+  // Header: account name, collection, current decision status
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-default);
+    background: var(--surface-subtle);
+  }
+
+  &__info { display: flex; flex-direction: column; gap: 1px; }
+  &__name       { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  &__collection { font-size: 11px; color: var(--text-tertiary); }
+
+  // Decision status badge (top right of each account card)
+  &__decision-status {
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: $radius-pill;
+    white-space: nowrap;
+
+    &--none   { background: $neutral-100; color: var(--text-tertiary); }
+    &--type-a { background: $color-success-subtle; color: $color-success; }
+    &--type-b { background: $color-info-subtle; color: $color-info; }
+    &--type-c { background: $color-accent-subtle; color: $color-accent; }
+    &--no-rel { background: $color-danger-subtle; color: $color-danger; }
+  }
+
+  // Priority list (Type A only — selecting any auto-saves as Type A)
+  &__priorities {
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border-default);
+  }
+
+  &__priority {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+    @include transition(background);
+
+    &:hover { background: var(--surface-subtle); }
+
+    input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; }
+  }
+
+  &__priority-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  &__priority-label { font-size: 13px; color: var(--text-primary); line-height: 1.4; }
+  &__priority-code  { font-size: 11px; color: var(--text-tertiary); font-family: $font-mono; }
+
+  // Action buttons (Type B, Type C, Not Relevant)
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+  }
+
+  // Active action state — button pressed/selected
+  &__action-btn {
+    &--active-b { background: $color-info-subtle;    color: $color-info;    border-color: $color-info; }
+    &--active-c { background: $color-accent-subtle;  color: $color-accent;  border-color: $color-accent; }
+    &--active-nr{ background: $color-danger-subtle;  color: $color-danger;  border-color: $color-danger; }
+  }
+}
+
+
+// ── COMPONENT: BOARD SWITCHER ─────────────────────────────────
+// Category-based board selector on the Tasks page.
+// Selecting an item changes which board (and its columns) is shown.
+// Distinct from Segmented Control — this selects WHAT to view,
+// not HOW to view it. Wraps to multiple rows when many categories exist.
+
+.board-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    background: var(--surface-base);
+    border: 1px solid var(--border-default);
+    border-radius: $radius-pill;
+    cursor: pointer;
+    font-family: $font-sans;
+    white-space: nowrap;
+    @include transition(background, border-color, color, box-shadow);
+    @include focus-ring;
+
+    svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    &:hover { border-color: var(--border-strong); color: var(--text-primary); }
+
+    &--active {
+      background: $color-primary;
+      border-color: $color-primary;
+      color: #fff;
+      font-weight: 500;
+    }
+  }
+
+  &__count {
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: $radius-pill;
+    padding: 0 5px;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1.6;
+
+    .board-switcher__item--active & {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+    .board-switcher__item:not(.board-switcher__item--active) & {
+      background: var(--surface-subtle);
+      color: var(--text-tertiary);
+    }
+  }
+}
+
+
+// ── COMPONENT: KANBAN BOARD ───────────────────────────────────
+// Column names, count, and order are dynamic — provided by the
+// selected board category and the user's role.
+// Never hardcode column names in templates.
+
+.kanban-board {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 24px;
+  align-items: flex-start;
+  -webkit-overflow-scrolling: touch;
+
+  // Ensure the board fills the horizontal space
+  min-width: 0;
+}
+
+.kanban-col {
+  min-width: 268px;
+  width: 268px;
+  flex-shrink: 0;
+  background: var(--surface-subtle);
+  border-radius: $radius-xl;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 320px);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px 10px;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+  }
+
+  &__count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    background: var(--surface-base);
+    border: 1px solid var(--border-default);
+    border-radius: $radius-pill;
+    padding: 1px 7px;
+    min-width: 22px;
+    text-align: center;
+  }
+
+  &__add {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    border-radius: $radius-md;
+    font-size: 18px;
+    line-height: 1;
+    @include transition(background, color);
+    &:hover { background: var(--border-default); color: var(--text-primary); }
+  }
+
+  &__cards {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__empty {
+    padding: 16px 10px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    border: 1px dashed var(--border-default);
+    border-radius: $radius-lg;
+    margin: 0 10px;
+  }
+}
+
+.kanban-card {
+  background: var(--surface-base);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-lg;
+  padding: 12px 14px;
+  cursor: pointer;
+  @include transition(box-shadow, border-color, transform);
+
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+
+  &__workspace {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 5px;
+  }
+
+  &__title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  &__tag {
+    font-size: 11px;
+    color: var(--text-secondary);
+    background: var(--surface-subtle);
+    border-radius: $radius-sm;
+    padding: 2px 6px;
+    border: 1px solid var(--border-default);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-default);
+  }
+
+  &__assignees {
+    display: flex;
+    .avatar {
+      border: 2px solid var(--surface-base);
+      margin-left: -6px;
+      &:first-child { margin-left: 0; }
+    }
+  }
+
+  &__due {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    svg { width: 11px; height: 11px; }
+    &--urgent { color: $color-danger; font-weight: 500; }
+  }
+}
+
+
+// ── COMPONENT: COLLECTION CARD ───────────────────────────────
+// Used on the Workspaces page to display collections within an account.
+// Four-column grid layout. Star icon toggles favorite state.
+// "View Files" navigates to the file review queue.
+// "Details" opens the collection detail page.
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1200px) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px)  { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+
+.collection-card {
+  background: var(--surface-base);
+  border: 1px solid var(--border-default);
+  border-radius: $radius-xl;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  @include transition(box-shadow, border-color);
+
+  &:hover {
+    box-shadow: $shadow-md;
+    border-color: var(--border-strong);
+  }
+
+  // Header: star + title on same row
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px 16px 6px;
+  }
+
+  &__star {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    padding: 0;
+    border-radius: $radius-sm;
+    margin-top: 1px;
+    @include transition(color);
+    @include focus-ring;
+
+    svg { width: 15px; height: 15px; }
+
+    &:hover          { color: $color-warning; }
+    &.is-favorited   { color: $color-warning; }
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+    min-width: 0;
+    line-height: 1.35;
+  }
+
+  // Date and file details sit below the header row
+  &__meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 0 16px 4px;
+  }
+
+  &__details {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    padding: 0 16px 16px;
+    flex: 1; // pushes footer to bottom
+    line-height: 1.4;
+  }
+
+  // Footer: always pinned to bottom, two actions
+  &__footer {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+    border-top: 1px solid var(--border-default);
+    background: var(--surface-subtle);
+    flex-shrink: 0;
+  }
+
+  &__view-btn { flex: 1; } // View Files takes remaining space
+
+  // Empty state variant
+  &--empty {
+    .collection-card__details { color: var(--text-tertiary); font-style: italic; }
+  }
+}
+
+
+// ── COMPONENT: CHART CONTAINER ────────────────────────────────
+// Wraps Recharts / ECharts (React) instances. Handles all states: loading,
+// empty, error, and rendered. Never put chart option colors
+// inside CSS — all color values live in $chart-* tokens
+// and are passed directly to the ECharts option object.
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+
+  echarts,
+  [echarts] { width: 100%; height: 100%; display: block; }
+}
+
+.chart-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 10px;
+  text-align: center;
+  padding: 24px;
+
+  svg   { width: 32px; height: 32px; color: var(--text-tertiary); }
+  p     { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+
+  &--loading {
+    .skeleton__line { width: 100%; height: 180px; border-radius: $radius-lg; }
+  }
+
+  &--error  svg { color: $color-danger; }
+  &--empty  svg { color: var(--text-tertiary); }
+}
+
+// Data table fallback (accessibility — always provide with chart)
+.chart-table-toggle {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 6px 0;
+  display: block;
+  text-align: right;
+  width: 100%;
+  font-family: $font-sans;
+  @include focus-ring;
+  &:hover { color: var(--text-secondary); }
+}
+
+.chart-table-fallback {
+  display: none;
+  margin-top: 12px;
+  &.is-visible { display: block; }
+}
+
+// Chart card — wraps chart container within a card
+.chart-card {
+  @include card-base;
+  padding: 20px 24px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  &__title    { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  &__subtitle { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
+  &__actions  { display: flex; gap: 6px; align-items: center; }
+}
+
+
+// ── COMPONENT: TASKS CONTROLS ─────────────────────────────────
+// Stacked control rows above the Kanban board on the Tasks page.
+
+.tasks-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__filter-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__count {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-left: auto;
+  }
+}
+
+
+// ── LAYOUT: APP SHELL ────────────────────────────────────────
+// Primary shell: sticky top nav + scrollable content area.
+// No sidebar. The sidebar pattern has been removed from this system.
+
+.app-shell {
+  display: flex;
+  flex-direction: column;   // nav on top, content below
+  height: 100vh;
+  overflow: hidden;
+  background: var(--surface-page);
+}
+
+// ── TOP NAVIGATION ────────────────────────────────────────────
+
+.app-topnav {
+  position: sticky;
+  top: 0;
+  z-index: $z-dropdown;
+  height: 56px;
+  background: var(--surface-base);
+  border-bottom: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 4px;
+  flex-shrink: 0;
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: inherit;
+  }
+  &__logo { width: 28px; height: 28px; border-radius: $radius-md; flex-shrink: 0; }
+  &__name { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: $radius-md;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: $font-sans;
+    white-space: nowrap;
+    @include transition(color, background);
+    @include focus-ring;
+
+    &:hover { color: var(--text-primary); background: var(--surface-subtle); text-decoration: none; }
+
+    &--active {
+      color: var(--text-primary);
+      font-weight: 500;
+      background: var(--surface-subtle);
+    }
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+}
+
+// ── WORKSPACE SWITCHER ────────────────────────────────────────
+// Dropdown from the Workspaces nav item.
+// Each item: colored icon square left + name + description (two-line).
+// Role-scoped items are hidden via *ngIf — never disabled.
+// Selecting a workspace changes only the main content area.
+
+.workspace-switcher {
+  position: relative;
+
+  &__trigger {
+    // Extends .app-topnav__item
+    &[aria-expanded="true"] {
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+      .workspace-switcher__chevron { transform: rotate(180deg); }
+    }
+  }
+
+  &__chevron {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    @include transition(transform);
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 320px;
+    background: var(--surface-base);
+    border: 1px solid var(--border-default);
+    border-radius: 16px;
+    box-shadow: $shadow-lg;
+    z-index: $z-toast;
+    overflow: hidden;
+    padding: 8px 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    @include transition(opacity, transform);
+
+    &.is-open {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 20px;
+    font-family: $font-sans;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    @include transition(background);
+    @include focus-ring;
+
+    &:hover { background: var(--surface-subtle); }
+
+    &--active {
+      box-shadow: inset 3px 0 0 $color-accent;
+      background: $color-accent-subtle;
+
+      .workspace-switcher__item-name { color: $color-accent; }
+    }
+  }
+
+  // Icon container — tinted square, color set per workspace via modifier
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg { width: 22px; height: 22px; }
+  }
+
+  &__item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__item-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  &__item-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    white-space: normal;
+  }
+
+  &__divider { height: 1px; background: var(--border-default); margin: 6px 0; }
+
+  &__section-label {
+    display: block;
+    padding: 4px 20px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+}
+
+// ── WORKSPACE ICON COLOR THEMES ───────────────────────────────
+// Applied to .workspace-switcher__icon as a modifier class.
+// Each workspace defines its own icon color in application config.
+
+.ws-icon--green  { background: #E8F5F0; color: #1B7A4E; }
+.ws-icon--blue   { background: #EBF0FF; color: #3B5BDB; }
+.ws-icon--purple { background: #F0EBFF; color: #7048E8; }
+.ws-icon--rose   { background: #FFE8F0; color: #C2255C; }
+.ws-icon--amber  { background: #FFF3E0; color: #D6840A; }
+.ws-icon--teal   { background: #E0F8F5; color: #0E9684; }
+
+// ── MAIN CONTENT AREA ─────────────────────────────────────────
+
+.app-content { flex: 1; overflow-y: auto; }
+
+.page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 32px 64px;
+}
+
+
+// ── LAYOUT: SETTINGS ─────────────────────────────────────────
+
+.settings-layout {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+.settings-nav {
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 24px;
+
+  &__item {
+    display: block;
+    padding: 7px 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: $radius-md;
+    @include transition(background, color);
+
+    &:hover  { background: var(--surface-subtle); color: var(--text-primary); text-decoration: none; }
+    &--active { background: var(--surface-subtle); color: var(--text-primary); font-weight: 500; }
+  }
+}
+.settings-content { flex: 1; min-width: 0; }
+.settings-section {
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--border-default);
+  &:last-child { border-bottom: none; }
+
+  &__title { font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  &__desc  { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+  &__body  { display: flex; flex-direction: column; gap: 16px; max-width: 520px; }
+}
+
+
+// ── RESPONSIVE GRID SYSTEM ────────────────────────────────────
+// 12-column grid with named gutter and margin tokens.
+// Columns never collapse below 8 at tablet — enterprise users
+// need full functionality at every width they work at.
+//
+// Breakpoint    Columns  Margin  Gutter  Philosophy
+// 1440px+         12      32px    24px    Ideal
+// 1024–1439       12      24px    24px    Primary working width
+// 768–1023         8      24px    16px    Adaptive — full functionality
+// <768             4      16px    16px    Accessible — not optimised
+
+$grid-cols-lg:   12;
+$grid-cols-md:   8;
+$grid-cols-sm:   4;
+
+$grid-gutter-xl: 24px;  // 1024px+
+$grid-gutter-md: 16px;  // 768–1023px
+$grid-gutter-sm: 16px;  // <768px
+
+$grid-margin-xl: 32px;  // 1440px+
+$grid-margin-lg: 24px;  // 1024–1439px
+$grid-margin-md: 24px;  // 768–1023px
+$grid-margin-sm: 16px;  // <768px
+
+// Grid container — wraps all page content
+.grid-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $grid-margin-xl;
+  padding-right: $grid-margin-xl;
+}
+
+// Grid row — direct parent of grid columns
+.grid-row {
+  display: grid;
+  grid-template-columns: repeat($grid-cols-lg, 1fr);
+  gap: $grid-gutter-xl;
+  align-items: start;
+}
+
+// Column span utilities — use with .grid-row
+// .col-{n} spans n of 12 columns
+@for $i from 1 through 12 {
+  .col-#{$i} { grid-column: span #{$i}; }
+}
+
+// Common layout presets
+.grid-halves   { @extend .grid-row; grid-template-columns: 1fr 1fr; }
+.grid-thirds   { @extend .grid-row; grid-template-columns: 1fr 1fr 1fr; }
+.grid-sidebar  { @extend .grid-row; grid-template-columns: 280px 1fr; } // fixed sidebar
+.grid-sidebar-r{ @extend .grid-row; grid-template-columns: 1fr 320px; } // fixed right panel
+
+// Responsive adjustments per breakpoint
+@media (max-width: 1439px) {
+  .grid-container { padding-left: $grid-margin-lg; padding-right: $grid-margin-lg; }
+}
+
+@media (max-width: 1023px) {
+  .grid-container { padding-left: $grid-margin-md; padding-right: $grid-margin-md; }
+  .grid-row       { grid-template-columns: repeat($grid-cols-md, 1fr); gap: $grid-gutter-md; }
+  .grid-halves    { grid-template-columns: 1fr 1fr; }
+  .grid-thirds    { grid-template-columns: 1fr 1fr; } // 2-up at tablet
+  .grid-sidebar   { grid-template-columns: 1fr; }     // sidebar stacks
+  .grid-sidebar-r { grid-template-columns: 1fr; }
+  // Column spans — remap to 8-column context
+  .col-9, .col-10, .col-11, .col-12 { grid-column: span 8; } // full width
+  .col-7, .col-8 { grid-column: span 6; }
+  .col-5, .col-6 { grid-column: span 4; }
+}
+
+@media (max-width: 767px) {
+  .grid-container { padding-left: $grid-margin-sm; padding-right: $grid-margin-sm; }
+  .grid-row       { grid-template-columns: repeat($grid-cols-sm, 1fr); gap: $grid-gutter-sm; }
+  .grid-halves    { grid-template-columns: 1fr; }
+  .grid-thirds    { grid-template-columns: 1fr; }
+  .col-1, .col-2  { grid-column: span 2; }
+  .col-3, .col-4  { grid-column: span 4; }
+  .col-5, .col-6,
+  .col-7, .col-8,
+  .col-9, .col-10,
+  .col-11, .col-12 { grid-column: span 4; } // all full width at mobile
+}
+
+
+// ── RESPONSIVE ───────────────────────────────────────────────
+// Breakpoints are in px (CSS pixels).
+// At 200% browser zoom on a 1440px screen: effective width ≈ 720px
+// The 768px breakpoint correctly handles 200% zoom on desktop.
+// Ensure all content at 768px is functional, not just scaled down.
+
+@media (max-width: 1024px) {
+  .page-container { padding: 24px 24px 48px; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .app-topnav { padding: 0 16px; }
+  .dashboard-split { grid-template-columns: 1fr 300px; }
+}
+
+// 768px — also applies at 200% zoom on a 1440px screen
+@media (max-width: 768px) {
+  .page-container { padding: 20px 16px 48px; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .page-header { flex-direction: column; gap: 12px; &__actions { align-self: flex-start; } }
+  .filter-bar { &__actions { margin-left: 0; width: 100%; justify-content: flex-end; } }
+  .settings-layout { flex-direction: column; gap: 24px; }
+  .settings-nav { width: 100%; position: static; display: flex; flex-wrap: wrap; gap: 4px; }
+  .data-table-wrap .data-table-foot { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .dashboard-split { grid-template-columns: 1fr; }
+  // File review — narrow file list panel at this width
+  .file-list-panel { width: 240px; }
+  // Compact top nav (applies at 200% zoom on 1440px)
+  .app-topnav__name { display: none; }
+  .app-topnav__item { padding: 6px 8px; font-size: 13px; }
+  // Kanban: columns reduce minimum width
+  .kanban-col { min-width: 220px; width: 220px; }
+}
+
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr; }
+  .modal { max-width: 100%; border-radius: $radius-xl $radius-xl 0 0; }
+  .modal-overlay { align-items: flex-end; padding: 0; }
+}
+
+
+// ── HIGH CONTRAST MODE ────────────────────────────────────────
+// Windows High Contrast Mode / forced-colors media query.
+// Required for WCAG 2.1 AA compliance in government and enterprise.
+// In forced-colors mode, background and text colors are replaced by
+// system colors. Only borders and outlines remain visible.
+// Ensure all interactive state differences are conveyed via borders,
+// not background color alone.
+
+@media (forced-colors: active) {
+  // Buttons — ensure borders are always visible
+  .btn {
+    border: 2px solid ButtonText;
+    &--primary, &--danger { background: Highlight; color: HighlightText; border-color: Highlight; }
+    &--ghost { border-color: transparent; }
+    &:disabled { border-color: GrayText; color: GrayText; }
+  }
+
+  // Form controls
+  .input, .select, .textarea {
+    border: 2px solid ButtonText;
+    &:focus { outline: 3px solid Highlight; }
+  }
+  .checkbox, .radio {
+    border: 2px solid ButtonText;
+    &:checked { border-color: Highlight; }
+  }
+
+  // Cards and containers — ensure visible boundaries
+  .card, .data-table-wrap, .card-queue-wrap,
+  .workspace-switcher__dropdown, .dropdown__menu {
+    border: 1px solid ButtonText;
+  }
+
+  // Navigation active state — must use border not background
+  .app-topnav__item--active {
+    border-bottom: 3px solid Highlight;
+    background: transparent;
+  }
+  .file-list-item--active {
+    border-left: 3px solid Highlight;
+    background: transparent;
+  }
+  .board-switcher__item--active {
+    background: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+  }
+
+  // Badges — must be distinguishable without color
+  .badge {
+    border: 1px solid ButtonText;
+    background: transparent;
+    color: ButtonText;
+  }
+
+  // Relevance decision status indicators
+  .relevance-account__decision-status {
+    border: 1px solid ButtonText;
+    background: transparent;
+    color: ButtonText;
+    &--type-a, &--type-b, &--type-c { border-color: Highlight; color: Highlight; }
+    &--no-rel { border-color: Mark; color: Mark; }
+  }
+
+  // Focus always visible
+  :focus-visible {
+    outline: 3px solid Highlight !important;
+    outline-offset: 2px !important;
+  }
+
+  // Skeleton shimmer — replace with static border
+  .skeleton__line, .skeleton__block {
+    background: transparent;
+    border: 1px solid GrayText;
+    animation: none;
+  }
+}
