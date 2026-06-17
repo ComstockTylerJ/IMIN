@@ -2,17 +2,17 @@
 
 function WsHeader({name, icon, color, tint, setPage, action}){
   return (
-    <div style={{borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
+    <div style={{borderBottom:'1px solid var(--border)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
       <div className="page" style={{paddingTop:20,paddingBottom:18}}>
         <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:16,flexWrap:'wrap'}}>
           <div>
-            <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--ink-3)',fontWeight:500,marginBottom:7}}>
+            <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--muted-foreground)',fontWeight:500,marginBottom:7}}>
               <span style={{cursor:'pointer'}} onClick={()=>setPage('dashboard')}>Workspaces</span>
               <Icon name="chevron_right" size={13} style={{opacity:.6}}/>
-              <span style={{color:'var(--ink-2)'}}>{name}</span>
+              <span style={{color:'var(--secondary-foreground)'}}>{name}</span>
             </div>
             <div style={{display:'flex',alignItems:'center',gap:11}}>
-              <h1 style={{fontSize:23,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)'}}>{name}</h1>
+              <h1 style={{fontSize:23,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--foreground)'}}>{name}</h1>
             </div>
           </div>
           {action}
@@ -35,7 +35,7 @@ function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:22}}>
           {[['Active items',w.active,w.color],['Due today',w.today,'#DC2626'],['Completed (wk)',Math.round(w.active*0.7),'#16A34A'],['Avg cycle','2.4d','#475569']].map(([l,v,c])=>(
             <div key={l} className="card card-pad">
-              <div style={{fontSize:12.5,fontWeight:550,color:'var(--ink-2)',marginBottom:8}}>{l}</div>
+              <div style={{fontSize:12.5,fontWeight:550,color:'var(--secondary-foreground)',marginBottom:8}}>{l}</div>
               <div style={{fontSize:26,fontWeight:700,letterSpacing:'-.03em',color:c}}>{v}</div>
             </div>
           ))}
@@ -48,10 +48,10 @@ function WorkspaceDetail({id, setPage, openTask, openCreate, flash, onSearch}){
               action={<button className="btn btn-secondary btn-sm" onClick={()=>setPage('tasks')}>Open board<Icon name="arrow_right" size={14}/></button>}/>
             <div style={{display:'flex',flexDirection:'column'}}>
               {TASKS.filter((t,i)=> i%2 === (wid==='teams'?1:0)).slice(0,6).map((t,i)=>(
-                <div key={t.id} onClick={()=>openTask(t.id)} style={{display:'flex',alignItems:'center',gap:13,padding:'12px 6px',borderTop:i?'1px solid var(--line)':0,cursor:'pointer',borderRadius:8}}
-                  onMouseEnter={e=>e.currentTarget.style.background='var(--surface-2)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                <div key={t.id} onClick={()=>openTask(t.id)} style={{display:'flex',alignItems:'center',gap:13,padding:'12px 6px',borderTop:i?'1px solid var(--border)':0,cursor:'pointer',borderRadius:8}}
+                  onMouseEnter={e=>e.currentTarget.style.background='var(--background)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
                   <span style={{width:8,height:8,borderRadius:'50%',background:STATUS[t.col].color}}></span>
-                  <span style={{flex:1,fontSize:13.5,fontWeight:550,color:'var(--ink)'}}>{t.file}</span>
+                  <span style={{flex:1,fontSize:13.5,fontWeight:550,color:'var(--foreground)'}}>{t.file}</span>
                   {t.tags.slice(0,2).map(tg=><Tag key={tg} k={tg} sm/>)}
                   <StatusPill k={t.col}/>
                   <AvatarStack ids={t.assignees} size={24} max={2}/>
@@ -87,7 +87,7 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed, openP
         <HeroPattern opacity={0.6}/>
         <div className="page" style={{position:'relative',zIndex:1,paddingTop:embed?18:30,paddingBottom:embed?26:32}}>
           <div style={{maxWidth:760,margin:'0 auto',textAlign:'center'}}>
-            {!embed && <h2 style={{fontSize:32,fontWeight:700,letterSpacing:'-.035em',margin:0,color:'var(--ink)'}}>
+            {!embed && <h2 style={{fontSize:32,fontWeight:700,letterSpacing:'-.035em',margin:0,color:'var(--foreground)'}}>
               What are you <span className="grad-text">looking for?</span>
             </h2>}
             {!embed && <div className="sec" style={{fontSize:13.5,margin:'10px 0 0',display:'flex',flexWrap:'wrap',gap:8,alignItems:'center',justifyContent:'center'}}>
@@ -100,25 +100,25 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed, openP
 
             <div className="card" style={{marginTop:embed?0:22,boxShadow:'var(--shadow-md)',borderRadius:14,overflow:'hidden',textAlign:'left'}}>
               <div style={{display:'flex',alignItems:'center',gap:12,padding:'14px 16px'}}>
-                <Icon name={ai?'sparkle':'search'} size={20} style={{color:ai?'var(--violet)':'var(--ink-3)',flex:'none'}}/>
+                <Icon name={ai?'sparkle':'search'} size={20} style={{color:ai?'var(--violet)':'var(--muted-foreground)',flex:'none'}}/>
                 <input value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>e.key==='Enter'&&go()} placeholder={ai?'Ask anything about your content…':'Search files, folders & people…'}
-                  style={{flex:1,border:0,outline:'none',fontSize:15,fontFamily:'inherit',background:'transparent',color:'var(--ink)'}}/>
+                  style={{flex:1,border:0,outline:'none',fontSize:15,fontFamily:'inherit',background:'transparent',color:'var(--foreground)'}}/>
                 <button onClick={()=>setAi(a=>!a)} title="Toggle AI search" style={{display:'flex',padding:ai?'1.5px':0,borderRadius:999,
-                  border:ai?'0':'1px solid var(--line-2)',background:ai?'var(--logo-grad)':'#fff',cursor:'pointer',transition:'.15s',flex:'none'}}>
+                  border:ai?'0':'1px solid var(--border-strong)',background:ai?'var(--logo-grad)':'#fff',cursor:'pointer',transition:'.15s',flex:'none'}}>
                   <span style={{display:'flex',alignItems:'center',gap:6,height:ai?25:28,padding:'0 12px',borderRadius:999,background:'#fff',
-                    fontSize:12.5,fontWeight:600,color:ai?'var(--ink)':'var(--ink-3)',transition:'.15s'}}>
+                    fontSize:12.5,fontWeight:600,color:ai?'var(--foreground)':'var(--muted-foreground)',transition:'.15s'}}>
                     <Icon name="sparkle" size={15} style={{color:ai?'var(--violet)':'var(--ink-4)'}}/>AI Mode
                   </span>
                 </button>
                 <button className="btn btn-primary btn-icon" onClick={go}><Icon name="arrow_right" size={17} sw={2.2}/></button>
               </div>
-              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 16px',borderTop:'1px solid var(--line)',background:'var(--surface-2)'}}>
-                <label style={{display:'flex',alignItems:'center',gap:8,fontSize:12.5,color:'var(--ink-2)',cursor:'pointer',minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+              <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 16px',borderTop:'1px solid var(--border)',background:'var(--background)'}}>
+                <label style={{display:'flex',alignItems:'center',gap:8,fontSize:12.5,color:'var(--secondary-foreground)',cursor:'pointer',minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
                   <input type="checkbox" defaultChecked style={{accentColor:'var(--primary)',width:14,height:14,flex:'none'}}/>Search within file contents
                 </label>
                 <div style={{display:'flex',alignItems:'center',gap:14,fontSize:12.5,flexShrink:0,marginLeft:14}}>
                   <span className="linkish" style={{display:'flex',alignItems:'center',gap:5,whiteSpace:'nowrap'}}><Icon name="settings" size={13}/>Query Builder</span>
-                  <span style={{width:1,height:13,background:'var(--line-2)'}}></span>
+                  <span style={{width:1,height:13,background:'var(--border-strong)'}}></span>
                   <span className="linkish" style={{display:'flex',alignItems:'center',gap:5,whiteSpace:'nowrap'}}><Icon name="history" size={13}/>Search History</span>
                 </div>
               </div>
@@ -127,34 +127,34 @@ function ContentWorkspace({w, setPage, openCreate, flash, onSearch, embed, openP
         </div>
       </div>
 
-      <div style={{borderTop:'1px solid var(--line)'}}>
+      <div style={{borderTop:'1px solid var(--border)'}}>
         <div className="page" style={{paddingTop:24}}>
           {/* browse bar */}
           <div style={{display:'flex',alignItems:'center',gap:14,flexWrap:'wrap',marginBottom:18}}>
-            <span style={{fontSize:13,fontWeight:600,color:'var(--ink-2)'}}>Browse</span>
+            <span style={{fontSize:13,fontWeight:600,color:'var(--secondary-foreground)'}}>Browse</span>
             <div style={{display:'flex',gap:3,background:'#EEF1F6',padding:3,borderRadius:9}}>
               {[['Collections','collections'],['Topics','layers'],['Devices','device'],['People','users']].map(([b,ic])=>(
                 <button key={b} onClick={()=>setBrowse(b)} style={{display:'flex',alignItems:'center',gap:6,border:0,
-                  background:browse===b?'#fff':'transparent',color:browse===b?'var(--ink)':'var(--ink-3)',fontSize:12.5,fontWeight:550,
+                  background:browse===b?'#fff':'transparent',color:browse===b?'var(--foreground)':'var(--muted-foreground)',fontSize:12.5,fontWeight:550,
                   padding:'6px 13px',borderRadius:7,cursor:'pointer',boxShadow:browse===b?'var(--shadow-sm)':'none',transition:'.12s'}}>
                   <Icon name={ic} size={14}/>{b}</button>
               ))}
             </div>
             <div style={{flex:1}}></div>
             <button onClick={()=>setFavOnly(v=>!v)} className="chip" style={favOnly?{background:'#FFFBEB',borderColor:'#E6C975',color:'#92600A'}:undefined}>
-              <Icon name={favOnly?'star_fill':'star'} size={13} style={{color:favOnly?'#B5851C':'var(--ink-3)'}}/>Favorites
+              <Icon name={favOnly?'star_fill':'star'} size={13} style={{color:favOnly?'#B5851C':'var(--muted-foreground)'}}/>Favorites
             </button>
             <div style={{display:'flex',gap:3,background:'#EEF1F6',padding:3,borderRadius:9}}>
               {[['card','grid','Card view'],['list','list','List view']].map(([id,ic,lb])=>(
                 <button key={id} onClick={()=>setGv(id)} title={lb}
                   style={{display:'flex',alignItems:'center',justifyContent:'center',width:32,height:28,border:0,
-                    background:gv===id?'#fff':'transparent',color:gv===id?'var(--ink)':'var(--ink-3)',
+                    background:gv===id?'#fff':'transparent',color:gv===id?'var(--foreground)':'var(--muted-foreground)',
                     borderRadius:7,cursor:'pointer',boxShadow:gv===id?'var(--shadow-sm)':'none',transition:'.12s'}}>
                   <Icon name={ic} size={15}/></button>
               ))}
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 12px',width:230,border:'1px solid var(--line-2)',background:'#fff',borderRadius:8}}>
-              <Icon name="search" size={15} style={{color:'var(--ink-3)'}}/>
+            <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 12px',width:230,border:'1px solid var(--border-strong)',background:'#fff',borderRadius:8}}>
+              <Icon name="search" size={15} style={{color:'var(--muted-foreground)'}}/>
               <input value={filter} onChange={e=>setFilter(e.target.value)} placeholder={`Filter ${browse.toLowerCase()}…`}
                 style={{flex:1,border:0,outline:'none',fontSize:13,fontFamily:'inherit',background:'transparent'}}/>
             </div>
@@ -181,13 +181,13 @@ function FolderGrid({filter, setPage, flash, view='card', favOnly=false, favs={}
     {view==='list' ? (
       <div className="card" style={{padding:0,overflow:'hidden'}}>
         {list.map((f,i)=>(
-          <div key={f.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',borderTop:i?'1px solid var(--line)':0}}>
+          <div key={f.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',borderTop:i?'1px solid var(--border)':0}}>
             {star(f)}
             <div style={{width:230,flex:'none',minWidth:0}}>
-              <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</div>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</div>
               <div className="muted" style={{fontSize:11.5}}>Updated {f.updated}</div>
             </div>
-            <div style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:8,fontSize:12,color:'var(--ink-3)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+            <div style={{flex:1,minWidth:0,display:'flex',alignItems:'center',gap:8,fontSize:12,color:'var(--muted-foreground)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
               <Icon name="files" size={13}/>{f.files} files<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.size}<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.types}
             </div>
             <CardActions stacked viewLabel="View Files" viewIcon="files" onView={()=>open(f)} onDetails={()=>setDetail(f)}/>
@@ -200,12 +200,12 @@ function FolderGrid({filter, setPage, flash, view='card', favOnly=false, favs={}
           <div key={f.id} className="card card-hover" style={{padding:'15px 16px 14px',display:'flex',flexDirection:'column',gap:10}}>
             <div style={{display:'flex',alignItems:'flex-start',gap:10}}>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</div>
+                <div style={{fontSize:14,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.name}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1}}>Updated {f.updated}</div>
               </div>
               {star(f)}
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:8,fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}>
+            <div style={{display:'flex',alignItems:'center',gap:8,fontSize:11.5,color:'var(--muted-foreground)',fontWeight:500}}>
               <span style={{display:'flex',alignItems:'center',gap:4}}><Icon name="files" size={13}/>{f.files} files</span>
               <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.size}
               <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{f.types}
@@ -286,18 +286,18 @@ function CollectionDetails({folder:f, onClose, onOpen}){
 
   function Stat({label,value,sub}){
     return (
-      <div style={{flex:1,border:'1px solid var(--line)',borderRadius:11,padding:'12px 13px',background:'var(--surface-2)'}}>
-        <div style={{fontSize:11,fontWeight:600,color:'var(--ink-3)',letterSpacing:'.02em'}}>{label}</div>
-        <div style={{fontSize:19,fontWeight:700,letterSpacing:'-.02em',color:'var(--ink)',marginTop:4}}>{value}</div>
+      <div style={{flex:1,border:'1px solid var(--border)',borderRadius:11,padding:'12px 13px',background:'var(--background)'}}>
+        <div style={{fontSize:11,fontWeight:600,color:'var(--muted-foreground)',letterSpacing:'.02em'}}>{label}</div>
+        <div style={{fontSize:19,fontWeight:700,letterSpacing:'-.02em',color:'var(--foreground)',marginTop:4}}>{value}</div>
         {sub&&<div style={{fontSize:11,color:'var(--ink-4)',marginTop:1}}>{sub}</div>}
       </div>
     );
   }
   function Section({label,sub,children}){
     return (
-      <div style={{padding:'20px 22px',borderTop:'1px solid var(--line)'}}>
+      <div style={{padding:'20px 22px',borderTop:'1px solid var(--border)'}}>
         <div style={{display:'flex',alignItems:'baseline',gap:8,marginBottom:13}}>
-          <span style={{fontSize:11,fontWeight:700,letterSpacing:'.07em',textTransform:'uppercase',color:'var(--ink-2)'}}>{label}</span>
+          <span style={{fontSize:11,fontWeight:700,letterSpacing:'.07em',textTransform:'uppercase',color:'var(--secondary-foreground)'}}>{label}</span>
           {sub&&<span style={{fontSize:11.5,color:'var(--ink-4)'}}>{sub}</span>}
         </div>
         {children}
@@ -311,16 +311,16 @@ function CollectionDetails({folder:f, onClose, onOpen}){
       <div style={{position:'absolute',top:0,right:0,bottom:0,width:'min(456px,96vw)',background:'#fff',
         boxShadow:'-20px 0 60px rgba(29,53,87,.18)',animation:'slidein .26s cubic-bezier(.2,.8,.3,1)',display:'flex',flexDirection:'column'}}>
         {/* header */}
-        <div style={{padding:'18px 22px 17px',borderBottom:'1px solid var(--line)'}}>
+        <div style={{padding:'18px 22px 17px',borderBottom:'1px solid var(--border)'}}>
           <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12,marginBottom:14}}>
-            <span style={{fontSize:11,fontWeight:600,letterSpacing:'.06em',textTransform:'uppercase',color:'var(--ink-3)'}}>Collection details</span>
+            <span style={{fontSize:11,fontWeight:600,letterSpacing:'.06em',textTransform:'uppercase',color:'var(--muted-foreground)'}}>Collection details</span>
             <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose} title="Close"><Icon name="x" size={17}/></button>
           </div>
           <div style={{display:'flex',alignItems:'flex-start',gap:13}}>
             <span style={{width:42,height:42,borderRadius:11,background:f.color+'1a',color:f.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="collections" size={21}/></span>
             <div style={{flex:1,minWidth:0}}>
-              <h2 style={{fontSize:18,fontWeight:700,letterSpacing:'-.02em',margin:0,color:'var(--ink)',lineHeight:1.25}}>{f.name}</h2>
-              <div style={{display:'flex',alignItems:'center',gap:8,marginTop:6,fontSize:12,color:'var(--ink-3)'}}>
+              <h2 style={{fontSize:18,fontWeight:700,letterSpacing:'-.02em',margin:0,color:'var(--foreground)',lineHeight:1.25}}>{f.name}</h2>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginTop:6,fontSize:12,color:'var(--muted-foreground)'}}>
                 <span style={{display:'inline-flex',alignItems:'center',gap:6}}><span className="av" style={{width:18,height:18,background:owner.color,fontSize:8}}>{owner.initials}</span>{owner.name}</span>
                 <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>Updated {f.updated}
               </div>
@@ -331,8 +331,8 @@ function CollectionDetails({folder:f, onClose, onOpen}){
         <div style={{flex:1,overflowY:'auto'}}>
           {/* summary */}
           <Section label="Summary">
-            <p style={{fontSize:13.5,lineHeight:1.6,color:'var(--ink-2)',margin:0,textWrap:'pretty'}}>
-              <b style={{color:'var(--ink)',fontWeight:600}}>{f.name}</b> holds <b style={{color:'var(--ink)',fontWeight:600}}>{f.files} files</b> ({f.size}) spanning {types.map(t=>ftMeta(t).label.toLowerCase()).join(', ')}. Owned by {owner.name.split(' ')[0]}, it has been active since {startMo} with steady review activity. {pending? `${pending} item${pending>1?'s':''} still need a first-pass review.` : 'All items have had a first-pass review.'}
+            <p style={{fontSize:13.5,lineHeight:1.6,color:'var(--secondary-foreground)',margin:0,textWrap:'pretty'}}>
+              <b style={{color:'var(--foreground)',fontWeight:600}}>{f.name}</b> holds <b style={{color:'var(--foreground)',fontWeight:600}}>{f.files} files</b> ({f.size}) spanning {types.map(t=>ftMeta(t).label.toLowerCase()).join(', ')}. Owned by {owner.name.split(' ')[0]}, it has been active since {startMo} with steady review activity. {pending? `${pending} item${pending>1?'s':''} still need a first-pass review.` : 'All items have had a first-pass review.'}
             </p>
           </Section>
 
@@ -350,7 +350,7 @@ function CollectionDetails({folder:f, onClose, onOpen}){
             <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
               {topics.map(t=>(
                 <span key={t} style={{display:'inline-flex',alignItems:'center',gap:6,height:28,padding:'0 12px',borderRadius:999,
-                  border:'1px solid var(--line-2)',background:'#fff',fontSize:12.5,fontWeight:500,color:'var(--ink-2)'}}>
+                  border:'1px solid var(--border-strong)',background:'#fff',fontSize:12.5,fontWeight:500,color:'var(--secondary-foreground)'}}>
                   <span style={{width:6,height:6,borderRadius:'50%',background:f.color}}></span>{t}</span>
               ))}
             </div>
@@ -369,10 +369,10 @@ function CollectionDetails({folder:f, onClose, onOpen}){
                     <span style={{width:28,height:28,borderRadius:8,background:c.color+'1a',color:c.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={c.icon} size={15}/></span>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{display:'flex',justifyContent:'space-between',gap:8,fontSize:12.5}}>
-                        <span style={{fontWeight:600,color:'var(--ink)'}}>{c.label}</span>
-                        <span style={{color:'var(--ink-3)'}}>{c.count} &middot; {pct}%</span>
+                        <span style={{fontWeight:600,color:'var(--foreground)'}}>{c.label}</span>
+                        <span style={{color:'var(--muted-foreground)'}}>{c.count} &middot; {pct}%</span>
                       </div>
-                      <div style={{height:5,borderRadius:3,background:'var(--line)',marginTop:5,overflow:'hidden'}}>
+                      <div style={{height:5,borderRadius:3,background:'var(--border)',marginTop:5,overflow:'hidden'}}>
                         <div style={{width:pct+'%',height:'100%',background:c.color,borderRadius:3}}></div>
                       </div>
                     </div>
@@ -389,8 +389,8 @@ function CollectionDetails({folder:f, onClose, onOpen}){
                 <div key={i} style={{display:'flex',alignItems:'center',gap:11,padding:'8px 2px'}}>
                   <span className="av" style={{width:30,height:30,background:p.color,fontSize:11}}>{p.initials}</span>
                   <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:13,fontWeight:550,color:'var(--ink)'}}>{p.name}</div>
-                    <div style={{fontSize:11.5,color:'var(--ink-3)'}}>{p.role||'Contributor'}</div>
+                    <div style={{fontSize:13,fontWeight:550,color:'var(--foreground)'}}>{p.name}</div>
+                    <div style={{fontSize:11.5,color:'var(--muted-foreground)'}}>{p.role||'Contributor'}</div>
                   </div>
                   {i===0&&<span className="badge" style={{background:f.color+'1a',color:f.color}}>Owner</span>}
                 </div>
@@ -402,9 +402,9 @@ function CollectionDetails({folder:f, onClose, onOpen}){
           <Section label="Metadata">
             <div style={{display:'flex',flexDirection:'column'}}>
               {[['Collection ID',f.id.toUpperCase()+'-'+(seed%9000+1000)],['Created',startMo+' 2024'],['Last updated',f.updated+', 2024'],['Storage',f.size],['Visibility','Team \u00B7 Operations'],['Retention','Standard \u2014 7 years']].map(([k,v])=>(
-                <div key={k} style={{display:'flex',justifyContent:'space-between',gap:14,padding:'10px 2px',borderBottom:'1px solid var(--line)',fontSize:12.5}}>
-                  <span style={{color:'var(--ink-3)'}}>{k}</span>
-                  <span style={{color:'var(--ink)',fontWeight:550,textAlign:'right'}}>{v}</span>
+                <div key={k} style={{display:'flex',justifyContent:'space-between',gap:14,padding:'10px 2px',borderBottom:'1px solid var(--border)',fontSize:12.5}}>
+                  <span style={{color:'var(--muted-foreground)'}}>{k}</span>
+                  <span style={{color:'var(--foreground)',fontWeight:550,textAlign:'right'}}>{v}</span>
                 </div>
               ))}
             </div>
@@ -412,7 +412,7 @@ function CollectionDetails({folder:f, onClose, onOpen}){
         </div>
 
         {/* footer */}
-        <div style={{borderTop:'1px solid var(--line)',padding:'13px 22px',display:'flex',gap:10}}>
+        <div style={{borderTop:'1px solid var(--border)',padding:'13px 22px',display:'flex',gap:10}}>
           <button className="btn btn-primary" style={{flex:1}} onClick={onOpen}><Icon name="files" size={16}/>View Files</button>
           <button className="btn btn-secondary" onClick={onClose}>Close</button>
         </div>
@@ -432,15 +432,15 @@ function DeviceGrid({filter, flash, openDevice, view='card', favs={}, toggleFav=
       <div className="card" style={{padding:0,overflow:'hidden'}}>
         {list.map((d,i)=>{ const ty=DEVICE_TYPE[d.type], stt=DEVICE_STATUS[d.status];
           return (
-          <div key={d.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',borderTop:i?'1px solid var(--line)':0}}>
+          <div key={d.id} style={{display:'flex',alignItems:'center',gap:14,padding:'13px 16px',borderTop:i?'1px solid var(--border)':0}}>
             <FavStar on={!!favs[d.id]} onToggle={()=>toggleFav(d.id)} size={16}/>
-            <span style={{width:36,height:36,borderRadius:9,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={18}/></span>
+            <span style={{width:36,height:36,borderRadius:9,background:'var(--secondary)',color:'var(--secondary-foreground)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={18}/></span>
             <div style={{width:200,flex:'none',minWidth:0}}>
-              <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{d.name}</div>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{d.name}</div>
               <div className="muted" style={{fontSize:11.5,display:'flex',alignItems:'center',gap:6,whiteSpace:'nowrap'}}><span style={{fontFamily:'ui-monospace,Menlo,monospace'}}>{d.ev}</span><span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{ty.label}</div>
             </div>
             <span className="badge" style={{background:stt.tint,color:stt.color,height:21,fontSize:11,fontWeight:600,flex:'none'}}>{stt.label}</span>
-            <div style={{flex:1,minWidth:0,fontSize:12,color:'var(--ink-3)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+            <div style={{flex:1,minWidth:0,fontSize:12,color:'var(--muted-foreground)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
               {d.status==='locked'?'Not imaged':`${d.files?d.files.toLocaleString()+' files · ':''}${d.os}`}
             </div>
             <CardActions stacked viewLabel="View" onView={()=>openDevice&&openDevice(d.id)} onDetails={()=>setDetail(d)}/>
@@ -453,18 +453,18 @@ function DeviceGrid({filter, flash, openDevice, view='card', favs={}, toggleFav=
           return (
           <div key={d.id} className="card card-hover card-pad" style={{display:'flex',flexDirection:'column',gap:12}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:8}}>
-              <span style={{width:38,height:38,borderRadius:10,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={19}/></span>
+              <span style={{width:38,height:38,borderRadius:10,background:'var(--secondary)',color:'var(--secondary-foreground)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ty.icon} size={19}/></span>
               <FavStar on={!!favs[d.id]} onToggle={()=>toggleFav(d.id)}/>
             </div>
             <div>
-              <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{d.name}</div>
+              <div style={{fontSize:14,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{d.name}</div>
               <div className="muted" style={{fontSize:11.5,marginTop:2,display:'flex',alignItems:'center',gap:6}}>
-                <span style={{fontFamily:'ui-monospace,Menlo,monospace',color:'var(--ink-3)'}}>{d.ev}</span>
+                <span style={{fontFamily:'ui-monospace,Menlo,monospace',color:'var(--muted-foreground)'}}>{d.ev}</span>
                 <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{ty.label}
                 {d.encrypted && <Icon name="lock" size={11} style={{color:'var(--ink-4)'}}/>}
               </div>
             </div>
-            <div style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500,display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
+            <div style={{fontSize:11.5,color:'var(--muted-foreground)',fontWeight:500,display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
               <Icon name="files" size={13} style={{color:'var(--ink-4)'}}/>{d.files?`${d.files.toLocaleString()} files`:'Not imaged'}<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{d.os}
             </div>
             <CardActions viewLabel="View" onView={()=>openDevice&&openDevice(d.id)} onDetails={()=>setDetail(d)}/>
@@ -516,15 +516,15 @@ function PeopleGrid({filter, flash, openPerson, view='card', favs={}, toggleFav=
       <div className="card" style={{padding:0,overflow:'hidden'}}>
         {list.map((p,i)=>{ const rs=REL_STATUS[p.rel]||REL_STATUS.active;
           return (
-          <div key={p.id} style={{display:'flex',alignItems:'center',gap:14,padding:'12px 16px',borderTop:i?'1px solid var(--line)':0}}>
+          <div key={p.id} style={{display:'flex',alignItems:'center',gap:14,padding:'12px 16px',borderTop:i?'1px solid var(--border)':0}}>
             <FavStar on={!!favs[p.id]} onToggle={()=>toggleFav(p.id)} size={16}/>
             {gAv(p,36)}
             <div style={{width:200,flex:'none',minWidth:0}}>
-              <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
+              <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
               <div className="muted" style={{fontSize:11.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.relType} · {p.company}</div>
             </div>
             <span className="badge" style={{background:rs.tint,color:rs.color,height:20,fontSize:10.5,fontWeight:600,flex:'none'}}>{rs.label}</span>
-            <div style={{flex:1,minWidth:0,fontSize:12,color:'var(--ink-3)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
+            <div style={{flex:1,minWidth:0,fontSize:12,color:'var(--muted-foreground)',fontWeight:500,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
               {p.value||'—'} · {p.meetings} meetings · next {p.next}
             </div>
             <CardActions stacked viewLabel="View" onView={()=>openPerson&&openPerson(p.id)} onDetails={()=>setDetail(p)}/>
@@ -541,25 +541,25 @@ function PeopleGrid({filter, flash, openPerson, view='card', favs={}, toggleFav=
             <div style={{display:'flex',alignItems:'flex-start',gap:12}}>
               {gAv(p,44)}
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
+                <div style={{fontSize:14,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.relType} · {p.company}</div>
               </div>
               <span className="badge" style={{background:rs.tint,color:rs.color,height:20,fontSize:10.5,fontWeight:600,flex:'none'}}><span style={{width:5,height:5,borderRadius:'50%',background:rs.color}}></span>{rs.label}</span>
               <FavStar on={!!favs[p.id]} onToggle={()=>toggleFav(p.id)}/>
             </div>
-            <div style={{display:'flex',gap:0,paddingTop:11,borderTop:'1px solid var(--line)'}}>
+            <div style={{display:'flex',gap:0,paddingTop:11,borderTop:'1px solid var(--border)'}}>
               <div style={{flex:1,textAlign:'center',minWidth:0}}>
-                <div style={{fontSize:14,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap'}}>{p.value||'—'}</div>
+                <div style={{fontSize:14,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em',whiteSpace:'nowrap'}}>{p.value||'—'}</div>
                 <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Contract</div>
               </div>
-              <div style={{width:1,background:'var(--line)'}}></div>
+              <div style={{width:1,background:'var(--border)'}}></div>
               <div style={{flex:1,textAlign:'center',minWidth:0}}>
-                <div style={{fontSize:14,fontWeight:700,letterSpacing:'-.01em',whiteSpace:'nowrap',color:days==null?'var(--ink-4)':(p.rel==='renewal'?'var(--orange)':'var(--ink)')}}>{days==null?'—':days+'d'}</div>
+                <div style={{fontSize:14,fontWeight:700,letterSpacing:'-.01em',whiteSpace:'nowrap',color:days==null?'var(--ink-4)':(p.rel==='renewal'?'var(--orange)':'var(--foreground)')}}>{days==null?'—':days+'d'}</div>
                 <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>To renewal</div>
               </div>
-              <div style={{width:1,background:'var(--line)'}}></div>
+              <div style={{width:1,background:'var(--border)'}}></div>
               <div style={{flex:1,textAlign:'center',minWidth:0}}>
-                <div style={{fontSize:14,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{p.meetings}</div>
+                <div style={{fontSize:14,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em'}}>{p.meetings}</div>
                 <div style={{fontSize:10.5,color:'var(--ink-4)',fontWeight:500,marginTop:1}}>Meetings</div>
               </div>
             </div>
@@ -581,7 +581,7 @@ function PersonQuickDetails({p, onClose, onView}){
       <InfoSection title="Relationship">
         <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
           <span className="badge" style={{background:rs.tint,color:rs.color,height:24}}><span style={{width:6,height:6,borderRadius:'50%',background:rs.color}}></span>{rs.label}</span>
-          <span className="badge" style={{background:'var(--hover)',color:'var(--ink-2)',height:24}}>{p.relType}</span>
+          <span className="badge" style={{background:'var(--secondary)',color:'var(--secondary-foreground)',height:24}}>{p.relType}</span>
         </div>
       </InfoSection>
       <InfoSection title="Details">
@@ -604,9 +604,9 @@ function PersonQuickDetails({p, onClose, onView}){
 
 function Empty({label}){
   return (
-    <div className="card" style={{padding:'48px 20px',textAlign:'center',border:'1.5px dashed var(--line-2)',background:'var(--surface-2)'}}>
+    <div className="card" style={{padding:'48px 20px',textAlign:'center',border:'1.5px dashed var(--border-strong)',background:'var(--background)'}}>
       <Icon name="search" size={26} style={{color:'var(--ink-4)'}}/>
-      <div style={{fontSize:13.5,color:'var(--ink-3)',marginTop:8,fontWeight:500}}>{label}</div>
+      <div style={{fontSize:13.5,color:'var(--muted-foreground)',marginTop:8,fontWeight:500}}>{label}</div>
     </div>
   );
 }
@@ -618,8 +618,8 @@ function RequestsTableFull(){
       <tbody>
         {REQUESTS.map(r=>{const s=REQ_STATUS[r.status];return(
           <tr key={r.id}>
-            <td style={{color:'var(--ink)',fontWeight:550}}>{r.name}<span className="muted" style={{fontSize:11,fontWeight:400,marginLeft:6}}>{r.id}</span></td>
-            <td><span className="badge" style={{background:'transparent',border:'1px solid var(--line-2)',color:REQ_TYPE[r.type]}}><span className="dot" style={{background:REQ_TYPE[r.type]}}></span>{r.type}</span></td>
+            <td style={{color:'var(--foreground)',fontWeight:550}}>{r.name}<span className="muted" style={{fontSize:11,fontWeight:400,marginLeft:6}}>{r.id}</span></td>
+            <td><span className="badge" style={{background:'transparent',border:'1px solid var(--border-strong)',color:REQ_TYPE[r.type]}}><span className="dot" style={{background:REQ_TYPE[r.type]}}></span>{r.type}</span></td>
             <td>{r.submitted}</td>
             <td><span className="st" style={{background:s.tint,color:s.color}}><span className="dot" style={{background:s.color}}></span>{r.status}</span></td>
             <td><div style={{display:'flex',alignItems:'center',gap:7}}><Avatar id={r.reviewer} size={22}/><span style={{fontSize:12.5}}>{PEOPLE[r.reviewer].name.split(' ')[0]}</span></div></td>
@@ -646,7 +646,7 @@ function CreateModal({onClose, onCreate}){
     <div style={{position:'fixed',inset:0,zIndex:300,display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:'9vh'}}>
       <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(36,39,45,.32)',backdropFilter:'blur(2px)',animation:'fade .2s'}}></div>
       <div className="pop card" style={{position:'relative',width:'min(560px,94vw)',boxShadow:'var(--shadow-lg)',borderRadius:16,overflow:'hidden'}}>
-        <div style={{padding:'18px 22px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div style={{padding:'18px 22px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div style={{display:'flex',alignItems:'center',gap:10}}>
             <span style={{width:32,height:32,borderRadius:9,background:'var(--primary-tint)',color:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="check_square" size={17}/></span>
             <span style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em'}}>Create task</span>
@@ -655,29 +655,29 @@ function CreateModal({onClose, onCreate}){
         </div>
         <div style={{padding:'20px 22px',display:'flex',flexDirection:'column',gap:18}}>
           <div>
-            <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>File / task name</label>
+            <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>File / task name</label>
             <input autoFocus value={file} onChange={e=>setFile(e.target.value)} placeholder="e.g. Q4 Launch — Hero Video.mp4"
-              style={{width:'100%',height:40,border:'1px solid var(--line-2)',borderRadius:9,padding:'0 13px',fontSize:14,fontFamily:'inherit',outline:'none'}}
-              onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--line-2)'}/>
+              style={{width:'100%',height:40,border:'1px solid var(--border-strong)',borderRadius:9,padding:'0 13px',fontSize:14,fontFamily:'inherit',outline:'none'}}
+              onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--border-strong)'}/>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16}}>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>Stage</label>
+              <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>Stage</label>
               <div style={{display:'flex',gap:5,flexWrap:'wrap'}}>{COLUMNS.map(c=><button key={c.id} className={'chip'+(col===c.id?' on':'')} onClick={()=>setCol(c.id)} style={{height:30}}>{c.label}</button>)}</div>
             </div>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>Priority</label>
+              <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>Priority</label>
               <div style={{display:'flex',gap:5}}>{Object.entries(PRIORITY).map(([k,p])=><button key={k} className={'chip'+(pri===k?' on':'')} onClick={()=>setPri(k)} style={{height:30}}>{p.label}</button>)}</div>
             </div>
           </div>
           <div>
-            <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>Tags</label>
+            <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>Tags</label>
             <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{Object.keys(TAGS).map(k=>(
-              <button key={k} onClick={()=>toggle(tags,setTags,k)} className="badge" style={{cursor:'pointer',border:'1px solid',borderColor:tags.includes(k)?TAGS[k].color:'var(--line-2)',background:tags.includes(k)?TAGS[k].tint:'#fff',color:tags.includes(k)?TAGS[k].color:'var(--ink-3)',height:28}}>{TAGS[k].label}</button>
+              <button key={k} onClick={()=>toggle(tags,setTags,k)} className="badge" style={{cursor:'pointer',border:'1px solid',borderColor:tags.includes(k)?TAGS[k].color:'var(--border-strong)',background:tags.includes(k)?TAGS[k].tint:'#fff',color:tags.includes(k)?TAGS[k].color:'var(--muted-foreground)',height:28}}>{TAGS[k].label}</button>
             ))}</div>
           </div>
           <div>
-            <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>Assignees</label>
+            <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>Assignees</label>
             <div style={{display:'flex',gap:7,flexWrap:'wrap'}}>{PL.map(p=>(
               <button key={p.id} onClick={()=>toggle(assignees,setAssignees,p.id)} title={p.name}
                 style={{border:0,background:'transparent',padding:0,cursor:'pointer',borderRadius:'50%',opacity:assignees.includes(p.id)?1:0.4,
@@ -685,7 +685,7 @@ function CreateModal({onClose, onCreate}){
             ))}</div>
           </div>
         </div>
-        <div style={{padding:'14px 22px',borderTop:'1px solid var(--line)',display:'flex',justifyContent:'flex-end',gap:9,background:'var(--surface-2)'}}>
+        <div style={{padding:'14px 22px',borderTop:'1px solid var(--border)',display:'flex',justifyContent:'flex-end',gap:9,background:'var(--background)'}}>
           <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
           <button className="btn btn-primary" onClick={submit}><Icon name="plus" size={16} sw={2.2}/>Create task</button>
         </div>

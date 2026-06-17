@@ -51,7 +51,7 @@ function Swatch({nm, val, desc, ink}){
   const display = isVar ? `var(${nm})` : nm;
   return (
     <div className="sw" onClick={()=>gdCopy(val.toUpperCase(), `${val.toUpperCase()} copied`)} title="Click to copy hex">
-      <div className="chip" style={{background:val, boxShadow: ink?'inset 0 0 0 1px var(--line)':'none'}}></div>
+      <div className="chip" style={{background:val, boxShadow: ink?'inset 0 0 0 1px var(--border)':'none'}}></div>
       <div className="meta">
         <div className="nm">{display}</div>
         <div className="hex">{val}</div>
@@ -151,9 +151,9 @@ function ComponentsSection(){
         </div>
       </Demo>
       <SpecTable cols={['Class','Radius','Border','Shadow']} rows={[
-        [{tok:'.card'}, {val:'14px'}, {val:'1px var(--line)'}, {val:'--shadow-sm'}],
+        [{tok:'.card'}, {val:'14px'}, {val:'1px var(--border)'}, {val:'--shadow-sm'}],
         [{tok:'.card-pad'}, {val:'—'}, {val:'18px 20px padding'}, {val:'—'}],
-        [{tok:'.card-hover'}, {val:'14px'}, {val:'→ var(--line-2)'}, {val:'→ --shadow-md, -2px lift'}],
+        [{tok:'.card-hover'}, {val:'14px'}, {val:'→ var(--border-strong)'}, {val:'→ --shadow-md, -2px lift'}],
       ]}/>
       <Code lang="html" code={`<div class="card card-pad card-hover">
   <div class="eyebrow">Workspace</div>
@@ -184,7 +184,7 @@ function ComponentsSection(){
       </Demo>
       <Demo label="Priority flags — PRIORITY token map">
         {Object.keys(window.PRIORITY||{}).map(k=>(
-          <span key={k} style={{display:'inline-flex',alignItems:'center',gap:6,fontSize:12.5,color:'var(--ink-2)',fontWeight:550}}>
+          <span key={k} style={{display:'inline-flex',alignItems:'center',gap:6,fontSize:12.5,color:'var(--secondary-foreground)',fontWeight:550}}>
             <PriorityFlag k={k}/> {window.PRIORITY[k].label}
           </span>
         ))}
@@ -215,13 +215,13 @@ function ComponentsSection(){
         <table className="tbl">
           <thead><tr><th>Task</th><th>Owner</th><th>Status</th><th>Priority</th></tr></thead>
           <tbody>
-            <tr><td style={{color:'var(--ink)',fontWeight:550}}>Finalize launch copy</td><td><Avatar id={(window.PL||[{}])[0].id} size={22}/></td><td><StatusPill k="in_progress"/></td><td><PriorityFlag k="urgent"/></td></tr>
-            <tr><td style={{color:'var(--ink)',fontWeight:550}}>Export brand assets</td><td><Avatar id={(window.PL||[{},{}])[1] ? window.PL[1].id : undefined} size={22}/></td><td><StatusPill k="review"/></td><td><PriorityFlag k="high"/></td></tr>
-            <tr><td style={{color:'var(--ink)',fontWeight:550}}>Archive Q2 retro</td><td><Avatar id={(window.PL||[{},{},{}])[2] ? window.PL[2].id : undefined} size={22}/></td><td><StatusPill k="complete"/></td><td><PriorityFlag k="med"/></td></tr>
+            <tr><td style={{color:'var(--foreground)',fontWeight:550}}>Finalize launch copy</td><td><Avatar id={(window.PL||[{}])[0].id} size={22}/></td><td><StatusPill k="in_progress"/></td><td><PriorityFlag k="urgent"/></td></tr>
+            <tr><td style={{color:'var(--foreground)',fontWeight:550}}>Export brand assets</td><td><Avatar id={(window.PL||[{},{}])[1] ? window.PL[1].id : undefined} size={22}/></td><td><StatusPill k="review"/></td><td><PriorityFlag k="high"/></td></tr>
+            <tr><td style={{color:'var(--foreground)',fontWeight:550}}>Archive Q2 retro</td><td><Avatar id={(window.PL||[{},{},{}])[2] ? window.PL[2].id : undefined} size={22}/></td><td><StatusPill k="complete"/></td><td><PriorityFlag k="med"/></td></tr>
           </tbody>
         </table>
       </Demo>
-      <Note>Rows hover to <code>var(--surface-2)</code> with a pointer cursor. Header cells are <b>11px uppercase, .05em tracked</b>. Cell borders use <code>border-top:1px solid var(--line)</code> — no outer table border.</Note>
+      <Note>Rows hover to <code>var(--background)</code> with a pointer cursor. Header cells are <b>11px uppercase, .05em tracked</b>. Cell borders use <code>border-top:1px solid var(--border)</code> — no outer table border.</Note>
 
       {/* Nav + misc */}
       <div className="gd-sub">Navigation &amp; inline elements</div>
@@ -231,7 +231,7 @@ function ComponentsSection(){
         <span className="navlink"><Icon name="chart" size={16}/> Metrics</span>
       </Demo>
       <Demo label="Inline: keyboard, link, divider">
-        <span style={{fontSize:13,color:'var(--ink-2)'}}>Press <span className="kbd">⌘</span> <span className="kbd">K</span> to search</span>
+        <span style={{fontSize:13,color:'var(--secondary-foreground)'}}>Press <span className="kbd">⌘</span> <span className="kbd">K</span> to search</span>
         <span className="linkish">View all activity</span>
       </Demo>
     </section>

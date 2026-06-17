@@ -79,14 +79,14 @@ function ACirc({init,color,size=30}){
 const CALL_DIR={in:{ic:'arrow_down',c:'#16A34A',l:'Incoming'},out:{ic:'arrow_up',c:'#0073E6',l:'Outgoing'},missed:{ic:'x',c:'#DC2626',l:'Missed'}};
 
 function ArtRow({children, onLeave}){
-  return <div style={{display:'flex',alignItems:'center',gap:12,padding:'11px 14px',borderTop:'1px solid var(--line)'}}>{children}</div>;
+  return <div style={{display:'flex',alignItems:'center',gap:12,padding:'11px 14px',borderTop:'1px solid var(--border)'}}>{children}</div>;
 }
 function MoreFoot({shown,total,label,flash}){
   if(total<=shown) return null;
   return (
-    <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:7,padding:'13px',borderTop:'1px solid var(--line)',fontSize:12.5,color:'var(--ink-3)',fontWeight:500}}>
+    <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:7,padding:'13px',borderTop:'1px solid var(--border)',fontSize:12.5,color:'var(--muted-foreground)',fontWeight:500}}>
       Showing {shown.toLocaleString()} of {total.toLocaleString()} {label}
-      <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--line-2)',height:26}} onClick={()=>flash&&flash('Loading full '+label+'…')}>Load all</button>
+      <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--border-strong)',height:26}} onClick={()=>flash&&flash('Loading full '+label+'…')}>Load all</button>
     </div>
   );
 }
@@ -110,9 +110,9 @@ function DeviceArtifacts({device, flash}){
   return (
     <div className="card" style={{padding:0,overflow:'hidden',display:'flex',height:'clamp(560px, calc(100vh - 220px), 760px)'}}>
       {/* category rail */}
-      <div style={{width:228,flex:'none',borderRight:'1px solid var(--line)',display:'flex',flexDirection:'column',background:'var(--surface-2)'}}>
-        <div style={{padding:'16px 16px 12px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',gap:9}}>
-          <span style={{display:'inline-flex',color:'var(--ink-3)'}}><Icon name="layers" size={16}/></span>
+      <div style={{width:228,flex:'none',borderRight:'1px solid var(--border)',display:'flex',flexDirection:'column',background:'var(--background)'}}>
+        <div style={{padding:'16px 16px 12px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',gap:9}}>
+          <span style={{display:'inline-flex',color:'var(--muted-foreground)'}}><Icon name="layers" size={16}/></span>
           <div>
             <div className="card-title" style={{fontSize:14}}>Artifacts</div>
             <div className="muted" style={{fontSize:11.5,marginTop:1}}>{device.files.toLocaleString()} items</div>
@@ -123,13 +123,13 @@ function DeviceArtifacts({device, flash}){
             <button key={t.id} onClick={()=>setTab(t.id)} style={{display:'flex',alignItems:'center',gap:10,width:'100%',textAlign:'left',
               border:0,padding:'9px 11px',borderRadius:9,cursor:'pointer',transition:'.12s',
               background:on?'#fff':'transparent', boxShadow:on?'var(--shadow-sm)':'none',
-              color:on?'var(--blue)':'var(--ink-2)', fontWeight:on?600:500, fontSize:13}}
-              onMouseEnter={e=>{if(!on)e.currentTarget.style.background='var(--hover)';}}
+              color:on?'var(--blue)':'var(--secondary-foreground)', fontWeight:on?600:500, fontSize:13}}
+              onMouseEnter={e=>{if(!on)e.currentTarget.style.background='var(--secondary)';}}
               onMouseLeave={e=>{if(!on)e.currentTarget.style.background='transparent';}}>
-              <Icon name={t.icon} size={16} style={{flex:'none',color:on?'var(--blue)':'var(--ink-3)'}}/>
+              <Icon name={t.icon} size={16} style={{flex:'none',color:on?'var(--blue)':'var(--muted-foreground)'}}/>
               <span style={{flex:1,minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.label}</span>
               <span style={{fontSize:11,fontWeight:600,padding:'1px 7px',borderRadius:999,flex:'none',
-                background:on?'var(--blue-t)':'#fff',color:on?'var(--blue)':'var(--ink-3)',border:'1px solid '+(on?'transparent':'var(--line)')}}>{t.total.toLocaleString()}</span>
+                background:on?'var(--blue-t)':'#fff',color:on?'var(--blue)':'var(--muted-foreground)',border:'1px solid '+(on?'transparent':'var(--border)')}}>{t.total.toLocaleString()}</span>
             </button>
           );})}
         </div>
@@ -137,18 +137,18 @@ function DeviceArtifacts({device, flash}){
 
       {/* records panel */}
       <div style={{flex:1,minWidth:0,display:'flex',flexDirection:'column'}}>
-        <div style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',borderBottom:'1px solid var(--line)',flex:'none'}}>
+        <div style={{display:'flex',alignItems:'center',gap:12,padding:'13px 18px',borderBottom:'1px solid var(--border)',flex:'none'}}>
           <span style={{width:34,height:34,borderRadius:9,background:'var(--blue-t)',color:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={activeTab.icon} size={17}/></span>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:14.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{activeTab.label}</div>
+            <div style={{fontSize:14.5,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em'}}>{activeTab.label}</div>
             <div className="muted" style={{fontSize:12}}>{activeTab.total.toLocaleString()} items recovered</div>
           </div>
-          <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 12px',width:230,maxWidth:'42%',border:'1px solid var(--line-2)',background:'#fff',borderRadius:8}}>
-            <Icon name="search" size={15} style={{color:'var(--ink-3)',flex:'none'}}/>
+          <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 12px',width:230,maxWidth:'42%',border:'1px solid var(--border-strong)',background:'#fff',borderRadius:8}}>
+            <Icon name="search" size={15} style={{color:'var(--muted-foreground)',flex:'none'}}/>
             <input placeholder={`Search ${activeTab.label.toLowerCase()}…`} onKeyDown={e=>{if(e.key==='Enter')flash&&flash('Searching '+activeTab.label.toLowerCase()+'…');}}
               style={{flex:1,minWidth:0,border:0,outline:'none',fontSize:13,fontFamily:'inherit',background:'transparent'}}/>
           </div>
-          <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--line-2)',flex:'none'}} onClick={()=>flash&&flash('Exporting '+activeTab.label.toLowerCase()+'…')}><Icon name="download" size={14}/>Export</button>
+          <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--border-strong)',flex:'none'}} onClick={()=>flash&&flash('Exporting '+activeTab.label.toLowerCase()+'…')}><Icon name="download" size={14}/>Export</button>
         </div>
 
         {/* records */}
@@ -159,10 +159,10 @@ function DeviceArtifacts({device, flash}){
             <ArtRow key={i}>
               <ACirc init={c.init} color={c.color}/>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{c.name}</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{c.name}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{c.email}{c.org!=='—'&&` · ${c.org}`}</div>
               </div>
-              <span style={{fontSize:12.5,color:'var(--ink-2)',fontFamily:'ui-monospace,Menlo,monospace',flex:'none'}}>{c.phone}</span>
+              <span style={{fontSize:12.5,color:'var(--secondary-foreground)',fontFamily:'ui-monospace,Menlo,monospace',flex:'none'}}>{c.phone}</span>
             </ArtRow>
           ))}
           <MoreFoot shown={data.contacts.rows.length} total={data.contacts.total} label="contacts" flash={flash}/>
@@ -174,11 +174,11 @@ function DeviceArtifacts({device, flash}){
             <ArtRow key={i}>
               <span style={{width:30,height:30,borderRadius:8,background:cd.c+'1a',color:cd.c,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={cd.ic} size={15} sw={2.2}/></span>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{c.name}</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{c.name}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1,display:'flex',gap:7}}><span style={{color:cd.c,fontWeight:600}}>{cd.l}</span><span style={{fontFamily:'ui-monospace,Menlo,monospace'}}>{c.phone}</span></div>
               </div>
               <div style={{textAlign:'right',flex:'none'}}>
-                <div style={{fontSize:12,color:'var(--ink-2)',fontWeight:550}}>{c.dur}</div>
+                <div style={{fontSize:12,color:'var(--secondary-foreground)',fontWeight:550}}>{c.dur}</div>
                 <div className="muted" style={{fontSize:11,marginTop:1}}>{c.time}</div>
               </div>
             </ArtRow>
@@ -192,13 +192,13 @@ function DeviceArtifacts({device, flash}){
             <ArtRow key={i}>
               <span style={{width:32,height:32,borderRadius:9,background:_aPal[i%_aPal.length]+'1a',color:_aPal[i%_aPal.length],display:'flex',alignItems:'center',justifyContent:'center',fontSize:13,fontWeight:700,flex:'none'}}>{a.n[0]}</span>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--ink)'}}>{a.n} <span className="muted" style={{fontWeight:400,fontSize:11.5}}>v{a.ver}</span></div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)'}}>{a.n} <span className="muted" style={{fontWeight:400,fontSize:11.5}}>v{a.ver}</span></div>
                 <div style={{display:'flex',alignItems:'center',gap:6,marginTop:3,flexWrap:'wrap'}}>
                   <span className="muted" style={{fontSize:11.5}}>{a.cat}</span>
-                  {a.perms.map(p=><span key={p} style={{fontSize:10.5,fontWeight:550,padding:'1px 7px',borderRadius:999,background:'var(--surface-2)',border:'1px solid var(--line)',color:'var(--ink-3)'}}>{p}</span>)}
+                  {a.perms.map(p=><span key={p} style={{fontSize:10.5,fontWeight:550,padding:'1px 7px',borderRadius:999,background:'var(--background)',border:'1px solid var(--border)',color:'var(--muted-foreground)'}}>{p}</span>)}
                 </div>
               </div>
-              <span style={{fontSize:12,color:'var(--ink-3)',fontWeight:550,flex:'none'}}>{a.size}</span>
+              <span style={{fontSize:12,color:'var(--muted-foreground)',fontWeight:550,flex:'none'}}>{a.size}</span>
             </ArtRow>
           ))}
         </div>)}
@@ -209,7 +209,7 @@ function DeviceArtifacts({device, flash}){
             <ArtRow key={i}>
               <span style={{width:30,height:30,borderRadius:8,background:'var(--orange-t)',color:'var(--orange)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="text" size={15}/></span>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--ink)'}}>{n.title}</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)'}}>{n.title}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:2,lineHeight:1.45,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{n.body}</div>
               </div>
               <span className="muted" style={{fontSize:11,flex:'none'}}>{n.date}</span>
@@ -220,10 +220,10 @@ function DeviceArtifacts({device, flash}){
 
         {/* PASSWORDS */}
         {tab==='passwords' && (<div>
-          <div style={{display:'flex',alignItems:'center',gap:9,padding:'10px 14px',background:'var(--coral-t)',borderTop:'1px solid var(--line)'}}>
+          <div style={{display:'flex',alignItems:'center',gap:9,padding:'10px 14px',background:'var(--coral-t)',borderTop:'1px solid var(--border)'}}>
             <Icon name="shield" size={14} style={{color:'var(--coral)'}}/>
-            <span style={{fontSize:12,color:'var(--ink-2)',flex:1}}>Recovered credentials are sensitive. Access is logged.</span>
-            <button className="btn btn-ghost btn-sm" style={{height:26,border:'1px solid var(--line-2)',background:'#fff'}} onClick={()=>{const all={};data.passwords.rows.forEach((_,i)=>all[i]=true);setReveal(r=>Object.keys(r).length?{}:all);}}>
+            <span style={{fontSize:12,color:'var(--secondary-foreground)',flex:1}}>Recovered credentials are sensitive. Access is logged.</span>
+            <button className="btn btn-ghost btn-sm" style={{height:26,border:'1px solid var(--border-strong)',background:'#fff'}} onClick={()=>{const all={};data.passwords.rows.forEach((_,i)=>all[i]=true);setReveal(r=>Object.keys(r).length?{}:all);}}>
               <Icon name={Object.keys(reveal).length?'eye':'eye'} size={13}/>{Object.keys(reveal).length?'Hide all':'Reveal all'}
             </button>
           </div>
@@ -231,10 +231,10 @@ function DeviceArtifacts({device, flash}){
             <ArtRow key={i}>
               <span style={{width:30,height:30,borderRadius:8,background:'var(--blue-t)',color:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="lock" size={14}/></span>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--ink)'}}>{p.s} <span className="muted" style={{fontWeight:400,fontSize:11}}>· {p.t}</span></div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)'}}>{p.s} <span className="muted" style={{fontWeight:400,fontSize:11}}>· {p.t}</span></div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{p.user}</div>
               </div>
-              <span style={{fontFamily:'ui-monospace,Menlo,monospace',fontSize:12.5,color:'var(--ink-2)',width:96,textAlign:'right',flex:'none',letterSpacing:shown?0:'1px'}}>{shown?p.pass:'•••••••'}</span>
+              <span style={{fontFamily:'ui-monospace,Menlo,monospace',fontSize:12.5,color:'var(--secondary-foreground)',width:96,textAlign:'right',flex:'none',letterSpacing:shown?0:'1px'}}>{shown?p.pass:'•••••••'}</span>
               <button title={shown?'Hide':'Reveal'} onClick={()=>setReveal(r=>({...r,[i]:!r[i]}))} style={{border:0,background:'transparent',padding:3,cursor:'pointer',color:'var(--ink-4)',flex:'none'}}><Icon name="eye" size={15}/></button>
               <span className="badge" style={{background:st.c+'1a',color:st.c,height:19,flex:'none'}}>{st.l}</span>
             </ArtRow>
@@ -246,14 +246,14 @@ function DeviceArtifacts({device, flash}){
         {tab==='media' && (<div style={{padding:14}}>
           <div style={{display:'grid',gridTemplateColumns:'repeat(6,1fr)',gap:8}}>
             {Array.from({length:24}).map((_,i)=>(
-              <div key={i} style={{aspectRatio:'1',borderRadius:8,background:`repeating-linear-gradient(135deg, var(--surface-2), var(--surface-2) 7px, #F1F5F9 7px, #F1F5F9 14px)`,border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ink-4)'}}>
+              <div key={i} style={{aspectRatio:'1',borderRadius:8,background:`repeating-linear-gradient(135deg, var(--background), var(--background) 7px, #F1F5F9 7px, #F1F5F9 14px)`,border:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ink-4)'}}>
                 <Icon name={i%5===0?'video':'image'} size={16}/>
               </div>
             ))}
           </div>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:7,marginTop:13,fontSize:12.5,color:'var(--ink-3)',fontWeight:500}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:7,marginTop:13,fontSize:12.5,color:'var(--muted-foreground)',fontWeight:500}}>
             Showing 24 of {data.media.total.toLocaleString()} media items
-            <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--line-2)',height:26}} onClick={()=>{window.__reviewFolder=device.name;flash&&flash('Opening media gallery…');}}>Open gallery</button>
+            <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--border-strong)',height:26}} onClick={()=>{window.__reviewFolder=device.name;flash&&flash('Opening media gallery…');}}>Open gallery</button>
           </div>
         </div>)}
 
@@ -261,9 +261,9 @@ function DeviceArtifacts({device, flash}){
         {tab==='browser' && (<div>
           {data.browser.rows.map((b,i)=>(
             <ArtRow key={i}>
-              <span style={{width:30,height:30,borderRadius:8,background:'var(--surface-2)',color:'var(--ink-3)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',border:'1px solid var(--line)'}}><Icon name="globe" size={15}/></span>
+              <span style={{width:30,height:30,borderRadius:8,background:'var(--background)',color:'var(--muted-foreground)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',border:'1px solid var(--border)'}}><Icon name="globe" size={15}/></span>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.t}</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.t}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1,fontFamily:'ui-monospace,Menlo,monospace',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.u}</div>
               </div>
               <span className="muted" style={{fontSize:11,flex:'none'}}>{b.time}</span>
@@ -278,7 +278,7 @@ function DeviceArtifacts({device, flash}){
             <ArtRow key={i}>
               <span style={{width:30,height:30,borderRadius:8,background:'var(--cyan-t)',color:'var(--teal)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="mail" size={15}/></span>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{m.subj}</div>
+                <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{m.subj}</div>
                 <div className="muted" style={{fontSize:11.5,marginTop:1,fontFamily:'ui-monospace,Menlo,monospace',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{m.from}</div>
               </div>
               <span className="muted" style={{fontSize:11,flex:'none'}}>{m.time}</span>

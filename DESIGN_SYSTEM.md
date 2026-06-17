@@ -156,18 +156,25 @@ This is the authoritative token file. All values use OKLCH. Source hex values ar
   --info-foreground:        oklch(1.000 0.000 271.2);
 
   /* Subtle fills — callouts, row highlights, badge backgrounds */
-  --accent-subtle:          oklch(0.950 0.030 256.1);  /* #EBF4FF */
+  --accent-subtle:          oklch(0.964 0.017 250);    /* #EBF4FF (corrected) */
   --success-subtle:         oklch(0.971 0.029 149.2);  /* #F0FDF4 */
   --warning-subtle:         oklch(0.987 0.030 89.2);   /* #FFFBEB */
   --destructive-subtle:     oklch(0.981 0.025 27.3);   /* #FEF2F2 */
   --info-subtle:            oklch(0.971 0.030 237.3);  /* #F0F9FF */
 
-  /* Chart tokens */
-  --chart-1: oklch(0.569 0.195 256.1);  /* accent blue   */
-  --chart-2: oklch(0.627 0.170 149.2);  /* success green */
-  --chart-3: oklch(0.809 0.160 89.2);   /* warning amber */
-  --chart-4: oklch(0.577 0.215 27.3);   /* destructive   */
-  --chart-5: oklch(0.685 0.148 237.3);  /* info cyan     */
+  /* Chart tokens — distinct categorical palette. Per §11.1 these never reuse
+     brand/semantic colors; a series in --accent would read as interactive. */
+  --chart-1: #3B82F6;  /* blue — distinct from --accent (#0073E6) */
+  --chart-2: #10B981;  /* emerald */
+  --chart-3: #F59E0B;  /* amber   */
+  --chart-4: #EF4444;  /* red     */
+  --chart-5: #8B5CF6;  /* purple  */
+
+  /* Neutral scale — exposed as runtime CSS vars so components that need a raw
+     neutral (tooltip surface, dividers) can use var(--neutral-*). Absolute. */
+  --neutral-0:#FFFFFF; --neutral-50:#F8FAFC; --neutral-100:#F1F5F9; --neutral-200:#E2E8F0;
+  --neutral-300:#CBD5E1; --neutral-400:#94A3B8; --neutral-500:#64748B; --neutral-600:#475569;
+  --neutral-700:#334155; --neutral-800:#1E293B; --neutral-900:#0F172A; --neutral-950:#020617;
 }
 
 /* Dark mode — .dark class on <html>
@@ -630,24 +637,24 @@ Every interactive component must implement the states relevant to it. This table
 | `.btn--lg` | 42px | 6px | 14px |
 
 #### HTML Pattern
-```html
-<!-- Default primary -->
-<button type="button" class="btn btn--primary">Save changes</button>
+```jsx
+{/* Default primary */}
+<button type="button" className="btn btn--primary">Save changes</button>
 
-<!-- Small with icon -->
-<button type="button" class="btn btn--secondary btn--sm">
+{/* Small with icon */}
+<button type="button" className="btn btn--secondary btn--sm">
   <svg aria-hidden="true">...</svg>
   Export
 </button>
 
-<!-- Icon-only ghost -->
-<button type="button" class="btn btn--ghost btn--icon" aria-label="More options">
+{/* Icon-only ghost */}
+<button type="button" className="btn btn--ghost btn--icon" aria-label="More options">
   <svg aria-hidden="true">...</svg>
 </button>
 
-<!-- Loading -->
-<button type="button" class="btn btn--primary is-loading" aria-busy="true">
-  <span class="btn__spinner" aria-hidden="true"></span>
+{/* Loading */}
+<button type="button" className="btn btn--primary is-loading" aria-busy="true">
+  <span className="btn__spinner" aria-hidden="true"></span>
   Saving…
 </button>
 ```
@@ -665,10 +672,10 @@ Every interactive component must implement the states relevant to it. This table
 
 **Class pattern:** `.badge .badge--[variant] (.badge--pill)`
 
-```html
-<span class="badge badge--success">Active</span>
-<span class="badge badge--pill badge--warning">Pending</span>
-<span class="badge badge--danger">Error</span>
+```jsx
+<span className="badge badge--success">Active</span>
+<span className="badge badge--pill badge--warning">Pending</span>
+<span className="badge badge--danger">Error</span>
 ```
 
 | Class | Background | Text |
@@ -691,19 +698,19 @@ Every interactive component must implement the states relevant to it. This table
 | Other users | `.avatar` (default) | `$neutral-200` (#E2E8F0) | `$neutral-700` (#334155) | Any user that is not the current user |
 | Current user | `.avatar--current` | `$color-accent` (#0073E6) | white | The authenticated user — their own avatar only |
 
-```html
-<!-- Current authenticated user -->
-<div class="avatar avatar--current">JD</div>
+```jsx
+{/* Current authenticated user */}
+<div className="avatar avatar--current">JD</div>
 
-<!-- Any other user -->
-<div class="avatar">MC</div>
+{/* Any other user */}
+<div className="avatar">MC</div>
 
-<!-- Avatar group — current user gets --current, others stay default -->
-<div class="avatar-group">
-  <div class="avatar avatar--current">JD</div>
-  <div class="avatar">MC</div>
-  <div class="avatar">SW</div>
-  <div class="avatar">+3</div>
+{/* Avatar group — current user gets --current, others stay default */}
+<div className="avatar-group">
+  <div className="avatar avatar--current">JD</div>
+  <div className="avatar">MC</div>
+  <div className="avatar">SW</div>
+  <div className="avatar">+3</div>
 </div>
 ```
 
@@ -720,19 +727,19 @@ Every interactive component must implement the states relevant to it. This table
 ### 4.3 Forms
 
 #### Field Pattern
-```html
-<div class="field">
-  <label class="field__label" for="id">Label <span class="field__required">*</span></label>
-  <input class="input" type="text" id="id" placeholder="Placeholder">
-  <span class="field__hint">Helper text</span>
+```jsx
+<div className="field">
+  <label className="field__label" htmlFor="id">Label <span className="field__required">*</span></label>
+  <input className="input" type="text" id="id" placeholder="Placeholder" />
+  <span className="field__hint">Helper text</span>
 </div>
 
-<!-- Error state -->
-<div class="field field--error">
-  <label class="field__label" for="id-err">Email</label>
-  <input class="input input--error" type="email" id="id-err"
-         aria-invalid="true" aria-describedby="id-err-msg">
-  <span class="field__error" id="id-err-msg" role="alert">
+{/* Error state */}
+<div className="field field--error">
+  <label className="field__label" htmlFor="id-err">Email</label>
+  <input className="input input--error" type="email" id="id-err"
+         aria-invalid="true" aria-describedby="id-err-msg" />
+  <span className="field__error" id="id-err-msg" role="alert">
     Enter a valid email address
   </span>
 </div>
@@ -746,32 +753,32 @@ Every interactive component must implement the states relevant to it. This table
 | `.input--lg` | 42px |
 
 #### Controls
-```html
-<!-- Select -->
-<div class="select-wrap">
-  <select class="select">...</select>
+```jsx
+{/* Select */}
+<div className="select-wrap">
+  <select className="select">...</select>
 </div>
 
-<!-- Checkbox -->
-<label class="checkbox-wrap">
-  <input type="checkbox" class="checkbox">
-  <span class="checkbox__label">Option label</span>
+{/* Checkbox */}
+<label className="checkbox-wrap">
+  <input type="checkbox" className="checkbox" />
+  <span className="checkbox__label">Option label</span>
 </label>
 
-<!-- Radio -->
-<label class="radio-wrap">
-  <input type="radio" class="radio" name="group">
-  <span class="radio__label">Option label</span>
+{/* Radio */}
+<label className="radio-wrap">
+  <input type="radio" className="radio" name="group" />
+  <span className="radio__label">Option label</span>
 </label>
 
-<!-- Switch -->
-<label class="switch-wrap">
-  <div class="switch">
-    <input type="checkbox">
-    <div class="switch__track"></div>
-    <div class="switch__thumb"></div>
+{/* Switch */}
+<label className="switch-wrap">
+  <div className="switch">
+    <input type="checkbox" />
+    <div className="switch__track"></div>
+    <div className="switch__thumb"></div>
   </div>
-  <span class="switch__label">Enable notifications</span>
+  <span className="switch__label">Enable notifications</span>
 </label>
 ```
 
@@ -796,61 +803,69 @@ These rules are mandatory. Two engineers implementing the same form must produce
 
 **The single most important rule:** Never validate on `change` or `input` for text fields. Always validate on `blur`. This is the rule most frequently violated by AI-generated forms and the one that most damages trust with professional users.
 
-```html
-<!-- Correct: error shown after blur, cleared after correction -->
-<div class="field" [class.field--error]="emailError">
-  <label class="field__label" for="email">Email *</label>
-  <input class="input"
-         type="email"
-         id="email"
-         (blur)="validateEmail()"
-         (input)="clearEmailError()"
-         [attr.aria-invalid]="emailError ? 'true' : null"
-         aria-describedby="email-error">
-  <span class="field__error" id="email-error" role="alert" *ngIf="emailError">
-    {{ emailError }}
-  </span>
+```jsx
+{/* Correct: error shown after blur, cleared after correction */}
+<div className={`field ${emailError ? 'field--error' : ''}`}>
+  <label className="field__label" htmlFor="email">Email *</label>
+  <input
+    className="input"
+    type="email"
+    id="email"
+    onBlur={validateEmail}
+    onInput={clearEmailError}
+    aria-invalid={emailError ? 'true' : undefined}
+    aria-describedby="email-error"
+  />
+  {emailError && (
+    <span className="field__error" id="email-error" role="alert">
+      {emailError}
+    </span>
+  )}
 </div>
 
-<!-- Form-level summary (appears on submit when 3+ errors) -->
-<div class="callout callout--danger" role="alert" *ngIf="submitErrors.length >= 3">
-  <svg class="callout__icon" aria-hidden="true"><use href="#icon-alert-circle"/></svg>
-  <div class="callout__body">
-    <strong class="callout__title">{{ submitErrors.length }} errors need your attention</strong>
-    <ul style="margin:6px 0 0;padding-left:16px;font-size:13px">
-      <li *ngFor="let err of submitErrors">{{ err.label }}: {{ err.message }}</li>
-    </ul>
+{/* Form-level summary (appears on submit when 3+ errors) */}
+{submitErrors.length >= 3 && (
+  <div className="callout callout--danger" role="alert">
+    <svg className="callout__icon" aria-hidden="true"><use href="#icon-alert-circle" /></svg>
+    <div className="callout__body">
+      <strong className="callout__title">{submitErrors.length} errors need your attention</strong>
+      <ul style={{ margin: '6px 0 0', paddingLeft: 16, fontSize: 13 }}>
+        {submitErrors.map((err) => (
+          <li key={err.label}>{err.label}: {err.message}</li>
+        ))}
+      </ul>
+    </div>
   </div>
-</div>
+)}
 ```
 
 ---
 
 ### 4.4 Cards
 
-```html
-<!-- Standard card -->
-<div class="card">
-  <div class="card__header">
-    <div class="card__logo">...</div>
+```jsx
+{/* Standard card */}
+<div className="card">
+  <div className="card__header">
+    <div className="card__logo">...</div>
     <div>
-      <div class="card__title">Card Title</div>
-      <div class="card__subtitle">Supporting text</div>
+      <div className="card__title">Card Title</div>
+      <div className="card__subtitle">Supporting text</div>
     </div>
   </div>
-  <div class="card__body">Content</div>
-  <div class="card__footer">
-    <span class="card__meta">Meta info</span>
-    <span class="badge badge--success">Active</span>
+  <div className="card__body">Content</div>
+  <div className="card__footer">
+    <span className="card__meta">Meta info</span>
+    <span className="badge badge--success">Active</span>
   </div>
 </div>
 
-<!-- Clickable card -->
-<div class="card card--clickable" tabindex="0" role="article">...</div>
+{/* Clickable card */}
+<div className="card card--clickable" tabIndex="0" role="article">...</div>
 
-<!-- Card grid -->
-<div class="card-grid">
-  <div class="card">...</div>
+{/* Card grid */}
+<div className="card-grid">
+  <div className="card">...</div>
 </div>
 ```
 
@@ -869,58 +884,58 @@ gap: 16px;
 
 The primary data display component. Used for all list/tabular data.
 
-```html
-<div class="data-table-wrap">
-  <!-- Optional header -->
-  <div class="data-table-head">
-    <h3 class="data-table-head__title">Users</h3>
-    <div class="data-table-head__actions">
-      <button class="btn btn--secondary btn--sm">Export</button>
-      <button class="btn btn--primary btn--sm">+ Add user</button>
+```jsx
+<div className="data-table-wrap">
+  {/* Optional header */}
+  <div className="data-table-head">
+    <h3 className="data-table-head__title">Users</h3>
+    <div className="data-table-head__actions">
+      <button className="btn btn--secondary btn--sm">Export</button>
+      <button className="btn btn--primary btn--sm">+ Add user</button>
     </div>
   </div>
 
-  <!-- Scrollable table -->
-  <div class="table-scroll">
-    <table class="data-table">
+  {/* Scrollable table */}
+  <div className="table-scroll">
+    <table className="data-table">
       <thead>
         <tr>
-          <th class="col-check">
-            <input type="checkbox" aria-label="Select all">
+          <th className="col-check">
+            <input type="checkbox" aria-label="Select all" />
           </th>
-          <th class="col-sortable" aria-sort="ascending">
+          <th className="col-sortable" aria-sort="ascending">
             Name
-            <svg class="sort-icon" aria-hidden="true">...</svg>
+            <svg className="sort-icon" aria-hidden="true">...</svg>
           </th>
           <th>Status</th>
           <th>Role</th>
-          <th class="col-num">Revenue</th>
-          <th class="col-date">Joined</th>
-          <th class="col-action"><span class="sr-only">Actions</span></th>
+          <th className="col-num">Revenue</th>
+          <th className="col-date">Joined</th>
+          <th className="col-action"><span className="sr-only">Actions</span></th>
         </tr>
       </thead>
       <tbody>
-        <tr class="row--selected">
-          <td><input type="checkbox" checked></td>
+        <tr className="row--selected">
+          <td><input type="checkbox" defaultChecked /></td>
           <td>
-            <div class="flex items-center gap-3">
-              <div class="avatar">JD</div>
+            <div className="flex items-center gap-3">
+              <div className="avatar">JD</div>
               <div>
-                <div class="font-medium text-base">Jane Doe</div>
-                <div class="text-xs text-secondary">jane@example.com</div>
+                <div className="font-medium text-base">Jane Doe</div>
+                <div className="text-xs text-secondary">jane@example.com</div>
               </div>
             </div>
           </td>
-          <td><span class="badge badge--success">Active</span></td>
-          <td class="text-secondary text-sm">Admin</td>
-          <td class="col-num font-medium">$12,840</td>
-          <td class="col-date text-secondary text-sm">Jan 12, 2026</td>
-          <td class="col-action">
-            <div class="flex gap-1">
-              <button class="btn btn--ghost btn--sm btn--icon" aria-label="Edit Jane Doe">
+          <td><span className="badge badge--success">Active</span></td>
+          <td className="text-secondary text-sm">Admin</td>
+          <td className="col-num font-medium">$12,840</td>
+          <td className="col-date text-secondary text-sm">Jan 12, 2026</td>
+          <td className="col-action">
+            <div className="flex gap-1">
+              <button className="btn btn--ghost btn--sm btn--icon" aria-label="Edit Jane Doe">
                 <svg aria-hidden="true">...</svg>
               </button>
-              <button class="btn btn--ghost btn--sm btn--icon" aria-label="More options">
+              <button className="btn btn--ghost btn--sm btn--icon" aria-label="More options">
                 <svg aria-hidden="true">...</svg>
               </button>
             </div>
@@ -930,17 +945,17 @@ The primary data display component. Used for all list/tabular data.
     </table>
   </div>
 
-  <!-- Footer with count + pagination -->
-  <div class="data-table-foot">
-    <span class="table-count">Showing 1–20 of 143 results</span>
-    <nav class="pagination" aria-label="Table pagination">
-      <button class="pagination__btn" aria-label="Previous page" disabled>‹</button>
-      <button class="pagination__btn pagination__btn--active" aria-current="page">1</button>
-      <button class="pagination__btn">2</button>
-      <button class="pagination__btn">3</button>
-      <span class="pagination__ellipsis">…</span>
-      <button class="pagination__btn">8</button>
-      <button class="pagination__btn" aria-label="Next page">›</button>
+  {/* Footer with count + pagination */}
+  <div className="data-table-foot">
+    <span className="table-count">Showing 1–20 of 143 results</span>
+    <nav className="pagination" aria-label="Table pagination">
+      <button className="pagination__btn" aria-label="Previous page" disabled>‹</button>
+      <button className="pagination__btn pagination__btn--active" aria-current="page">1</button>
+      <button className="pagination__btn">2</button>
+      <button className="pagination__btn">3</button>
+      <span className="pagination__ellipsis">…</span>
+      <button className="pagination__btn">8</button>
+      <button className="pagination__btn" aria-label="Next page">›</button>
     </nav>
   </div>
 </div>
@@ -960,7 +975,7 @@ The primary data display component. Used for all list/tabular data.
 
 **Claude Rules for Data Tables:**
 - Every table must have a `<thead>` with descriptive `<th>` elements
-- Action columns always use `<span class="sr-only">` for accessibility
+- Action columns always use `<span className="sr-only">` for accessibility
 - Sortable columns use `aria-sort` attribute
 - Always wrap in `.table-scroll` for horizontal scrolling
 - Pagination always includes `aria-label`
@@ -976,18 +991,18 @@ The primary data display component. Used for all list/tabular data.
 
 #### Row Selection
 
-```html
-<!-- Header: select-all checkbox -->
-<th class="col-check">
+```jsx
+{/* Header: select-all checkbox */}
+<th className="col-check">
   <input type="checkbox"
          aria-label="Select all rows"
          id="select-all"
-         :indeterminate="someSelected && !allSelected">
+         ref={(el) => { if (el) el.indeterminate = someSelected && !allSelected; }} />
 </th>
 
-<!-- Body row: selected state -->
-<tr class="row--selected">
-  <td><input type="checkbox" checked aria-label="Select Jane Doe"></td>
+{/* Body row: selected state */}
+<tr className="row--selected">
+  <td><input type="checkbox" defaultChecked aria-label="Select Jane Doe" /></td>
   ...
 </tr>
 ```
@@ -1001,18 +1016,18 @@ The primary data display component. Used for all list/tabular data.
 
 Appears above the table when one or more rows are selected. Replaces the table header actions area while active.
 
-```html
-<!-- Shown when rows are selected -->
-<div class="data-table-bulk" role="toolbar" aria-label="Bulk actions">
-  <span class="data-table-bulk__count">3 rows selected</span>
-  <div class="data-table-bulk__actions">
-    <button class="btn btn--secondary btn--sm">Export</button>
-    <button class="btn btn--secondary btn--sm">Assign</button>
-    <button class="btn btn--outline btn--sm" style="color:var(--color-danger)">
+```jsx
+{/* Shown when rows are selected */}
+<div className="data-table-bulk" role="toolbar" aria-label="Bulk actions">
+  <span className="data-table-bulk__count">3 rows selected</span>
+  <div className="data-table-bulk__actions">
+    <button className="btn btn--secondary btn--sm">Export</button>
+    <button className="btn btn--secondary btn--sm">Assign</button>
+    <button className="btn btn--outline btn--sm" style={{ color: 'var(--color-danger)' }}>
       Delete
     </button>
   </div>
-  <button class="btn btn--ghost btn--sm data-table-bulk__clear"
+  <button className="btn btn--ghost btn--sm data-table-bulk__clear"
           aria-label="Clear selection">
     Clear
   </button>
@@ -1037,22 +1052,22 @@ Control row height via modifier class on `.data-table`:
 
 #### Expandable Rows
 
-```html
-<tr class="row--expandable">
+```jsx
+<tr className="row--expandable">
   <td>
-    <button class="row-expand-btn" aria-expanded="false"
+    <button className="row-expand-btn" aria-expanded="false"
             aria-controls="row-1-detail" aria-label="Expand Jane Doe">
-      <svg class="ds-icon row-expand-icon" aria-hidden="true">
+      <svg className="ds-icon row-expand-icon" aria-hidden="true">
         <use href="#icon-chevron-right"/>
       </svg>
     </button>
   </td>
   ...
 </tr>
-<!-- Expanded detail row — full width -->
-<tr class="row--detail" id="row-1-detail" hidden>
-  <td colspan="100%">
-    <!-- Detail content -->
+{/* Expanded detail row — full width */}
+<tr className="row--detail" id="row-1-detail" hidden>
+  <td colSpan="100%">
+    {/* Detail content */}
   </td>
 </tr>
 ```
@@ -1079,27 +1094,27 @@ Always apply when the table height exceeds its container:
 
 #### Empty and Loading States
 
-```html
-<!-- Loading — skeleton rows -->
-<tbody class="table-loading" aria-busy="true" aria-label="Loading data">
-  <tr><td colspan="100%"><div class="skeleton__line" style="height:44px"></div></td></tr>
-  <tr><td colspan="100%"><div class="skeleton__line" style="height:44px"></div></td></tr>
-  <tr><td colspan="100%"><div class="skeleton__line" style="height:44px"></div></td></tr>
+```jsx
+{/* Loading — skeleton rows */}
+<tbody className="table-loading" aria-busy="true" aria-label="Loading data">
+  <tr><td colSpan="100%"><div className="skeleton__line" style={{ height: '44px' }}></div></td></tr>
+  <tr><td colSpan="100%"><div className="skeleton__line" style={{ height: '44px' }}></div></td></tr>
+  <tr><td colSpan="100%"><div className="skeleton__line" style={{ height: '44px' }}></div></td></tr>
 </tbody>
 
-<!-- Empty — no data -->
+{/* Empty — no data */}
 <tbody>
   <tr>
-    <td colspan="100%">
-      <div class="empty-state">
-        <svg class="ds-icon ds-icon--lg" aria-hidden="true">
+    <td colSpan="100%">
+      <div className="empty-state">
+        <svg className="ds-icon ds-icon--lg" aria-hidden="true">
           <use href="#icon-inbox"/>
         </svg>
-        <p class="empty-state__title">No results</p>
-        <p class="empty-state__desc">
+        <p className="empty-state__title">No results</p>
+        <p className="empty-state__desc">
           No items match your current filters.
         </p>
-        <button class="btn btn--secondary btn--sm">Clear filters</button>
+        <button className="btn btn--secondary btn--sm">Clear filters</button>
       </div>
     </td>
   </tr>
@@ -1122,31 +1137,31 @@ Always apply when the table height exceeds its container:
 
 ### 4.6 Stat / KPI Cards 
 
-```html
-<!-- Stats row -->
-<div class="stat-grid">
-  <div class="stat-card">
-    <div class="stat-card__label">Total Revenue</div>
-    <div class="stat-card__value">$48,291</div>
-    <div class="stat-card__delta stat-card__delta--up">
-      <svg aria-hidden="true"><!-- up arrow --></svg>
+```jsx
+{/* Stats row */}
+<div className="stat-grid">
+  <div className="stat-card">
+    <div className="stat-card__label">Total Revenue</div>
+    <div className="stat-card__value">$48,291</div>
+    <div className="stat-card__delta stat-card__delta--up">
+      <svg aria-hidden="true">{/* up arrow */}</svg>
       12.4% vs last month
     </div>
   </div>
 
-  <div class="stat-card">
-    <div class="stat-card__label">Active Users</div>
-    <div class="stat-card__value">1,284</div>
-    <div class="stat-card__delta stat-card__delta--down">
-      <svg aria-hidden="true"><!-- down arrow --></svg>
+  <div className="stat-card">
+    <div className="stat-card__label">Active Users</div>
+    <div className="stat-card__value">1,284</div>
+    <div className="stat-card__delta stat-card__delta--down">
+      <svg aria-hidden="true">{/* down arrow */}</svg>
       3.1% vs last month
     </div>
   </div>
 
-  <div class="stat-card stat-card--featured">
-    <div class="stat-card__label">Conversion Rate</div>
-    <div class="stat-card__value">8.7%</div>
-    <div class="stat-card__delta stat-card__delta--neutral">No change</div>
+  <div className="stat-card stat-card--featured">
+    <div className="stat-card__label">Conversion Rate</div>
+    <div className="stat-card__value">8.7%</div>
+    <div className="stat-card__delta stat-card__delta--neutral">No change</div>
   </div>
 </div>
 ```
@@ -1169,25 +1184,25 @@ Always apply when the table height exceeds its container:
 
 Appears above data tables. Combines search, filters, and actions.
 
-```html
-<div class="filter-bar">
-  <div class="filter-bar__search">
-    <div class="input-icon-wrap">
-      <svg class="input-icon" aria-hidden="true"><!-- search --></svg>
-      <input class="input input--sm" type="search" placeholder="Search users…">
+```jsx
+<div className="filter-bar">
+  <div className="filter-bar__search">
+    <div className="input-icon-wrap">
+      <svg className="input-icon" aria-hidden="true">{/* search */}</svg>
+      <input className="input input--sm" type="search" placeholder="Search users…" />
     </div>
   </div>
 
-  <div class="filter-bar__filters">
-    <div class="select-wrap">
-      <select class="select select--sm">
+  <div className="filter-bar__filters">
+    <div className="select-wrap">
+      <select className="select select--sm">
         <option>All status</option>
         <option>Active</option>
         <option>Inactive</option>
       </select>
     </div>
-    <div class="select-wrap">
-      <select class="select select--sm">
+    <div className="select-wrap">
+      <select className="select select--sm">
         <option>All roles</option>
         <option>Admin</option>
         <option>Member</option>
@@ -1195,12 +1210,12 @@ Appears above data tables. Combines search, filters, and actions.
     </div>
   </div>
 
-  <div class="filter-bar__actions">
-    <button class="btn btn--secondary btn--sm">
-      <svg aria-hidden="true"><!-- download --></svg>
+  <div className="filter-bar__actions">
+    <button className="btn btn--secondary btn--sm">
+      <svg aria-hidden="true">{/* download */}</svg>
       Export
     </button>
-    <button class="btn btn--primary btn--sm">
+    <button className="btn btn--primary btn--sm">
       + Add user
     </button>
   </div>
@@ -1234,33 +1249,33 @@ Every internal page in IMIN opens with a page header. It sits directly below the
 
 #### HTML Pattern
 
-```html
-<div class="page-header">
-  <div class="page-header__main">
+```jsx
+<div className="page-header">
+  <div className="page-header__main">
 
-    <!-- Breadcrumb — always present on internal pages -->
-    <nav class="breadcrumb" aria-label="Breadcrumb">
-      <ol class="breadcrumb__list">
-        <li class="breadcrumb__item">
-          <a href="/workspaces" class="breadcrumb__link">Workspaces</a>
+    {/* Breadcrumb — always present on internal pages */}
+    <nav className="breadcrumb" aria-label="Breadcrumb">
+      <ol className="breadcrumb__list">
+        <li className="breadcrumb__item">
+          <a href="/workspaces" className="breadcrumb__link">Workspaces</a>
         </li>
-        <li class="breadcrumb__item" aria-hidden="true">›</li>
-        <li class="breadcrumb__item">
-          <span class="breadcrumb__current" aria-current="page">Clearance</span>
+        <li className="breadcrumb__item" aria-hidden="true">›</li>
+        <li className="breadcrumb__item">
+          <span className="breadcrumb__current" aria-current="page">Clearance</span>
         </li>
       </ol>
     </nav>
 
-    <h1 class="page-title">Clearance</h1>
-    <!-- Description is optional — omit if the title is self-explanatory -->
-    <p class="page-desc">Screen and clear public statements before release.</p>
+    <h1 className="page-title">Clearance</h1>
+    {/* Description is optional — omit if the title is self-explanatory */}
+    <p className="page-desc">Screen and clear public statements before release.</p>
 
   </div>
-  <div class="page-header__actions">
-    <!-- Secondary action left, primary action right -->
-    <button class="btn btn--secondary">Secondary action</button>
-    <button class="btn btn--primary">
-      <svg class="ds-icon" aria-hidden="true"><use href="#icon-plus"/></svg>
+  <div className="page-header__actions">
+    {/* Secondary action left, primary action right */}
+    <button className="btn btn--secondary">Secondary action</button>
+    <button className="btn btn--primary">
+      <svg className="ds-icon" aria-hidden="true"><use href="#icon-plus"/></svg>
       Primary action
     </button>
   </div>
@@ -1273,7 +1288,7 @@ Every internal page in IMIN opens with a page header. It sits directly below the
 // .page-header: flex items-start justify-between gap-6 margin-bottom:28px
 // .page-header__main: flex-1 min-width:0
 // .page-header__actions: flex items-center gap-2 flex-shrink-0 padding-top:4px
-// .page-title: font-size:26px font-weight:700 color:text-primary letter-spacing:-0.02em
+// .page-title: font-size:28px font-weight:700 color:text-primary letter-spacing:-0.02em (composes the .t-display role)
 // .page-desc: font-size:14px color:text-secondary margin-top:4px
 // .breadcrumb__list: flex items-center gap-6px list-style:none margin-bottom:8px
 // .breadcrumb__item: font-size:12px color:text-tertiary
@@ -1287,17 +1302,17 @@ Every internal page in IMIN opens with a page header. It sits directly below the
 - H1 always matches the last breadcrumb segment exactly
 - Maximum one `.btn--primary` in the actions area
 - Description is optional — use only when the title alone doesn't convey enough context
-- Actions are role-scoped — hide unavailable actions via `*ngIf`, never disable them
+- Actions are role-scoped — hide unavailable actions with conditional rendering, never disable them
 
 ---
 
 ### 4.9 Callouts
 
-```html
-<div class="callout callout--info">
-  <svg class="callout__icon" aria-hidden="true"><!-- info --></svg>
-  <div class="callout__body">
-    <strong class="callout__title">New feature available</strong>
+```jsx
+<div className="callout callout--info">
+  <svg className="callout__icon" aria-hidden="true">{/* info */}</svg>
+  <div className="callout__body">
+    <strong className="callout__title">New feature available</strong>
     <p>Advanced filtering is now available in your dashboard.</p>
   </div>
 </div>
@@ -1309,21 +1324,21 @@ Variants: `.callout--info`, `.callout--success`, `.callout--warning`, `.callout-
 
 ### 4.10 Modals
 
-```html
-<div class="modal-overlay" role="presentation" aria-hidden="false">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal__header">
-      <h2 class="modal__title" id="modal-title">Confirm deletion</h2>
-      <button class="btn btn--ghost btn--icon" aria-label="Close dialog">
-        <svg aria-hidden="true"><!-- x --></svg>
+```jsx
+<div className="modal-overlay" role="presentation" aria-hidden="false">
+  <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div className="modal__header">
+      <h2 className="modal__title" id="modal-title">Confirm deletion</h2>
+      <button className="btn btn--ghost btn--icon" aria-label="Close dialog">
+        <svg aria-hidden="true">{/* x */}</svg>
       </button>
     </div>
-    <div class="modal__body">
-      <p class="text-secondary">This action cannot be undone. All data will be permanently deleted.</p>
+    <div className="modal__body">
+      <p className="text-secondary">This action cannot be undone. All data will be permanently deleted.</p>
     </div>
-    <div class="modal__footer">
-      <button class="btn btn--secondary">Cancel</button>
-      <button class="btn btn--danger">Delete permanently</button>
+    <div className="modal__footer">
+      <button className="btn btn--secondary">Cancel</button>
+      <button className="btn btn--danger">Delete permanently</button>
     </div>
   </div>
 </div>
@@ -1341,16 +1356,16 @@ Variants: `.callout--info`, `.callout--success`, `.callout--warning`, `.callout-
 
 ### 4.11 Empty States
 
-```html
-<div class="empty-state">
-  <div class="empty-state__icon">
-    <svg aria-hidden="true"><!-- contextual icon --></svg>
+```jsx
+<div className="empty-state">
+  <div className="empty-state__icon">
+    <svg aria-hidden="true">{/* contextual icon */}</svg>
   </div>
-  <h3 class="empty-state__title">No users yet</h3>
-  <p class="empty-state__desc">
+  <h3 className="empty-state__title">No users yet</h3>
+  <p className="empty-state__desc">
     Invite your first team member to get started.
   </p>
-  <button class="btn btn--primary">Invite a user</button>
+  <button className="btn btn--primary">Invite a user</button>
 </div>
 ```
 
@@ -1363,27 +1378,27 @@ Variants: `.callout--info`, `.callout--success`, `.callout--warning`, `.callout-
 
 ### 4.12 Loading / Skeleton
 
-```html
-<!-- Skeleton lines -->
-<div class="skeleton">
-  <div class="skeleton__line skeleton__line--title"></div>
-  <div class="skeleton__line"></div>
-  <div class="skeleton__line skeleton__line--short"></div>
+```jsx
+{/* Skeleton lines */}
+<div className="skeleton">
+  <div className="skeleton__line skeleton__line--title"></div>
+  <div className="skeleton__line"></div>
+  <div className="skeleton__line skeleton__line--short"></div>
 </div>
 
-<!-- Skeleton stat card -->
-<div class="card skeleton-card">
-  <div class="skeleton__line skeleton__line--label"></div>
-  <div class="skeleton__line skeleton__line--value"></div>
-  <div class="skeleton__line skeleton__line--short"></div>
+{/* Skeleton stat card */}
+<div className="card skeleton-card">
+  <div className="skeleton__line skeleton__line--label"></div>
+  <div className="skeleton__line skeleton__line--value"></div>
+  <div className="skeleton__line skeleton__line--short"></div>
 </div>
 
-<!-- Skeleton table row -->
-<tr class="row--skeleton">
-  <td><div class="skeleton__block skeleton__block--sm"></div></td>
-  <td><div class="skeleton__line"></div></td>
-  <td><div class="skeleton__block skeleton__block--badge"></div></td>
-  <td><div class="skeleton__line skeleton__line--short"></div></td>
+{/* Skeleton table row */}
+<tr className="row--skeleton">
+  <td><div className="skeleton__block skeleton__block--sm"></div></td>
+  <td><div className="skeleton__line"></div></td>
+  <td><div className="skeleton__block skeleton__block--badge"></div></td>
+  <td><div className="skeleton__line skeleton__line--short"></div></td>
 </tr>
 ```
 
@@ -1398,25 +1413,25 @@ Variants: `.callout--info`, `.callout--success`, `.callout--warning`, `.callout-
 
 ### 4.13 Tabs
 
-```html
-<div class="tabs" role="tablist" aria-label="Section label">
-  <button class="tab tab--active" role="tab" aria-selected="true" aria-controls="panel-a">Overview</button>
-  <button class="tab" role="tab" aria-selected="false" aria-controls="panel-b">Activity</button>
-  <button class="tab" role="tab" aria-selected="false" aria-controls="panel-c">Settings</button>
+```jsx
+<div className="tabs" role="tablist" aria-label="Section label">
+  <button className="tab tab--active" role="tab" aria-selected="true" aria-controls="panel-a">Overview</button>
+  <button className="tab" role="tab" aria-selected="false" aria-controls="panel-b">Activity</button>
+  <button className="tab" role="tab" aria-selected="false" aria-controls="panel-c">Settings</button>
 </div>
-<div class="tab-panel tab-panel--active" id="panel-a" role="tabpanel">...</div>
+<div className="tab-panel tab-panel--active" id="panel-a" role="tabpanel">...</div>
 ```
 
 ---
 
 ### 4.14 Toast / Notification *(transient feedback)*
 
-```html
-<div class="toast-container" aria-live="polite">
-  <div class="toast toast--success">
-    <svg class="toast__icon" aria-hidden="true">...</svg>
-    <span class="toast__message">Changes saved successfully</span>
-    <button class="btn btn--ghost btn--icon btn--sm toast__close" aria-label="Dismiss">×</button>
+```jsx
+<div className="toast-container" aria-live="polite">
+  <div className="toast toast--success">
+    <svg className="toast__icon" aria-hidden="true">...</svg>
+    <span className="toast__message">Changes saved successfully</span>
+    <button className="btn btn--ghost btn--icon btn--sm toast__close" aria-label="Dismiss">×</button>
   </div>
 </div>
 ```
@@ -1442,47 +1457,47 @@ Mutually exclusive view or filter selector. A gray pill container with a floatin
 
 #### HTML Pattern
 
-```html
-<!-- Icon + text (Board/List/Calendar) -->
-<div class="seg-control" role="radiogroup" aria-label="View mode">
-  <button class="seg-control__item seg-control__item--active"
+```jsx
+{/* Icon + text (Board/List/Calendar) */}
+<div className="seg-control" role="radiogroup" aria-label="View mode">
+  <button className="seg-control__item seg-control__item--active"
           role="radio" aria-checked="true">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-columns"/></svg>
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-columns"/></svg>
     Board
   </button>
-  <button class="seg-control__item" role="radio" aria-checked="false">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-list"/></svg>
+  <button className="seg-control__item" role="radio" aria-checked="false">
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-list"/></svg>
     List
   </button>
-  <button class="seg-control__item" role="radio" aria-checked="false">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-calendar"/></svg>
+  <button className="seg-control__item" role="radio" aria-checked="false">
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-calendar"/></svg>
     Calendar
   </button>
 </div>
 
-<!-- Text only (Only Mine / My Teams) -->
-<div class="seg-control" role="radiogroup" aria-label="Scope">
-  <button class="seg-control__item" role="radio" aria-checked="false">Only Mine</button>
-  <button class="seg-control__item seg-control__item--active" role="radio" aria-checked="true">My Teams</button>
+{/* Text only (Only Mine / My Teams) */}
+<div className="seg-control" role="radiogroup" aria-label="Scope">
+  <button className="seg-control__item" role="radio" aria-checked="false">Only Mine</button>
+  <button className="seg-control__item seg-control__item--active" role="radio" aria-checked="true">My Teams</button>
 </div>
 
-<!-- With Agent item — .seg-control__item--agent on the Agents button -->
-<div class="seg-control" role="radiogroup" aria-label="View type">
-  <button class="seg-control__item seg-control__item--active" role="radio" aria-checked="true">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-list"/></svg>All
+{/* With Agent item — .seg-control__item--agent on the Agents button */}
+<div className="seg-control" role="radiogroup" aria-label="View type">
+  <button className="seg-control__item seg-control__item--active" role="radio" aria-checked="true">
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-list"/></svg>All
   </button>
-  <button class="seg-control__item" role="radio" aria-checked="false">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-users"/></svg>People
+  <button className="seg-control__item" role="radio" aria-checked="false">
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-users"/></svg>People
   </button>
-  <button class="seg-control__item seg-control__item--agent" role="radio" aria-checked="false">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-cpu"/></svg>Agents
+  <button className="seg-control__item seg-control__item--agent" role="radio" aria-checked="false">
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-cpu"/></svg>Agents
   </button>
 </div>
 
-<!-- Small — for toolbar or card-queue header use -->
-<div class="seg-control seg-control--sm" role="radiogroup" aria-label="Filter">
-  <button class="seg-control__item seg-control__item--active" role="radio" aria-checked="true">All</button>
-  <button class="seg-control__item" role="radio" aria-checked="false">Mine</button>
+{/* Small — for toolbar or card-queue header use */}
+<div className="seg-control seg-control--sm" role="radiogroup" aria-label="Filter">
+  <button className="seg-control__item seg-control__item--active" role="radio" aria-checked="true">All</button>
+  <button className="seg-control__item" role="radio" aria-checked="false">Mine</button>
 </div>
 ```
 
@@ -1563,59 +1578,59 @@ The `border-collapse: separate` + `border-spacing: 0 6px` creates row gaps. Bord
 
 #### HTML Pattern
 
-```html
-<div class="card-queue-wrap">
+```jsx
+<div className="card-queue-wrap">
 
-  <!-- Header: title + optional seg-control filter + actions -->
-  <div class="card-queue-head">
-    <div style="display:flex;align-items:center;gap:10px">
-      <span class="card-queue-head__title">Review Requests</span>
-      <span class="badge badge--neutral">12</span>
+  {/* Header: title + optional seg-control filter + actions */}
+  <div className="card-queue-head">
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <span className="card-queue-head__title">Review Requests</span>
+      <span className="badge badge--neutral">12</span>
     </div>
-    <div class="card-queue-head__actions">
-      <div class="seg-control seg-control--sm" role="radiogroup" aria-label="Filter">
-        <button class="seg-control__item seg-control__item--active" role="radio" aria-checked="true">All</button>
-        <button class="seg-control__item" role="radio" aria-checked="false">Mine</button>
-        <button class="seg-control__item" role="radio" aria-checked="false">Unassigned</button>
+    <div className="card-queue-head__actions">
+      <div className="seg-control seg-control--sm" role="radiogroup" aria-label="Filter">
+        <button className="seg-control__item seg-control__item--active" role="radio" aria-checked="true">All</button>
+        <button className="seg-control__item" role="radio" aria-checked="false">Mine</button>
+        <button className="seg-control__item" role="radio" aria-checked="false">Unassigned</button>
       </div>
-      <button class="btn btn--ghost btn--sm">
+      <button className="btn btn--ghost btn--sm">
         <svg aria-hidden="true"><use href="#icon-filter"/></svg>Filter
       </button>
     </div>
   </div>
 
-  <!-- Table: border-collapse separate gives card rows -->
-  <div class="card-queue-table-wrap">
-    <table class="card-queue" aria-label="Review requests">
+  {/* Table: border-collapse separate gives card rows */}
+  <div className="card-queue-table-wrap">
+    <table className="card-queue" aria-label="Review requests">
       <thead>
         <tr>
-          <th class="col-sortable" aria-sort="ascending" style="width:38%">
-            Request <svg class="sort-icon" aria-hidden="true">...</svg>
+          <th className="col-sortable" aria-sort="ascending" style={{ width: '38%' }}>
+            Request <svg className="sort-icon" aria-hidden="true">...</svg>
           </th>
           <th>Status</th>
           <th>Assignee</th>
-          <th class="col-sortable" style="text-align:right">Submitted</th>
-          <th class="col-action"><span class="sr-only">Actions</span></th>
+          <th className="col-sortable" style={{ textAlign: 'right' }}>Submitted</th>
+          <th className="col-action"><span className="sr-only">Actions</span></th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>
-            <div class="font-medium text-base">Issue title</div>
-            <div class="text-xs text-tertiary">Company · Plan</div>
+            <div className="font-medium text-base">Issue title</div>
+            <div className="text-xs text-tertiary">Company · Plan</div>
           </td>
-          <td><span class="badge badge--danger">Urgent</span></td>
+          <td><span className="badge badge--danger">Urgent</span></td>
           <td>
-            <div class="flex items-center gap-2">
-              <div class="avatar avatar--sm">JD</div>
-              <span class="text-sm text-secondary">Jane D.</span>
+            <div className="flex items-center gap-2">
+              <div className="avatar avatar--sm">JD</div>
+              <span className="text-sm text-secondary">Jane D.</span>
             </div>
           </td>
-          <td class="col-date">2h ago</td>
-          <td class="col-action">
-            <div class="flex gap-1 justify-end">
-              <button class="btn btn--primary btn--sm">Review</button>
-              <button class="btn btn--ghost btn--sm btn--icon"
+          <td className="col-date">2h ago</td>
+          <td className="col-action">
+            <div className="flex gap-1 justify-end">
+              <button className="btn btn--primary btn--sm">Review</button>
+              <button className="btn btn--ghost btn--sm btn--icon"
                       aria-label="More options for Issue title">
                 <svg aria-hidden="true"><use href="#icon-more-horizontal"/></svg>
               </button>
@@ -1626,10 +1641,10 @@ The `border-collapse: separate` + `border-spacing: 0 6px` creates row gaps. Bord
     </table>
   </div>
 
-  <!-- Footer: count + pagination -->
-  <div class="card-queue-foot">
-    <span class="table-count">Showing 1–4 of 12 requests</span>
-    <nav class="pagination" aria-label="Queue pagination">...</nav>
+  {/* Footer: count + pagination */}
+  <div className="card-queue-foot">
+    <span className="table-count">Showing 1–4 of 12 requests</span>
+    <nav className="pagination" aria-label="Queue pagination">...</nav>
   </div>
 
 </div>
@@ -1713,73 +1728,73 @@ The `border-collapse: separate` + `border-spacing: 0 6px` creates row gaps. Bord
 The Workspace Switcher opens from the Workspaces nav item as a rich dropdown picker. Each workspace is presented as a two-line item: a colored icon square on the left, bold workspace name on top, brief description below. This is a workspace launcher, not a compact list.
 
 #### Key Behaviours
-- Items unavailable to the current role are **hidden** (`*ngIf`) — never disabled, never shown as locked
+- Items unavailable to the current role are **not rendered** (conditional render) — never disabled, never shown as locked
 - The active workspace shows an accent left border + tinted background + accent-colored name
 - Dropdown width is fixed at 320px minimum to accommodate descriptions
 - Dropdown closes on: item selection, Escape key, click outside, focus leaving the component
 - Chevron rotates 180° when open (`[aria-expanded="true"]` CSS selector)
 
 #### HTML Pattern
-```html
-<div class="workspace-switcher">
-  <button class="app-topnav__item workspace-switcher__trigger"
+```jsx
+<div className="workspace-switcher">
+  <button className="app-topnav__item workspace-switcher__trigger"
           aria-haspopup="true"
           aria-expanded="false"
           aria-controls="workspace-dropdown">
     Workspaces
-    <svg class="workspace-switcher__chevron ds-icon" aria-hidden="true">
+    <svg className="workspace-switcher__chevron ds-icon" aria-hidden="true">
       <use href="#icon-chevron-down"/>
     </svg>
   </button>
 
-  <div class="workspace-switcher__dropdown"
+  <div className="workspace-switcher__dropdown"
        id="workspace-dropdown"
        role="menu"
        aria-label="Workspaces">
 
-    <!-- Optional label when workspaces are grouped -->
-    <span class="workspace-switcher__section-label">Your workspaces</span>
+    {/* Optional label when workspaces are grouped */}
+    <span className="workspace-switcher__section-label">Your workspaces</span>
 
-    <!-- Active workspace -->
-    <button class="workspace-switcher__item workspace-switcher__item--active"
+    {/* Active workspace */}
+    <button className="workspace-switcher__item workspace-switcher__item--active"
             role="menuitem" aria-current="true">
-      <div class="workspace-switcher__icon ws-icon--green" aria-hidden="true">
-        <svg class="ds-icon"><use href="#icon-layers"/></svg>
+      <div className="workspace-switcher__icon ws-icon--green" aria-hidden="true">
+        <svg className="ds-icon"><use href="#icon-layers"/></svg>
       </div>
-      <div class="workspace-switcher__item-text">
-        <span class="workspace-switcher__item-name">Collection Review — Q3</span>
-        <span class="workspace-switcher__item-desc">Review and classify incoming files</span>
-      </div>
-    </button>
-
-    <!-- Available workspaces (role-scoped via *ngIf) -->
-    <button class="workspace-switcher__item" role="menuitem">
-      <div class="workspace-switcher__icon ws-icon--purple" aria-hidden="true">
-        <svg class="ds-icon"><use href="#icon-edit-3"/></svg>
-      </div>
-      <div class="workspace-switcher__item-text">
-        <span class="workspace-switcher__item-name">Translation Queue</span>
-        <span class="workspace-switcher__item-desc">Assign and track translation work</span>
+      <div className="workspace-switcher__item-text">
+        <span className="workspace-switcher__item-name">Collection Review — Q3</span>
+        <span className="workspace-switcher__item-desc">Review and classify incoming files</span>
       </div>
     </button>
 
-    <button class="workspace-switcher__item" role="menuitem">
-      <div class="workspace-switcher__icon ws-icon--teal" aria-hidden="true">
-        <svg class="ds-icon"><use href="#icon-check-circle"/></svg>
+    {/* Available workspaces (role-scoped — excluded roles are not rendered) */}
+    <button className="workspace-switcher__item" role="menuitem">
+      <div className="workspace-switcher__icon ws-icon--purple" aria-hidden="true">
+        <svg className="ds-icon"><use href="#icon-edit-3"/></svg>
       </div>
-      <div class="workspace-switcher__item-text">
-        <span class="workspace-switcher__item-name">Senior Review Pool</span>
-        <span class="workspace-switcher__item-desc">Confirm relevance decisions and set priorities</span>
+      <div className="workspace-switcher__item-text">
+        <span className="workspace-switcher__item-name">Translation Queue</span>
+        <span className="workspace-switcher__item-desc">Assign and track translation work</span>
       </div>
     </button>
 
-    <div class="workspace-switcher__divider" role="separator"></div>
+    <button className="workspace-switcher__item" role="menuitem">
+      <div className="workspace-switcher__icon ws-icon--teal" aria-hidden="true">
+        <svg className="ds-icon"><use href="#icon-check-circle"/></svg>
+      </div>
+      <div className="workspace-switcher__item-text">
+        <span className="workspace-switcher__item-name">Senior Review Pool</span>
+        <span className="workspace-switcher__item-desc">Confirm relevance decisions and set priorities</span>
+      </div>
+    </button>
 
-    <!-- Footer utility action — no icon, no description -->
-    <button class="workspace-switcher__item" role="menuitem"
-            style="gap:10px;padding:10px 20px">
-      <svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-settings"/></svg>
-      <span style="font-size:13px;color:var(--text-secondary)">Manage workspaces</span>
+    <div className="workspace-switcher__divider" role="separator"></div>
+
+    {/* Footer utility action — no icon, no description */}
+    <button className="workspace-switcher__item" role="menuitem"
+            style={{ gap: '10px', padding: '10px 20px' }}>
+      <svg className="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-settings"/></svg>
+      <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Manage workspaces</span>
     </button>
 
   </div>
@@ -1802,7 +1817,7 @@ Applied as modifier class on `.workspace-switcher__icon`. Each workspace has a d
 **Claude Rules for Workspace Switcher:**
 - Every item must have both a name and a description — never a single-line workspace item
 - Icon color is assigned per workspace — do not choose it arbitrarily, use the workspace's defined theme
-- Never render workspace items as disabled — exclude via `*ngIf` for role-restricted items
+- Never render workspace items as disabled — omit role-restricted items from the render instead
 - The footer utility action (Manage workspaces) has no icon square and no description — it is a plain text action
 - `aria-haspopup="true"` and `aria-expanded` are required on the trigger button
 - `role="menu"` on the dropdown, `role="menuitem"` on each item, `role="separator"` on dividers
@@ -1816,39 +1831,39 @@ General-purpose action menu triggered by a button. Right-aligned by default. Use
 **Not the Workspace Switcher.** That is a specialized picker with a defined structure. The Dropdown is a general action list.
 
 #### HTML Pattern
-```html
-<div class="dropdown">
-  <!-- Trigger — usually a ghost icon button -->
-  <button class="btn btn--ghost btn--icon dropdown__trigger"
+```jsx
+<div className="dropdown">
+  {/* Trigger — usually a ghost icon button */}
+  <button className="btn btn--ghost btn--icon dropdown__trigger"
           aria-haspopup="true"
           aria-expanded="false"
           aria-controls="menu-id"
           aria-label="More options for [item name]">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-more-horizontal"/></svg>
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-more-horizontal"/></svg>
   </button>
 
-  <div class="dropdown__menu" id="menu-id" role="menu">
+  <div className="dropdown__menu" id="menu-id" role="menu">
 
-    <!-- Optional group label -->
-    <span class="dropdown__label">Actions</span>
+    {/* Optional group label */}
+    <span className="dropdown__label">Actions</span>
 
-    <button class="dropdown__item" role="menuitem">
+    <button className="dropdown__item" role="menuitem">
       <svg aria-hidden="true"><use href="#icon-edit-3"/></svg>
       Edit
     </button>
-    <button class="dropdown__item" role="menuitem">
+    <button className="dropdown__item" role="menuitem">
       <svg aria-hidden="true"><use href="#icon-download"/></svg>
       Export
     </button>
-    <button class="dropdown__item" role="menuitem">
+    <button className="dropdown__item" role="menuitem">
       <svg aria-hidden="true"><use href="#icon-user"/></svg>
       Assign
     </button>
 
-    <div class="dropdown__divider" role="separator"></div>
+    <div className="dropdown__divider" role="separator"></div>
 
-    <!-- Danger item — always last, always after a divider -->
-    <button class="dropdown__item dropdown__item--danger" role="menuitem">
+    {/* Danger item — always last, always after a divider */}
+    <button className="dropdown__item dropdown__item--danger" role="menuitem">
       <svg aria-hidden="true"><use href="#icon-trash-2"/></svg>
       Delete
     </button>
@@ -1856,8 +1871,8 @@ General-purpose action menu triggered by a button. Right-aligned by default. Use
   </div>
 </div>
 
-<!-- Left-aligned variant (when trigger is on the right side of the screen) -->
-<div class="dropdown__menu dropdown__menu--left is-open">...</div>
+{/* Left-aligned variant (when trigger is on the right side of the screen) */}
+<div className="dropdown__menu dropdown__menu--left is-open">...</div>
 ```
 
 **Claude Rules for Dropdown:**
@@ -1881,38 +1896,38 @@ Binary on/off control. Use instead of a checkbox when the action takes effect **
 
 #### HTML Pattern
 
-```html
-<!-- Default — label right -->
-<label class="toggle">
-  <input class="toggle__input" type="checkbox" role="switch" aria-checked="false">
-  <span class="toggle__track"><span class="toggle__thumb"></span></span>
-  <div class="toggle__content">
-    <span class="toggle__label">Email notifications</span>
-    <span class="toggle__hint">Receive updates about your assignments</span>
+```jsx
+{/* Default — label right */}
+<label className="toggle">
+  <input className="toggle__input" type="checkbox" role="switch" aria-checked="false" />
+  <span className="toggle__track"><span className="toggle__thumb"></span></span>
+  <div className="toggle__content">
+    <span className="toggle__label">Email notifications</span>
+    <span className="toggle__hint">Receive updates about your assignments</span>
   </div>
 </label>
 
-<!-- Row variant — full width, label left, toggle right -->
-<label class="toggle toggle--row">
-  <input class="toggle__input" type="checkbox" role="switch" aria-checked="true">
-  <span class="toggle__track"><span class="toggle__thumb"></span></span>
-  <div class="toggle__content">
-    <span class="toggle__label">Auto-assign new files</span>
+{/* Row variant — full width, label left, toggle right */}
+<label className="toggle toggle--row">
+  <input className="toggle__input" type="checkbox" role="switch" aria-checked="true" />
+  <span className="toggle__track"><span className="toggle__thumb"></span></span>
+  <div className="toggle__content">
+    <span className="toggle__label">Auto-assign new files</span>
   </div>
 </label>
 
-<!-- Small -->
-<label class="toggle toggle--sm">
-  <input class="toggle__input" type="checkbox" role="switch">
-  <span class="toggle__track"><span class="toggle__thumb"></span></span>
-  <span class="toggle__label">Compact mode</span>
+{/* Small */}
+<label className="toggle toggle--sm">
+  <input className="toggle__input" type="checkbox" role="switch" />
+  <span className="toggle__track"><span className="toggle__thumb"></span></span>
+  <span className="toggle__label">Compact mode</span>
 </label>
 
-<!-- Disabled -->
-<label class="toggle">
-  <input class="toggle__input" type="checkbox" role="switch" disabled>
-  <span class="toggle__track"><span class="toggle__thumb"></span></span>
-  <span class="toggle__label">Disabled feature</span>
+{/* Disabled */}
+<label className="toggle">
+  <input className="toggle__input" type="checkbox" role="switch" disabled />
+  <span className="toggle__track"><span className="toggle__thumb"></span></span>
+  <span className="toggle__label">Disabled feature</span>
 </label>
 ```
 
@@ -1934,78 +1949,78 @@ Compositional patterns built from Section 4 components. Includes full-page layou
 
 The root layout for all screens in this product. A sticky top navigation bar sits above a single scrollable content area. **There is no sidebar in this product.**
 
-```html
-<div class="app-shell">
+```jsx
+<div className="app-shell">
 
-  <!-- Sticky top navigation -->
-  <header class="app-topnav" role="banner">
+  {/* Sticky top navigation */}
+  <header className="app-topnav" role="banner">
 
-    <!-- Brand -->
-    <a href="/" class="app-topnav__brand" aria-label="Go to home">
-      <img class="app-topnav__logo" src="logo.svg" alt="">
-      <span class="app-topnav__name">ProductName</span>
+    {/* Brand */}
+    <a href="/" className="app-topnav__brand" aria-label="Go to home">
+      <img className="app-topnav__logo" src="logo.svg" alt="" />
+      <span className="app-topnav__name">ProductName</span>
     </a>
 
-    <!-- Primary navigation — all four items visible to all roles -->
-    <nav class="app-topnav__nav" aria-label="Primary navigation">
+    {/* Primary navigation — all four items visible to all roles */}
+    <nav className="app-topnav__nav" aria-label="Primary navigation">
 
-      <a href="/dashboard" class="app-topnav__item app-topnav__item--active"
+      <a href="/dashboard" className="app-topnav__item app-topnav__item--active"
          aria-current="page">Dashboard</a>
 
-      <a href="/tasks" class="app-topnav__item">Tasks</a>
+      <a href="/tasks" className="app-topnav__item">Tasks</a>
 
-      <!-- Workspace switcher — role-scoped dropdown -->
-      <div class="workspace-switcher">
-        <button class="app-topnav__item workspace-switcher__trigger"
+      {/* Workspace switcher — role-scoped dropdown */}
+      <div className="workspace-switcher">
+        <button className="app-topnav__item workspace-switcher__trigger"
                 aria-haspopup="true"
                 aria-expanded="false"
                 aria-controls="workspace-dropdown">
           Workspaces
-          <svg class="workspace-switcher__chevron ds-icon" aria-hidden="true">
+          <svg className="workspace-switcher__chevron ds-icon" aria-hidden="true">
             <use href="#icon-chevron-down"/>
           </svg>
         </button>
-        <div class="workspace-switcher__dropdown"
+        <div className="workspace-switcher__dropdown"
              id="workspace-dropdown"
              role="menu"
              aria-label="Workspaces">
-          <span class="workspace-switcher__section-label">Your workspaces</span>
-          <!-- Role-scoped items — hidden via *ngIf for excluded roles, never disabled -->
-          <button class="workspace-switcher__item workspace-switcher__item--active"
+          <span className="workspace-switcher__section-label">Your workspaces</span>
+          {/* Role-scoped items — not rendered for excluded roles, never disabled */}
+          <button className="workspace-switcher__item workspace-switcher__item--active"
                   role="menuitem" aria-current="true">
-            <svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-layers"/></svg>
+            <svg className="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-layers"/></svg>
             Active Workspace
           </button>
-          <button class="workspace-switcher__item" role="menuitem">
-            <svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-layers"/></svg>
+          <button className="workspace-switcher__item" role="menuitem">
+            <svg className="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-layers"/></svg>
             Another Workspace
           </button>
-          <div class="workspace-switcher__divider"></div>
-          <button class="workspace-switcher__item" role="menuitem">
-            <svg class="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-settings"/></svg>
+          <div className="workspace-switcher__divider"></div>
+          <button className="workspace-switcher__item" role="menuitem">
+            <svg className="ds-icon ds-icon--sm" aria-hidden="true"><use href="#icon-settings"/></svg>
             Manage workspaces
           </button>
         </div>
       </div>
 
-      <a href="/explore" class="app-topnav__item">Explore</a>
+      <a href="/explore" className="app-topnav__item">Explore</a>
 
     </nav>
 
-    <!-- Right-side utility actions -->
-    <div class="app-topnav__right">
-      <button class="btn btn--ghost btn--icon" aria-label="Notifications">
-        <svg class="ds-icon" aria-hidden="true"><use href="#icon-bell"/></svg>
+    {/* Right-side utility actions */}
+    <div className="app-topnav__right">
+      <button className="btn btn--ghost btn--icon" aria-label="Notifications">
+        <svg className="ds-icon" aria-hidden="true"><use href="#icon-bell"/></svg>
       </button>
-      <div class="avatar" aria-label="My account">JD</div>
+      <div className="avatar" aria-label="My account">JD</div>
     </div>
 
   </header>
 
-  <!-- Scrollable main content — changes when workspace is switched -->
-  <main class="app-content" id="main-content" tabindex="-1">
-    <div class="page-container">
-      <!-- Page content goes here -->
+  {/* Scrollable main content — changes when workspace is switched */}
+  <main className="app-content" id="main-content" tabIndex="-1">
+    <div className="page-container">
+      {/* Page content goes here */}
     </div>
   </main>
 
@@ -2029,21 +2044,21 @@ The root layout for all screens in this product. A sticky top navigation bar sit
 - Always start every screen with `.app-shell` → `.app-topnav` → `.app-content`
 - Never generate a sidebar. No `.app-sidebar`, no `.sidebar-nav`. These do not exist.
 - The active nav item uses `aria-current="page"` and `.app-topnav__item--active`
-- Workspace dropdown items hidden for excluded roles use `*ngIf` — never `disabled`
-- `main#main-content` receives focus on route change (`tabindex="-1"`, focus via router)
-- Skip navigation link must precede the top nav: `<a href="#main-content" class="skip-nav">Skip to content</a>`
+- Workspace dropdown items for excluded roles are conditionally rendered — never `disabled`
+- `main#main-content` receives focus on route change (`tabIndex={-1}`, focus via router)
+- Skip navigation link must precede the top nav: `<a href="#main-content" className="skip-nav">Skip to content</a>`
 
 ---
 
 ### 5.3 Split Panel Layout
 
-```html
-<div class="split-layout">
-  <div class="split-layout__list">
-    <!-- List panel: filters + table/list -->
+```jsx
+<div className="split-layout">
+  <div className="split-layout__list">
+    {/* List panel: filters + table/list */}
   </div>
-  <div class="split-layout__detail">
-    <!-- Detail panel: selected item -->
+  <div className="split-layout__detail">
+    {/* Detail panel: selected item */}
   </div>
 </div>
 ```
@@ -2058,20 +2073,20 @@ The root layout for all screens in this product. A sticky top navigation bar sit
 
 ### 5.4 Settings Layout
 
-```html
-<div class="settings-layout">
-  <nav class="settings-nav">
-    <a class="settings-nav__item settings-nav__item--active" href="#">General</a>
-    <a class="settings-nav__item" href="#">Security</a>
-    <a class="settings-nav__item" href="#">Notifications</a>
-    <a class="settings-nav__item" href="#">Billing</a>
+```jsx
+<div className="settings-layout">
+  <nav className="settings-nav">
+    <a className="settings-nav__item settings-nav__item--active" href="#">General</a>
+    <a className="settings-nav__item" href="#">Security</a>
+    <a className="settings-nav__item" href="#">Notifications</a>
+    <a className="settings-nav__item" href="#">Billing</a>
   </nav>
-  <div class="settings-content">
-    <div class="settings-section">
-      <h2 class="settings-section__title">General settings</h2>
-      <p class="settings-section__desc">...</p>
-      <div class="settings-section__body">
-        <!-- Form fields -->
+  <div className="settings-content">
+    <div className="settings-section">
+      <h2 className="settings-section__title">General settings</h2>
+      <p className="settings-section__desc">...</p>
+      <div className="settings-section__body">
+        {/* Form fields */}
       </div>
     </div>
   </div>
@@ -2087,30 +2102,30 @@ A category-based board selector used on the Tasks page. Each item represents a w
 
 **Distinct from Segmented Control.** A Segmented Control changes HOW content is viewed (Board/List/Calendar). A Board Switcher changes WHICH content is shown (which board/category). They are different components with different semantic roles — do not substitute one for the other.
 
-```html
-<div class="board-switcher" role="radiogroup" aria-label="Task category">
+```jsx
+<div className="board-switcher" role="radiogroup" aria-label="Task category">
 
-  <!-- "All" always first, shows total count across all categories -->
-  <button class="board-switcher__item board-switcher__item--active"
+  {/* "All" always first, shows total count across all categories */}
+  <button className="board-switcher__item board-switcher__item--active"
           role="radio" aria-checked="true">
     All
-    <span class="board-switcher__count">8</span>
+    <span className="board-switcher__count">8</span>
   </button>
 
-  <!-- Category items — role-scoped, dynamic, driven by user's workspaces -->
-  <button class="board-switcher__item" role="radio" aria-checked="false">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-[category-icon]"/></svg>
+  {/* Category items — role-scoped, dynamic, driven by user's workspaces */}
+  <button className="board-switcher__item" role="radio" aria-checked="false">
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-[category-icon]"/></svg>
     Press clearance
-    <span class="board-switcher__count">2</span>
+    <span className="board-switcher__count">2</span>
   </button>
 
-  <button class="board-switcher__item" role="radio" aria-checked="false">
-    <svg class="ds-icon" aria-hidden="true"><use href="#icon-[category-icon]"/></svg>
+  <button className="board-switcher__item" role="radio" aria-checked="false">
+    <svg className="ds-icon" aria-hidden="true"><use href="#icon-[category-icon]"/></svg>
     Relevance coding
-    <span class="board-switcher__count">2</span>
+    <span className="board-switcher__count">2</span>
   </button>
 
-  <!-- Additional categories rendered dynamically — no maximum -->
+  {/* Additional categories rendered dynamically — no maximum */}
 </div>
 ```
 
@@ -2119,7 +2134,7 @@ A category-based board selector used on the Tasks page. Each item represents a w
 - "All" is always the first item, always shows the total count across all categories
 - Category items and their icons are data-driven — never hardcode specific categories
 - When a category is selected, the Kanban board re-renders with that category's column configuration
-- Items that contain no tasks for the current user may be hidden (role-scoped via `*ngIf`)
+- Items that contain no tasks for the current user may be hidden (role-scoped — not rendered)
 
 ---
 
@@ -2132,58 +2147,67 @@ A dynamic column-based task board. Column names, count, and order are **always**
 
 #### HTML Pattern
 
-```html
-<!-- Column configuration comes from the selected board category -->
-<!-- cols = [{ id, name, count, cards: [] }, ...] — provided by data layer -->
+```jsx
+{/* Column configuration comes from the selected board category */}
+{/* columns = [{ id, name, count, cards: [] }, ...] — provided by the data layer */}
 
-<div class="kanban-board" aria-label="[Category name] board">
+<div className="kanban-board" aria-label={`${categoryName} board`}>
 
-  <div class="kanban-col" *ngFor="let col of columns">
-    <div class="kanban-col__header">
-      <span class="kanban-col__name">{{ col.name }}</span>
-      <span class="kanban-col__count" aria-label="{{ col.count }} tasks">
-        {{ col.count }}
-      </span>
-      <button class="kanban-col__add" aria-label="Add task to {{ col.name }}">+</button>
-    </div>
-
-    <div class="kanban-col__cards" role="list" aria-label="{{ col.name }} tasks">
-
-      <!-- Card — structure is consistent, content is dynamic -->
-      <div class="kanban-card" role="listitem" *ngFor="let card of col.cards"
-           tabindex="0"
-           (click)="openCard(card)"
-           (keydown.enter)="openCard(card)">
-
-        <!-- Optional workspace/collection context label -->
-        <div class="kanban-card__workspace">{{ card.workspace }}</div>
-
-        <div class="kanban-card__title">{{ card.title }}</div>
-
-        <div class="kanban-card__tags">
-          <span class="kanban-card__tag" *ngFor="let tag of card.tags">{{ tag }}</span>
-        </div>
-
-        <div class="kanban-card__footer">
-          <div class="kanban-card__assignees">
-            <div class="avatar avatar--sm" *ngFor="let a of card.assignees"
-                 [attr.aria-label]="a.name">{{ a.initials }}</div>
-          </div>
-          <div class="kanban-card__due"
-               [class.kanban-card__due--urgent]="card.isUrgent">
-            <svg class="ds-icon" aria-hidden="true"><use href="#icon-clock"/></svg>
-            {{ card.dueLabel }}
-          </div>
-        </div>
+  {columns.map((col) => (
+    <div className="kanban-col" key={col.id}>
+      <div className="kanban-col__header">
+        <span className="kanban-col__name">{col.name}</span>
+        <span className="kanban-col__count" aria-label={`${col.count} tasks`}>
+          {col.count}
+        </span>
+        <button className="kanban-col__add" aria-label={`Add task to ${col.name}`}>+</button>
       </div>
 
-      <!-- Empty column state -->
-      <div class="kanban-col__empty" *ngIf="col.cards.length === 0">
-        No tasks in {{ col.name }}
-      </div>
+      <div className="kanban-col__cards" role="list" aria-label={`${col.name} tasks`}>
 
+        {/* Card — structure is consistent, content is dynamic */}
+        {col.cards.map((card) => (
+          <div
+            className="kanban-card"
+            role="listitem"
+            key={card.id}
+            tabIndex={0}
+            onClick={() => openCard(card)}
+            onKeyDown={(e) => e.key === 'Enter' && openCard(card)}
+          >
+            {/* Optional workspace/collection context label */}
+            <div className="kanban-card__workspace">{card.workspace}</div>
+
+            <div className="kanban-card__title">{card.title}</div>
+
+            <div className="kanban-card__tags">
+              {card.tags.map((tag) => (
+                <span className="kanban-card__tag" key={tag}>{tag}</span>
+              ))}
+            </div>
+
+            <div className="kanban-card__footer">
+              <div className="kanban-card__assignees">
+                {card.assignees.map((a) => (
+                  <div className="avatar avatar--sm" key={a.name} aria-label={a.name}>{a.initials}</div>
+                ))}
+              </div>
+              <div className={`kanban-card__due ${card.isUrgent ? 'kanban-card__due--urgent' : ''}`}>
+                <svg className="ds-icon" aria-hidden="true"><use href="#icon-clock" /></svg>
+                {card.dueLabel}
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Empty column state */}
+        {col.cards.length === 0 && (
+          <div className="kanban-col__empty">No tasks in {col.name}</div>
+        )}
+
+      </div>
     </div>
-  </div>
+  ))}
 
 </div>
 ```
@@ -2230,7 +2254,7 @@ A dynamic column-based task board. Column names, count, and order are **always**
 
 ### 6.3 Navigation Rules
 
-**Role scoping:** Workspace items not available to the current role are removed from the DOM via `*ngIf`. They are never shown as disabled. A user should not see destinations they cannot access.
+**Role scoping:** Workspace items not available to the current role are not rendered (conditional rendering). They are never shown as disabled. A user should not see destinations they cannot access.
 
 **Active state:** The nav item matching the current route always has `aria-current="page"` (for `<a>` elements) or `aria-current="true"` (for workspace dropdown items). This drives both the visual active state and screen reader announcement.
 
@@ -2239,8 +2263,8 @@ A dynamic column-based task board. Column names, count, and order are **always**
 **Keyboard navigation:** Tab moves through nav items. Enter/Space activates. Workspace dropdown opens on Enter/Space, arrow keys navigate items, Escape closes and returns focus to the trigger.
 
 **Skip navigation:** Required on every screen above the `.app-topnav`:
-```html
-<a href="#main-content" class="skip-nav">Skip to main content</a>
+```jsx
+<a href="#main-content" className="skip-nav">Skip to main content</a>
 ```
 ```scss
 .skip-nav {
@@ -2281,17 +2305,17 @@ A dynamic column-based task board. Column names, count, and order are **always**
 | First use (onboarding) | Illustration (optional) + descriptive CTA |
 
 ### Error States
-```html
-<!-- Inline field error -->
-<span class="field__error" role="alert">...</span>
+```jsx
+{/* Inline field error */}
+<span className="field__error" role="alert">...</span>
 
-<!-- Page-level error -->
-<div class="callout callout--danger">
-  <svg class="callout__icon" aria-hidden="true">...</svg>
-  <div class="callout__body">
-    <strong class="callout__title">Failed to load data</strong>
+{/* Page-level error */}
+<div className="callout callout--danger">
+  <svg className="callout__icon" aria-hidden="true">...</svg>
+  <div className="callout__body">
+    <strong className="callout__title">Failed to load data</strong>
     <p>There was a problem fetching your data.</p>
-    <button class="btn btn--secondary btn--sm mt-3">Try again</button>
+    <button className="btn btn--secondary btn--sm mt-3">Try again</button>
   </div>
 </div>
 ```
@@ -2375,10 +2399,11 @@ See **Section 12: Zoom and Reflow** for full specification.
 - Settings pages always use the Settings Layout (Section 5.4)
 
 ### Typography Rules
-- Page titles: `.text-3xl .font-bold`
-- Section headings: `.text-xl .font-semibold`
-- Table column headers: `.text-label .uppercase .tracking-wide .text-tertiary`
-- Body text: `.text-base` or `.text-md`
+- Page titles: `.t-display` (28px / 700)
+- Section headings: `.t-title` (20px / 600)
+- Table column headers: `.t-label .uppercase .tracking-wide .text-tertiary`
+- Body text: `.t-body` (14px)
+- Size utilities (`.text-3xl`, `.text-xl`, …) are legacy implementation internals — never use them in new page markup
 - Never use `.text-hero` outside of marketing/hero sections
 
 ### SCSS Output Rules
@@ -2564,7 +2589,7 @@ Are the options mutually exclusive selections within the same view?
 │   Select / Dropdown Filter
 │
 └── No, navigating between pages or sections →
-    Sidebar Navigation
+    Top Nav — App Shell (§5.1). This product has NO sidebar.
     (never use tabs or segmented control for page-level navigation)
 
 NEVER: Tabs and Segmented Control on the same view for the same level of navigation.
@@ -2627,7 +2652,7 @@ The deciding question: "Will the user want to go back immediately after?"
 
 ## 11. Data Visualization Standards
 
-**Chart library:** ngx-echarts (Apache ECharts for React)
+**Chart library:** echarts-for-react (Apache ECharts React wrapper — `<ReactECharts option={…} />`)
 
 ### 11.1 The Core Rule
 
@@ -2765,54 +2790,62 @@ const lineOption = {
 
 Every chart wrapper must handle four states. Use the `.chart-container` component.
 
-```html
-<div class="chart-card">
-  <div class="chart-card__header">
+```jsx
+<div className="chart-card">
+  <div className="chart-card__header">
     <div>
-      <div class="chart-card__title">Decision Breakdown</div>
-      <div class="chart-card__subtitle">Last 30 days · 143 files</div>
+      <div className="chart-card__title">Decision Breakdown</div>
+      <div className="chart-card__subtitle">Last 30 days · 143 files</div>
     </div>
-    <div class="chart-card__actions">
-      <button class="btn btn--ghost btn--sm">Export</button>
+    <div className="chart-card__actions">
+      <button className="btn btn--ghost btn--sm">Export</button>
     </div>
   </div>
 
-  <div class="chart-container" style="height:240px">
+  <div className="chart-container" style={{ height: 240 }}>
 
-    <!-- Loading -->
-    <div class="chart-state chart-state--loading" *ngIf="loading">
-      <div class="skeleton__line" style="height:200px;border-radius:8px"></div>
-    </div>
+    {/* Loading */}
+    {loading && (
+      <div className="chart-state chart-state--loading">
+        <div className="skeleton__line" style={{ height: 200, borderRadius: 8 }}></div>
+      </div>
+    )}
 
-    <!-- Error -->
-    <div class="chart-state chart-state--error" *ngIf="error && !loading">
-      <svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#icon-alert-circle"/></svg>
-      <p>Failed to load chart data.</p>
-      <button class="btn btn--secondary btn--sm" (click)="retry()">Try again</button>
-    </div>
+    {/* Error */}
+    {error && !loading && (
+      <div className="chart-state chart-state--error">
+        <svg className="ds-icon ds-icon--lg" aria-hidden="true"><use href="#icon-alert-circle" /></svg>
+        <p>Failed to load chart data.</p>
+        <button className="btn btn--secondary btn--sm" onClick={retry}>Try again</button>
+      </div>
+    )}
 
-    <!-- Empty -->
-    <div class="chart-state chart-state--empty" *ngIf="!loading && !error && !data?.length">
-      <svg class="ds-icon ds-icon--lg" aria-hidden="true"><use href="#icon-bar-chart-2"/></svg>
-      <p>No data available for this period.</p>
-    </div>
+    {/* Empty */}
+    {!loading && !error && !data?.length && (
+      <div className="chart-state chart-state--empty">
+        <svg className="ds-icon ds-icon--lg" aria-hidden="true"><use href="#icon-bar-chart-2" /></svg>
+        <p>No data available for this period.</p>
+      </div>
+    )}
 
-    <!-- Chart (ngx-echarts) -->
-    <div echarts
-         [option]="chartOption"
-         role="img"
-         [attr.aria-label]="chartTitle + ': ' + chartSummary"
-         *ngIf="!loading && !error && data?.length">
-    </div>
+    {/* Chart — echarts-for-react */}
+    {!loading && !error && data?.length > 0 && (
+      <ReactECharts
+        option={chartOption}
+        role="img"
+        aria-label={`${chartTitle}: ${chartSummary}`}
+        style={{ height: '100%', width: '100%' }}
+      />
+    )}
 
   </div>
 
-  <!-- Accessibility: data table toggle — always provide -->
-  <button class="chart-table-toggle" (click)="toggleTable()">
+  {/* Accessibility: data-table toggle — always provide */}
+  <button className="chart-table-toggle" onClick={toggleTable}>
     View as table
   </button>
-  <div class="chart-table-fallback" [class.is-visible]="tableVisible">
-    <table class="data-table" aria-label="Chart data — {{ chartTitle }}">
+  <div className={`chart-table-fallback ${tableVisible ? 'is-visible' : ''}`}>
+    <table className="data-table" aria-label={`Chart data — ${chartTitle}`}>
       ...
     </table>
   </div>
@@ -3167,11 +3200,11 @@ These are frequently confused. The distinction determines keyboard behaviour, AR
 
 ### Utility classes (markup use)
 
-```html
-<div class="z-sticky">...</div>
-<div class="z-dropdown">...</div>
-<div class="z-modal">...</div>
-<div class="z-tooltip">...</div>
+```jsx
+<div className="z-sticky">...</div>
+<div className="z-dropdown">...</div>
+<div className="z-modal">...</div>
+<div className="z-tooltip">...</div>
 ```
 
 ---
@@ -3203,24 +3236,24 @@ Mobile is **accessible, not optimised**. Users can review records, approve tasks
 
 ### HTML usage
 
-```html
-<!-- Grid container — use instead of page-container for grid-based layouts -->
-<div class="grid-container">
-  <div class="grid-row">
+```jsx
+{/* Grid container — use instead of page-container for grid-based layouts */}
+<div className="grid-container">
+  <div className="grid-row">
 
-    <!-- Span columns using .col-{n} (1–12) -->
-    <div class="col-8">Main content</div>
-    <div class="col-4">Sidebar</div>
+    {/* Span columns using .col-{n} (1–12) */}
+    <div className="col-8">Main content</div>
+    <div className="col-4">Sidebar</div>
 
   </div>
 </div>
 
-<!-- Preset layouts -->
-<div class="grid-container">
-  <div class="grid-halves">...</div>    <!-- 1:1 two-column -->
-  <div class="grid-thirds">...</div>   <!-- 1:1:1 three-column (2-up at tablet) -->
-  <div class="grid-sidebar">...</div>  <!-- 280px fixed + flex content -->
-  <div class="grid-sidebar-r">...</div><!-- flex content + 320px fixed -->
+{/* Preset layouts */}
+<div className="grid-container">
+  <div className="grid-halves">...</div>    {/* 1:1 two-column */}
+  <div className="grid-thirds">...</div>   {/* 1:1:1 three-column (2-up at tablet) */}
+  <div className="grid-sidebar">...</div>  {/* 280px fixed + flex content */}
+  <div className="grid-sidebar-r">...</div>{/* flex content + 320px fixed */}
 </div>
 ```
 
@@ -3270,18 +3303,18 @@ Non-interactive contextual label triggered on hover or keyboard focus. The most 
 
 ### HTML Pattern
 
-```html
-<!-- The trigger element -->
+```jsx
+{/* The trigger element */}
 <button
-  class="btn btn--ghost btn--icon"
+  className="btn btn--ghost btn--icon"
   aria-label="Download file"
   aria-describedby="tooltip-download"
   data-tooltip="Download">
-  <svg class="ds-icon" aria-hidden="true"><use href="#icon-download"/></svg>
+  <svg className="ds-icon" aria-hidden="true"><use href="#icon-download"/></svg>
 </button>
 
-<!-- The tooltip — rendered via JS, positioned absolutely -->
-<div class="tooltip"
+{/* The tooltip — rendered via JS, positioned absolutely */}
+<div className="tooltip"
      id="tooltip-download"
      role="tooltip"
      aria-hidden="true">

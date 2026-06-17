@@ -90,7 +90,7 @@ function App(){
       <AgentTweaks t={t} setTweak={setTweak}/>
       {toast && (
         <div className="pop" style={{position:'fixed',bottom:26,left:'50%',transform:'translateX(-50%)',zIndex:400,
-          background:'var(--ink)',color:'#fff',padding:'11px 18px',borderRadius:11,fontSize:13.5,fontWeight:550,
+          background:'var(--foreground)',color:'#fff',padding:'11px 18px',borderRadius:11,fontSize:13.5,fontWeight:550,
           display:'flex',alignItems:'center',gap:9,boxShadow:'var(--shadow-lg)'}}>
           <span style={{width:18,height:18,borderRadius:'50%',background:'var(--lime)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={12} sw={3} style={{color:'#fff'}}/></span>
           {toast}

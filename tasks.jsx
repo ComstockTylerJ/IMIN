@@ -154,19 +154,19 @@ function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', fram
 
   return (
     <div className="rise">
-      <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--line)', background: 'rgba(255,255,255,.4)' }}>
+      <div style={{ position: 'relative', overflow: 'hidden', borderBottom: '1px solid var(--border)', background: 'rgba(255,255,255,.4)' }}>
         <HeroPattern opacity={0.7} />
         <div className="page" style={{ position: 'relative', zIndex: 1, paddingTop: 30, paddingBottom: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
             <div>
-              <h1 style={{ fontSize: 25, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--ink)' }}>Tasks</h1>
+              <h1 style={{ fontSize: 25, fontWeight: 700, letterSpacing: '-.03em', margin: 0, color: 'var(--foreground)' }}>Tasks</h1>
               <p className="sec" style={{ fontSize: 14, margin: '5px 0 0' }}>{subtitle}</p>
             </div>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
                 {[['board', 'columns', 'Board'], ['fleet', 'list', 'List'], ['calendar', 'calendar', 'Calendar']].map(([id, ic, lb]) =>
                 <button key={id} onClick={() => setView(id)} style={{ display: 'flex', alignItems: 'center', gap: 6, border: 0,
-                  background: view === id ? '#fff' : 'transparent', color: view === id ? 'var(--ink)' : 'var(--ink-3)', fontSize: 13, fontWeight: 550,
+                  background: view === id ? '#fff' : 'transparent', color: view === id ? 'var(--foreground)' : 'var(--muted-foreground)', fontSize: 13, fontWeight: 550,
                   padding: '7px 13px', borderRadius: 7, cursor: 'pointer', boxShadow: view === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}>
                     <Icon name={ic} size={15} />{lb}</button>
                 )}
@@ -180,14 +180,14 @@ function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', fram
             <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
               {[['mine', 'Only Mine'], ['teams', 'My Teams']].map(([id, lb]) =>
               <button key={id} onClick={() => setScope(id)} style={{ border: 0, background: scope === id ? '#fff' : 'transparent',
-                color: scope === id ? 'var(--ink)' : 'var(--ink-3)', fontSize: 12.5, fontWeight: 550, padding: '6px 13px', borderRadius: 7,
+                color: scope === id ? 'var(--foreground)' : 'var(--muted-foreground)', fontSize: 12.5, fontWeight: 550, padding: '6px 13px', borderRadius: 7,
                 cursor: 'pointer', boxShadow: scope === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}>{lb}</button>
               )}
             </div>
             <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 9 }}>
               {[['all', 'All', 'list'], ['people', 'People', 'users'], ['agents', 'Agents', 'cpu']].map(([id, lb, ic]) =>
               <button key={id} onClick={() => setAsg(id)} style={{ display:'flex', alignItems:'center', gap:6, border: 0, background: asg === id ? '#fff' : 'transparent',
-                color: asg === id ? 'var(--ink)' : 'var(--ink-3)', fontSize: 12.5, fontWeight: 550, padding: '6px 12px', borderRadius: 7,
+                color: asg === id ? 'var(--foreground)' : 'var(--muted-foreground)', fontSize: 12.5, fontWeight: 550, padding: '6px 12px', borderRadius: 7,
                 cursor: 'pointer', boxShadow: asg === id ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}><Icon name={ic} size={13}/>{lb}</button>
               )}
             </div>
@@ -207,14 +207,14 @@ function TasksPage({ openCreate, openTask, openRun, flash, glyph='diamond', fram
                 <button key={id} onClick={() => setWf(id)}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 6, height: 26, padding: '0 11px', borderRadius: 999, fontSize: 12, fontWeight: 550,
                   cursor: 'pointer', transition: '.13s', whiteSpace: 'nowrap',
-                  border: '1px solid ' + (on ? w.color : 'var(--line-2)'),
+                  border: '1px solid ' + (on ? w.color : 'var(--border-strong)'),
                   background: on ? w.tint : '#fff',
-                  color: on ? w.color : 'var(--ink-2)' }}
-                onMouseEnter={(e) => {if (!on) e.currentTarget.style.background = 'var(--hover)';}}
+                  color: on ? w.color : 'var(--secondary-foreground)' }}
+                onMouseEnter={(e) => {if (!on) e.currentTarget.style.background = 'var(--secondary)';}}
                 onMouseLeave={(e) => {if (!on) e.currentTarget.style.background = '#fff';}}>
-                    <Icon name={w.icon} size={13} sw={2} style={{ color: on ? w.color : 'var(--ink-3)' }} />
+                    <Icon name={w.icon} size={13} sw={2} style={{ color: on ? w.color : 'var(--muted-foreground)' }} />
                     {w.label}
-                    <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: on ? w.color : 'var(--ink-3)' }}>{n}</span>
+                    <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 600, color: on ? w.color : 'var(--muted-foreground)' }}>{n}</span>
                   </button>);
 
             })}
@@ -260,19 +260,19 @@ function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor, agentR
           onDragOver={(e) => {e.preventDefault();setOverCol(col.id);}}
           onDragLeave={(e) => {if (!e.currentTarget.contains(e.relatedTarget)) setOverCol(null);}}
           onDrop={(e) => {e.preventDefault();if (dragId) moveTask(dragId, col.id);setDragId(null);setOverCol(null);}}
-          style={{ background: 'rgba(247,250,253,.7)', border: '1px solid var(--line)', borderRadius: 14, padding: 10, minHeight: 220 }}>
+          style={{ background: 'rgba(247,250,253,.7)', border: '1px solid var(--border)', borderRadius: 14, padding: 10, minHeight: 220 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 6px 12px' }}>
               <span style={{ width: 9, height: 9, borderRadius: 3, background: accent }}></span>
-              <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)' }}>{col.label}</span>
+              <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--foreground)' }}>{col.label}</span>
               {runs.length>0 && <span title={runs.length+' agent'+(runs.length===1?'':'s')} style={{display:'inline-flex'}}><FleetToken size={15}/></span>}
               <div style={{ flex: 1 }}></div>
-              <span className="badge" style={{ background: '#E2E8F0', color: 'var(--ink-3)' }}>{total}</span>
+              <span className="badge" style={{ background: '#E2E8F0', color: 'var(--muted-foreground)' }}>{total}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minHeight: 40 }}>
               {runs.map((r) => <AgentRunCard key={r.id} run={r} glyph={glyph} flat={flat} framing={framing} />)}
               {list.map((t) => <WFCard key={t.id} t={t} dragId={dragId} setDragId={setDragId} setOverCol={setOverCol} />)}
               {total === 0 &&
-              <div style={{ padding: '22px 10px', textAlign: 'center', border: '1.5px dashed var(--line-2)', borderRadius: 10, color: 'var(--ink-4)', fontSize: 12.5 }}>
+              <div style={{ padding: '22px 10px', textAlign: 'center', border: '1.5px dashed var(--border-strong)', borderRadius: 10, color: 'var(--ink-4)', fontSize: 12.5 }}>
                   Drop here
                 </div>
               }
@@ -287,19 +287,19 @@ function Kanban({ cols, colKey, tasks, moveTask, openCreate, accentColor, agentR
 function WFCard({ t, dragId, setDragId, setOverCol }) {
   const w = WF[t.wf];
   const who = P[t.who];
-  const dueColor = t.tone === 'today' || t.tone === 'tomorrow' ? '#DC2626' : 'var(--ink-3)';
+  const dueColor = t.tone === 'today' || t.tone === 'tomorrow' ? '#DC2626' : 'var(--muted-foreground)';
   // left edge encodes urgency (attention), not type — keeps the board calm
-  const edge = t.done ? 'var(--line)'
+  const edge = t.done ? 'var(--border)'
     : (t.pri === 'urgent' || t.tone === 'today') ? '#DC2626'
     : (t.pri === 'high' || t.tone === 'tomorrow') ? '#C58A1E'
-    : 'var(--line)';
+    : 'var(--border)';
   return (
     <div className={'kcard' + (dragId === t.id ? ' dragging' : '')} draggable
     onDragStart={() => setDragId(t.id)} onDragEnd={() => {setDragId(null);setOverCol(null);}}
     style={{ borderLeft: `3px solid ${edge}`, paddingLeft: 12, opacity: t.done ? 0.92 : 1 }}>
       {/* header: workflow + priority */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 9 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: 'var(--ink-3)', fontSize: 10, fontWeight: 700, letterSpacing: '.045em', textTransform: 'uppercase' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: 'var(--muted-foreground)', fontSize: 10, fontWeight: 700, letterSpacing: '.045em', textTransform: 'uppercase' }}>
           <Icon name={w.icon} size={13} sw={2} />{w.label}
         </span>
         {t.pri &&
@@ -308,10 +308,10 @@ function WFCard({ t, dragId, setDragId, setOverCol }) {
           </span>}
       </div>
       {/* title */}
-      <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)', lineHeight: 1.32, marginBottom: 5,
-        textDecoration: t.done ? 'line-through' : 'none', textDecorationColor: 'var(--ink-4)', color: t.done ? 'var(--ink-3)' : 'var(--ink)' }}>{t.title}</div>
+      <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--foreground)', lineHeight: 1.32, marginBottom: 5,
+        textDecoration: t.done ? 'line-through' : 'none', textDecorationColor: 'var(--ink-4)', color: t.done ? 'var(--muted-foreground)' : 'var(--foreground)' }}>{t.title}</div>
       {/* desc */}
-      <div style={{ fontSize: 12, color: 'var(--ink-3)', lineHeight: 1.45, marginBottom: 13 }}>{t.desc}</div>
+      <div style={{ fontSize: 12, color: 'var(--muted-foreground)', lineHeight: 1.45, marginBottom: 13 }}>{t.desc}</div>
       {/* agent affordance: live run strip, or "run with agent" */}
       {(() => {
         const run = (typeof runForTask !== 'undefined') && runForTask(t.id);
@@ -336,9 +336,9 @@ function WFCard({ t, dragId, setDragId, setOverCol }) {
           return (
             <button onClick={(e) => { e.stopPropagation(); window.__openKickoff && window.__openKickoff(agId, { label: t.title }); }}
               style={{ display: 'flex', alignItems: 'center', gap: 7, width: '100%', padding: '6px 9px', margin: '0 0 11px', borderRadius: 9,
-                border: '1px dashed var(--line-2)', background: 'transparent', cursor: 'pointer', color: 'var(--ink-3)', fontSize: 11, fontWeight: 600, transition: '.13s' }}
+                border: '1px dashed var(--border-strong)', background: 'transparent', cursor: 'pointer', color: 'var(--muted-foreground)', fontSize: 11, fontWeight: 600, transition: '.13s' }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = ag.color; e.currentTarget.style.color = ag.color; e.currentTarget.style.background = ag.tint + '66'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--line-2)'; e.currentTarget.style.color = 'var(--ink-3)'; e.currentTarget.style.background = 'transparent'; }}>
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-strong)'; e.currentTarget.style.color = 'var(--muted-foreground)'; e.currentTarget.style.background = 'transparent'; }}>
               <Icon name="sparkle" size={12} />Run with {ag.code}
             </button>
           );
@@ -349,7 +349,7 @@ function WFCard({ t, dragId, setDragId, setOverCol }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
           <span className="av" style={{ width: 22, height: 22, background: who.color, fontSize: 9 }}>{who.initials}</span>
-          <span style={{ fontSize: 11.5, color: 'var(--ink-2)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{who.name}</span>
+          <span style={{ fontSize: 11.5, color: 'var(--secondary-foreground)', fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{who.name}</span>
         </span>
         {t.done ?
         <span style={{ fontFamily: MONO, fontSize: 10.5, color: 'var(--ink-4)', fontWeight: 500, whiteSpace: 'nowrap' }}>{t.doneDate}</span> :
@@ -374,9 +374,9 @@ function CalendarView({ openTask, openCreate }) {
 
   return (
     <div className="card" style={{ overflow: 'hidden' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '15px 20px', borderBottom: '1px solid var(--line)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '15px 20px', borderBottom: '1px solid var(--border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-.02em' }}>June 2026</span>
+          <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-.02em' }}>June 2026</span>
           <div style={{ display: 'flex', gap: 2 }}>
             <button className="btn btn-ghost btn-icon btn-sm"><Icon name="chevron_left" size={16} /></button>
             <button className="btn btn-ghost btn-icon btn-sm"><Icon name="chevron_right" size={16} /></button>
@@ -386,7 +386,7 @@ function CalendarView({ openTask, openCreate }) {
         <div style={{ display: 'flex', gap: 3, background: '#EEF1F6', padding: 3, borderRadius: 8 }}>
           {['month', 'week'].map((m) =>
           <button key={m} onClick={() => setMode(m)} style={{ border: 0, textTransform: 'capitalize', background: mode === m ? '#fff' : 'transparent',
-            color: mode === m ? 'var(--ink)' : 'var(--ink-3)', fontSize: 12.5, fontWeight: 550, padding: '5px 13px', borderRadius: 6, cursor: 'pointer',
+            color: mode === m ? 'var(--foreground)' : 'var(--muted-foreground)', fontSize: 12.5, fontWeight: 550, padding: '5px 13px', borderRadius: 6, cursor: 'pointer',
             boxShadow: mode === m ? 'var(--shadow-sm)' : 'none' }}>{m}</button>
           )}
         </div>
@@ -394,21 +394,21 @@ function CalendarView({ openTask, openCreate }) {
 
       {mode === 'month' ?
       <div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', borderBottom: '1px solid var(--line)' }}>
-            {dows.map((d) => <div key={d} style={{ padding: '9px 12px', fontSize: 11, fontWeight: 600, letterSpacing: '.05em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>{d}</div>)}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', borderBottom: '1px solid var(--border)' }}>
+            {dows.map((d) => <div key={d} style={{ padding: '9px 12px', fontSize: 11, fontWeight: 600, letterSpacing: '.05em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>{d}</div>)}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)' }}>
             {cells.map((d, i) => {
             const evs = d ? CAL_EVENTS[d] || [] : [];
             const isToday = d === 5;
             return (
-              <div key={i} onClick={() => d && openCreate()} style={{ minHeight: 108, padding: 8, borderRight: i % 7 !== 6 ? '1px solid var(--line)' : '0',
-                borderBottom: i < cells.length - 7 ? '1px solid var(--line)' : '0', background: d ? isToday ? 'rgba(45,178,243,.04)' : '#fff' : 'var(--surface-2)',
+              <div key={i} onClick={() => d && openCreate()} style={{ minHeight: 108, padding: 8, borderRight: i % 7 !== 6 ? '1px solid var(--border)' : '0',
+                borderBottom: i < cells.length - 7 ? '1px solid var(--border)' : '0', background: d ? isToday ? 'rgba(45,178,243,.04)' : '#fff' : 'var(--background)',
                 cursor: d ? 'pointer' : 'default', transition: '.12s', position: 'relative' }}
-              onMouseEnter={(e) => {if (d) e.currentTarget.style.background = isToday ? 'rgba(45,178,243,.08)' : 'var(--surface-2)';}}
+              onMouseEnter={(e) => {if (d) e.currentTarget.style.background = isToday ? 'rgba(45,178,243,.08)' : 'var(--background)';}}
               onMouseLeave={(e) => {if (d) e.currentTarget.style.background = isToday ? 'rgba(45,178,243,.04)' : '#fff';}}>
                   {d && <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 5 }}>
-                    <span style={{ fontSize: 12, fontWeight: isToday ? 700 : 550, color: isToday ? '#fff' : 'var(--ink-2)',
+                    <span style={{ fontSize: 12, fontWeight: isToday ? 700 : 550, color: isToday ? '#fff' : 'var(--secondary-foreground)',
                     width: isToday ? 22 : 'auto', height: isToday ? 22 : 'auto', borderRadius: '50%', background: isToday ? 'var(--primary)' : 'transparent',
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{d}</span>
                   </div>}
@@ -437,21 +437,21 @@ function WeekView({ openTask, openCreate, tagColor, tagTint }) {
   const hours = ['9 AM', '11 AM', '1 PM', '3 PM', '5 PM'];
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '56px repeat(7,1fr)' }}>
-      <div style={{ borderRight: '1px solid var(--line)' }}>
-        <div style={{ height: 46, borderBottom: '1px solid var(--line)' }}></div>
-        {hours.map((h) => <div key={h} style={{ height: 70, fontSize: 10.5, color: 'var(--ink-3)', padding: '4px 8px', textAlign: 'right', borderBottom: '1px solid var(--line)' }}>{h}</div>)}
+      <div style={{ borderRight: '1px solid var(--border)' }}>
+        <div style={{ height: 46, borderBottom: '1px solid var(--border)' }}></div>
+        {hours.map((h) => <div key={h} style={{ height: 70, fontSize: 10.5, color: 'var(--muted-foreground)', padding: '4px 8px', textAlign: 'right', borderBottom: '1px solid var(--border)' }}>{h}</div>)}
       </div>
       {days.map(([dn, dd], ci) => {
         const evs = CAL_EVENTS[dd] || [];
         const isToday = dd === 5;
         return (
-          <div key={dd} style={{ borderRight: ci < 6 ? '1px solid var(--line)' : '0' }}>
-            <div style={{ height: 46, borderBottom: '1px solid var(--line)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: isToday ? 'rgba(45,178,243,.05)' : '#fff' }}>
-              <span style={{ fontSize: 10.5, fontWeight: 600, color: 'var(--ink-3)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{dn}</span>
-              <span style={{ fontSize: 14, fontWeight: isToday ? 700 : 600, color: isToday ? 'var(--blue)' : 'var(--ink)' }}>{dd}</span>
+          <div key={dd} style={{ borderRight: ci < 6 ? '1px solid var(--border)' : '0' }}>
+            <div style={{ height: 46, borderBottom: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: isToday ? 'rgba(45,178,243,.05)' : '#fff' }}>
+              <span style={{ fontSize: 10.5, fontWeight: 600, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{dn}</span>
+              <span style={{ fontSize: 14, fontWeight: isToday ? 700 : 600, color: isToday ? 'var(--blue)' : 'var(--foreground)' }}>{dd}</span>
             </div>
             <div style={{ position: 'relative', background: isToday ? 'rgba(45,178,243,.02)' : '#fff' }} onClick={() => openCreate()}>
-              {hours.map((h, hi) => <div key={hi} style={{ height: 70, borderBottom: '1px solid var(--line)' }}></div>)}
+              {hours.map((h, hi) => <div key={hi} style={{ height: 70, borderBottom: '1px solid var(--border)' }}></div>)}
               <div style={{ position: 'absolute', inset: 0, padding: '4px 4px', display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {evs.map((e, j) =>
                 <div key={j} onClick={(ev) => {ev.stopPropagation();openCreate();}}

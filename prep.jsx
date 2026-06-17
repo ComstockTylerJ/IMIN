@@ -55,14 +55,14 @@ function PrepWorkspace({setPage, flash}){
         <SectionHead title="Start something new" sub="Structured formats that route cleanly into Memos" icon="plus"/>
         <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
           {PREP_TEMPLATES.map(t=>(
-            <button key={t.id} onClick={()=>newDraft(t)} className="card card-hover" style={{padding:'16px 17px',textAlign:'left',cursor:'pointer',border:'1px solid var(--line)',display:'flex',flexDirection:'column',gap:12}}>
+            <button key={t.id} onClick={()=>newDraft(t)} className="card card-hover" style={{padding:'16px 17px',textAlign:'left',cursor:'pointer',border:'1px solid var(--border)',display:'flex',flexDirection:'column',gap:12}}>
               <span style={{width:40,height:40,borderRadius:11,background:t.tint,color:t.color,display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name={t.icon} size={20}/></span>
               <div>
-                <div style={{fontSize:14.5,fontWeight:600,color:'var(--ink)'}}>{t.name}</div>
+                <div style={{fontSize:14.5,fontWeight:600,color:'var(--foreground)'}}>{t.name}</div>
                 <div className="muted" style={{fontSize:12,marginTop:3,lineHeight:1.4}}>{t.desc}</div>
               </div>
               <div style={{display:'flex',gap:5,flexWrap:'wrap',marginTop:2}}>
-                {t.sections.map(s=><span key={s} className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',border:'1px solid var(--line)',height:20,fontWeight:500}}>{s}</span>)}
+                {t.sections.map(s=><span key={s} className="badge" style={{background:'var(--background)',color:'var(--muted-foreground)',border:'1px solid var(--border)',height:20,fontWeight:500}}>{s}</span>)}
               </div>
             </button>
           ))}
@@ -97,16 +97,16 @@ function PrepEditor({cfg, onBack, setPage, flash}){
 
   return (
     <div className="rise">
-      <div style={{position:'sticky',top:'var(--header-h)',zIndex:40,background:'rgba(255,255,255,.85)',backdropFilter:'blur(10px)',borderBottom:'1px solid var(--line)'}}>
+      <div style={{position:'sticky',top:'var(--header-h)',zIndex:40,background:'rgba(255,255,255,.85)',backdropFilter:'blur(10px)',borderBottom:'1px solid var(--border)'}}>
         <div className="page" style={{padding:'11px 28px',display:'flex',alignItems:'center',gap:14}}>
           <button onClick={onBack} className="btn btn-secondary btn-sm"><Icon name="chevron_left" size={15} sw={2.2}/>Prep</button>
-          <span style={{width:1,height:24,background:'var(--line-2)'}}></span>
+          <span style={{width:1,height:24,background:'var(--border-strong)'}}></span>
           <span style={{width:28,height:28,borderRadius:8,background:t.tint,color:t.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={15}/></span>
           <div style={{minWidth:0,flex:1}}>
-            <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{title}</div>
+            <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{title}</div>
             <div className="muted" style={{fontSize:11.5}}>{t.name} · Draft</div>
           </div>
-          <span style={{display:'flex',alignItems:'center',gap:6,fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><span style={{width:6,height:6,borderRadius:'50%',background:'#16A34A'}}></span>Auto-saved</span>
+          <span style={{display:'flex',alignItems:'center',gap:6,fontSize:11.5,color:'var(--muted-foreground)',fontWeight:500}}><span style={{width:6,height:6,borderRadius:'50%',background:'#16A34A'}}></span>Auto-saved</span>
           <button className="btn btn-secondary btn-sm" onClick={()=>flash&&flash('Saved to drafts')}><Icon name="check" size={14}/>Save</button>
           <button className="btn btn-primary btn-sm" onClick={()=>{flash&&flash('Submitted to Memos for review');setPage('memos');}}><Icon name="send" size={14}/>Submit to review</button>
         </div>
@@ -119,8 +119,8 @@ function PrepEditor({cfg, onBack, setPage, flash}){
           <div style={{display:'flex',flexDirection:'column',gap:3}}>
             {t.sections.map((s,i)=>(
               <button key={s} onClick={()=>setActive(i)} style={{display:'flex',alignItems:'center',gap:9,border:0,background:active===i?'var(--blue-t)':'transparent',
-                color:active===i?'var(--blue)':'var(--ink-2)',padding:'9px 11px',borderRadius:8,cursor:'pointer',textAlign:'left',fontSize:13,fontWeight:active===i?600:500,transition:'.12s'}}>
-                <span style={{width:20,height:20,borderRadius:6,background:active===i?'var(--blue)':'var(--line)',color:active===i?'#fff':'var(--ink-3)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,flex:'none'}}>{i+1}</span>
+                color:active===i?'var(--blue)':'var(--secondary-foreground)',padding:'9px 11px',borderRadius:8,cursor:'pointer',textAlign:'left',fontSize:13,fontWeight:active===i?600:500,transition:'.12s'}}>
+                <span style={{width:20,height:20,borderRadius:6,background:active===i?'var(--blue)':'var(--border)',color:active===i?'#fff':'var(--muted-foreground)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,flex:'none'}}>{i+1}</span>
                 <span style={{flex:1}}>{s}</span>
                 {body[i].trim() && <Icon name="check" size={13} sw={2.6} style={{color:'#16A34A'}}/>}
               </button>
@@ -140,8 +140,8 @@ function PrepEditor({cfg, onBack, setPage, flash}){
               <span className="muted" style={{fontSize:11.5,fontFamily:P_MONO}}>{(body.join(' ').trim().split(/\s+/).filter(Boolean).length)} words</span>
             </div>
             <input value={title} onChange={e=>setTitle(e.target.value)} placeholder="Memo title"
-              style={{width:'100%',border:0,outline:'none',fontFamily:P_SERIF,fontSize:27,fontWeight:700,letterSpacing:'-.015em',color:'var(--ink)',background:'transparent',marginBottom:6}}/>
-            <div style={{height:1,background:'var(--line)',margin:'10px 0 22px'}}></div>
+              style={{width:'100%',border:0,outline:'none',fontFamily:P_SERIF,fontSize:27,fontWeight:700,letterSpacing:'-.015em',color:'var(--foreground)',background:'transparent',marginBottom:6}}/>
+            <div style={{height:1,background:'var(--border)',margin:'10px 0 22px'}}></div>
             <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:12}}>
               <span style={{fontFamily:P_MONO,fontSize:11,fontWeight:700,letterSpacing:'.08em',color:t.color,textTransform:'uppercase'}}>{active+1}. {t.sections[active]}</span>
             </div>
@@ -156,24 +156,24 @@ function PrepEditor({cfg, onBack, setPage, flash}){
           <div className="card card-pad">
             <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:12}}>
               <span style={{width:26,height:26,borderRadius:8,background:'var(--violet-t)',color:'var(--violet)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="sparkle" size={15}/></span>
-              <span style={{fontSize:13.5,fontWeight:700,color:'var(--ink)'}}>Drafting assist</span>
+              <span style={{fontSize:13.5,fontWeight:700,color:'var(--foreground)'}}>Drafting assist</span>
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:7}}>
               {ASSIST.map(a=>(
-                <button key={a.label} onClick={()=>assist(a)} style={{display:'flex',alignItems:'center',gap:10,border:'1px solid var(--line)',background:'#fff',
+                <button key={a.label} onClick={()=>assist(a)} style={{display:'flex',alignItems:'center',gap:10,border:'1px solid var(--border)',background:'#fff',
                   padding:'10px 11px',borderRadius:9,cursor:'pointer',textAlign:'left',transition:'.12s'}}
                   onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--violet)';e.currentTarget.style.background='var(--violet-t)';}}
-                  onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line)';e.currentTarget.style.background='#fff';}}>
+                  onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.background='#fff';}}>
                   <Icon name={a.icon} size={15} style={{color:'var(--violet)',flex:'none'}}/>
-                  <span style={{fontSize:12.5,fontWeight:550,color:'var(--ink-2)'}}>{a.label}</span>
+                  <span style={{fontSize:12.5,fontWeight:550,color:'var(--secondary-foreground)'}}>{a.label}</span>
                 </button>
               ))}
             </div>
           </div>
-          <div className="card card-pad" style={{background:'var(--surface-2)'}}>
+          <div className="card card-pad" style={{background:'var(--background)'}}>
             <div className="eyebrow" style={{marginBottom:8}}>Pre-flight checks</div>
             {[['Classification set',true],['All sections filled',body.every(b=>b.trim())],['Sourcing present',body.join('').includes('Source')]].map(([l,ok])=>(
-              <div key={l} style={{display:'flex',alignItems:'center',gap:9,padding:'5px 0',fontSize:12.5,color:'var(--ink-2)'}}>
+              <div key={l} style={{display:'flex',alignItems:'center',gap:9,padding:'5px 0',fontSize:12.5,color:'var(--secondary-foreground)'}}>
                 <span style={{width:18,height:18,borderRadius:'50%',background:ok?'#F0FDF4':'#F1F5F9',color:ok?'#16A34A':'var(--ink-4)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ok?'check':'x'} size={11} sw={3}/></span>
                 {l}
               </div>

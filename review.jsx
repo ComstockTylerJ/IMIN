@@ -158,7 +158,7 @@ function RvList({ setPage, flash, folderName, onOpen }) {
         </span>) },
     { label: 'Coding', width: 120, render: (d) => d.reviewed
         ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5, fontWeight: 600, color: 'var(--lime)' }}><Icon name="check" size={14} sw={2.4} />Relevant</span>
-        : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, color: 'var(--ink-3)' }}><span style={{ width: 8, height: 8, borderRadius: '50%', border: '1.5px solid var(--line-2)' }}></span>Pending</span> },
+        : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, color: 'var(--muted-foreground)' }}><span style={{ width: 8, height: 8, borderRadius: '50%', border: '1.5px solid var(--border-strong)' }}></span>Pending</span> },
     { label: 'Date', width: 80, align: 'right', render: (d) => <span style={{ fontSize: 12, color: 'var(--ink-4)', whiteSpace: 'nowrap' }}>{d.date}</span> },
   ];
   return (
@@ -223,17 +223,17 @@ function RvWorkbench({ setPage, flash, folderName, startId, onBack }) {
   return (
     <div className="rise" style={{ display: 'flex', height: 'calc(100vh - var(--header-h))', overflow: 'hidden', background: '#fff' }}>
       {/* ============ LEFT: queue ============ */}
-      <aside style={{ width: 296, flex: 'none', borderRight: '1px solid var(--line)', display: 'flex', flexDirection: 'column', background: 'var(--surface-2)' }}>
-        <div style={{ padding: '13px 16px 11px', borderBottom: '1px solid var(--line)' }}>
+      <aside style={{ width: 296, flex: 'none', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', background: 'var(--background)' }}>
+        <div style={{ padding: '13px 16px 11px', borderBottom: '1px solid var(--border)' }}>
           <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: 0, background: 'transparent',
-            color: 'var(--ink-3)', fontSize: 11.5, fontWeight: 600, cursor: 'pointer', padding: 0, marginBottom: 9 }}>
+            color: 'var(--muted-foreground)', fontSize: 11.5, fontWeight: 600, cursor: 'pointer', padding: 0, marginBottom: 9 }}>
             <Icon name="chevron_left" size={13} sw={2.2} />Triage queue
           </button>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>Review Queue</span>
-            <span style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--ink-3)' }}>{reviewedCount}/{RV_DOCS.length}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>Review Queue</span>
+            <span style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--muted-foreground)' }}>{reviewedCount}/{RV_DOCS.length}</span>
           </div>
-          <div style={{ height: 3, borderRadius: 2, background: 'var(--line)', marginTop: 9, overflow: 'hidden' }}>
+          <div style={{ height: 3, borderRadius: 2, background: 'var(--border)', marginTop: 9, overflow: 'hidden' }}>
             <div style={{ width: (reviewedCount / RV_DOCS.length * 100) + '%', height: '100%', background: 'var(--lime)', borderRadius: 2, transition: 'width .25s' }}></div>
           </div>
         </div>
@@ -245,26 +245,26 @@ function RvWorkbench({ setPage, flash, folderName, startId, onBack }) {
             return (
               <button key={d.id} onClick={() => { setSelId(d.id); setTab('coding'); }}
                 style={{ display: 'flex', alignItems: 'flex-start', gap: 11, width: '100%', textAlign: 'left', border: 0,
-                  borderBottom: '1px solid var(--line)', borderLeft: isSel ? '2.5px solid var(--primary)' : '2.5px solid transparent',
+                  borderBottom: '1px solid var(--border)', borderLeft: isSel ? '2.5px solid var(--primary)' : '2.5px solid transparent',
                   background: isSel ? 'var(--primary-tint)' : 'transparent', padding: '11px 14px 11px 12px', cursor: 'pointer', transition: 'background .12s' }}
-                onMouseEnter={(e) => { if (!isSel) e.currentTarget.style.background = 'var(--hover)'; }}
+                onMouseEnter={(e) => { if (!isSel) e.currentTarget.style.background = 'var(--secondary)'; }}
                 onMouseLeave={(e) => { if (!isSel) e.currentTarget.style.background = 'transparent'; }}>
                 <span style={{ width: 26, height: 26, borderRadius: 7, flex: 'none', marginTop: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: t.color + '18', color: t.color }}><Icon name={t.icon} size={15} /></span>
                 <span style={{ flex: 1, minWidth: 0 }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ flex: 1, minWidth: 0, fontSize: 13, fontWeight: isSel ? 600 : 550, color: isSel ? 'var(--primary)' : 'var(--ink)',
+                    <span style={{ flex: 1, minWidth: 0, fontSize: 13, fontWeight: isSel ? 600 : 550, color: isSel ? 'var(--primary)' : 'var(--foreground)',
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.title}</span>
                     {d.priv && <Icon name="shield" size={12} style={{ color: '#B5851C', flex: 'none' }} />}
                     {d.hot && <span style={{ width: 7, height: 7, borderRadius: 2, background: '#DC2626', flex: 'none' }}></span>}
                   </span>
-                  <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-3)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted-foreground)', marginTop: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {d.who} &middot; {d.date}
                   </span>
                 </span>
                 <span style={{ width: 8, height: 8, borderRadius: '50%', flex: 'none', marginTop: 5,
                   background: done ? (done === 'notrel' ? 'var(--ink-4)' : 'var(--lime)') : 'transparent',
-                  border: done ? 'none' : '1.5px solid var(--line-2)' }}></span>
+                  border: done ? 'none' : '1.5px solid var(--border-strong)' }}></span>
               </button>);
           })}
         </div>
@@ -273,18 +273,18 @@ function RvWorkbench({ setPage, flash, folderName, startId, onBack }) {
       {/* ============ CENTER: document ============ */}
       <main style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', background: '#F7F8FB' }}>
         {/* doc header */}
-        <div style={{ borderBottom: '1px solid var(--line)', background: '#fff', padding: '14px 26px' }}>
+        <div style={{ borderBottom: '1px solid var(--border)', background: '#fff', padding: '14px 26px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ width: 30, height: 30, borderRadius: 8, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
               background: RV_TYPE[sel.type].color + '18', color: RV_TYPE[sel.type].color }}><Icon name={RV_TYPE[sel.type].icon} size={17} /></span>
-            <h1 style={{ fontSize: 17, fontWeight: 650, letterSpacing: '-.01em', margin: 0, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sel.title}</h1>
+            <h1 style={{ fontSize: 17, fontWeight: 650, letterSpacing: '-.01em', margin: 0, color: 'var(--foreground)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{sel.title}</h1>
             <div style={{ flex: 1 }}></div>
             <button className="btn btn-ghost btn-icon btn-sm" title="Download"><Icon name="download" size={16} /></button>
             <button className="btn btn-ghost btn-icon btn-sm" title="Open externally"><Icon name="external" size={15} /></button>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 11, flexWrap: 'wrap', fontSize: 12.5, color: 'var(--ink-3)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginTop: 11, flexWrap: 'wrap', fontSize: 12.5, color: 'var(--muted-foreground)' }}>
             <RvAvatar who={sel.who} size={22} />
-            <span style={{ color: 'var(--ink-2)', fontWeight: 600, whiteSpace: 'nowrap' }}>{sel.who}</span>
+            <span style={{ color: 'var(--secondary-foreground)', fontWeight: 600, whiteSpace: 'nowrap' }}>{sel.who}</span>
             <Dotsep /><span style={{ fontFamily: "ui-monospace, Menlo, monospace", fontSize: 12, whiteSpace: 'nowrap' }}>{sel.bates}</span>
             <Dotsep /><span style={{ whiteSpace: 'nowrap' }}>{sel.date}</span>
             <Dotsep /><span style={{ whiteSpace: 'nowrap' }}>{sel.size}</span>
@@ -302,15 +302,15 @@ function RvWorkbench({ setPage, flash, folderName, startId, onBack }) {
       </main>
 
       {/* ============ RIGHT: coding ============ */}
-      <aside style={{ width: 392, flex: 'none', borderLeft: '1px solid var(--line)', display: 'flex', flexDirection: 'column', background: '#fff' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 12px', borderBottom: '1px solid var(--line)', flex: 'none' }}>
+      <aside style={{ width: 392, flex: 'none', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'column', background: '#fff' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 2, padding: '0 12px', borderBottom: '1px solid var(--border)', flex: 'none' }}>
           {RV_TABS.map((tb) => (
             <button key={tb.id} onClick={() => setTab(tb.id)} style={{ display: 'flex', alignItems: 'center', gap: 6, border: 0, background: 'transparent',
               padding: '13px 9px', cursor: 'pointer', fontSize: 12.5, fontWeight: tab === tb.id ? 600 : 500, position: 'relative',
-              color: tab === tb.id ? 'var(--primary)' : 'var(--ink-3)' }}>
+              color: tab === tb.id ? 'var(--primary)' : 'var(--muted-foreground)' }}>
               <Icon name={tb.icon} size={14} />{tb.label}
               {tb.count != null && <span style={{ fontSize: 10, fontWeight: 700, minWidth: 15, height: 15, padding: '0 4px', borderRadius: 7,
-                background: tab === tb.id ? 'var(--primary)' : 'var(--line)', color: tab === tb.id ? '#fff' : 'var(--ink-3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{tb.count}</span>}
+                background: tab === tb.id ? 'var(--primary)' : 'var(--border)', color: tab === tb.id ? '#fff' : 'var(--muted-foreground)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>{tb.count}</span>}
               {tab === tb.id && <span style={{ position: 'absolute', left: 6, right: 6, bottom: -1, height: 2.5, background: 'var(--primary)', borderRadius: 2 }}></span>}
             </button>
           ))}
@@ -322,8 +322,8 @@ function RvWorkbench({ setPage, flash, folderName, startId, onBack }) {
         </div>
 
         {/* footer */}
-        <div style={{ borderTop: '1px solid var(--line)', padding: '12px 18px', flex: 'none' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: decision ? (decision === 'notrel' ? 'var(--ink-3)' : 'var(--lime)') : 'var(--ink-3)', marginBottom: 11 }}>
+        <div style={{ borderTop: '1px solid var(--border)', padding: '12px 18px', flex: 'none' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: decision ? (decision === 'notrel' ? 'var(--muted-foreground)' : 'var(--lime)') : 'var(--muted-foreground)', marginBottom: 11 }}>
             <Icon name={decision ? 'check' : 'clock'} size={14} sw={decision ? 2.4 : 1.75} />
             {decision === 'relevant' ? 'Marked relevant' : decision === 'notrel' ? 'Marked not relevant' : 'Awaiting review'}
           </div>
@@ -331,8 +331,8 @@ function RvWorkbench({ setPage, flash, folderName, startId, onBack }) {
             <button onClick={save} style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 0,
               background: 'var(--primary)', color: '#fff', fontSize: 13.5, fontWeight: 600, padding: '11px', borderRadius: 9, cursor: 'pointer',
               boxShadow: '0 2px 8px rgba(29,53,87,.22)' }}><Icon name="download" size={15} />Save coding</button>
-            <button onClick={nextUnreviewed} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, border: '1px solid var(--line-2)',
-              background: '#fff', color: 'var(--ink-2)', fontSize: 13.5, fontWeight: 600, padding: '11px 15px', borderRadius: 9, cursor: 'pointer' }}>
+            <button onClick={nextUnreviewed} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7, border: '1px solid var(--border-strong)',
+              background: '#fff', color: 'var(--secondary-foreground)', fontSize: 13.5, fontWeight: 600, padding: '11px 15px', borderRadius: 9, cursor: 'pointer' }}>
               Next unreviewed<Icon name="arrow_right" size={15} /></button>
           </div>
         </div>
@@ -346,12 +346,12 @@ function Dotsep() { return <span style={{ width: 3, height: 3, borderRadius: '50
 function RvArchive({ sel, flash }) {
   return (
     <div className="card" style={{ borderRadius: 14, overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '20px 22px', borderBottom: '1px solid var(--line)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '20px 22px', borderBottom: '1px solid var(--border)' }}>
         <span style={{ width: 42, height: 42, borderRadius: 11, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: '#F1F5F9', color: '#475569' }}><Icon name="files" size={21} /></span>
         <div>
-          <div style={{ fontSize: 15, fontWeight: 650, color: 'var(--ink)' }}>{sel.title}</div>
-          <div style={{ fontSize: 12.5, color: 'var(--ink-3)', marginTop: 2 }}>{sel.archive.length} items &middot; {sel.size} compressed</div>
+          <div style={{ fontSize: 15, fontWeight: 650, color: 'var(--foreground)' }}>{sel.title}</div>
+          <div style={{ fontSize: 12.5, color: 'var(--muted-foreground)', marginTop: 2 }}>{sel.archive.length} items &middot; {sel.size} compressed</div>
         </div>
       </div>
       <div style={{ padding: '7px 10px 4px' }}>
@@ -364,13 +364,13 @@ function RvArchive({ sel, flash }) {
             <button key={i} onClick={() => flash && flash('Opening ' + f.name)}
               style={{ display: 'flex', alignItems: 'center', gap: 13, width: '100%', textAlign: 'left', border: 0, background: 'transparent',
                 padding: '12px', borderRadius: 9, cursor: 'pointer', transition: 'background .12s' }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--hover)'}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--secondary)'}
               onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
               <span style={{ width: 30, height: 30, borderRadius: 8, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: t.color + '18', color: t.color }}><Icon name={t.icon} size={16} /></span>
               <span style={{ flex: 1, minWidth: 0 }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                  <span style={{ fontSize: 13.5, fontWeight: 550, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.name}</span>
+                  <span style={{ fontSize: 13.5, fontWeight: 550, color: 'var(--foreground)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.name}</span>
                   {f.hot && <span style={{ width: 7, height: 7, borderRadius: 2, background: '#DC2626', flex: 'none' }}></span>}
                 </span>
                 <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-4)', marginTop: 2 }}>{f.size}</span>
@@ -391,7 +391,7 @@ function RvMail({ sel }) {
       {sel.body.map((line, i) => {
         const isHeader = i < 3 && /^(From|To|Subject):/.test(line);
         return <p key={i} style={{ margin: i === 0 ? '0 0 4px' : isHeader ? '0 0 4px' : '0 0 15px',
-          fontSize: isHeader ? 12.5 : 14.5, lineHeight: 1.6, color: isHeader ? 'var(--ink-3)' : 'var(--ink)',
+          fontSize: isHeader ? 12.5 : 14.5, lineHeight: 1.6, color: isHeader ? 'var(--muted-foreground)' : 'var(--foreground)',
           fontFamily: isHeader ? "ui-monospace, Menlo, monospace" : 'inherit', textWrap: 'pretty' }}>{line}</p>;
       })}
     </div>);
@@ -402,14 +402,14 @@ function RvPlaceholder({ sel }) {
   const t = RV_TYPE[sel.type];
   return (
     <div className="card" style={{ borderRadius: 14, padding: '60px 30px', textAlign: 'center', boxShadow: 'var(--shadow-sm)',
-      backgroundImage: 'repeating-linear-gradient(135deg, var(--surface-2), var(--surface-2) 12px, #fff 12px, #fff 24px)' }}>
+      backgroundImage: 'repeating-linear-gradient(135deg, var(--background), var(--background) 12px, #fff 12px, #fff 24px)' }}>
       <span style={{ width: 60, height: 60, borderRadius: 16, display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         background: t.color + '18', color: t.color }}><Icon name={t.icon} size={30} /></span>
-      <div style={{ fontSize: 15, fontWeight: 650, color: 'var(--ink)', marginTop: 16 }}>{sel.title}</div>
-      <div style={{ fontSize: 13, color: 'var(--ink-3)', marginTop: 5 }}>{sel.size} &middot; {sel.source}</div>
+      <div style={{ fontSize: 15, fontWeight: 650, color: 'var(--foreground)', marginTop: 16 }}>{sel.title}</div>
+      <div style={{ fontSize: 13, color: 'var(--muted-foreground)', marginTop: 5 }}>{sel.size} &middot; {sel.source}</div>
       <div style={{ display: 'inline-flex', gap: 9, marginTop: 20 }}>
         <button className="btn btn-secondary btn-sm"><Icon name="eye" size={14} />Open viewer</button>
-        <button className="btn btn-ghost btn-sm" style={{ border: '1px solid var(--line-2)' }}><Icon name="download" size={14} />Download</button>
+        <button className="btn btn-ghost btn-sm" style={{ border: '1px solid var(--border-strong)' }}><Icon name="download" size={14} />Download</button>
       </div>
       <div style={{ fontFamily: "ui-monospace, Menlo, monospace", fontSize: 11.5, color: 'var(--ink-4)', marginTop: 22 }}>{sel.type.toUpperCase()} preview \u2014 drop a {sel.type} renderer here</div>
     </div>);
@@ -425,7 +425,7 @@ function RvCoding({ sel, code, decision, setCode, toggleIssue }) {
       <SectionLabel main="Review decision" sub="relevance & flags" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 22 }}>
         <DecisionBtn active={decision === 'relevant'} accent="var(--lime)" icon="check" label="Relevant" k="R" onClick={() => setCode({ decision: 'relevant' })} />
-        <DecisionBtn active={decision === 'notrel'} accent="var(--ink-3)" icon="x" label="Not relevant" k="N" onClick={() => setCode({ decision: 'notrel' })} />
+        <DecisionBtn active={decision === 'notrel'} accent="var(--muted-foreground)" icon="x" label="Not relevant" k="N" onClick={() => setCode({ decision: 'notrel' })} />
       </div>
 
       <SectionLabel main="Flags" />
@@ -440,13 +440,13 @@ function RvCoding({ sel, code, decision, setCode, toggleIssue }) {
           const on = issues.includes(iss.id);
           return (
             <button key={iss.id} onClick={() => toggleIssue(iss.id)} style={{ display: 'flex', alignItems: 'flex-start', gap: 11, textAlign: 'left',
-              border: '1px solid ' + (on ? 'var(--primary)' : 'var(--line)'), background: on ? 'var(--primary-tint)' : '#fff', borderRadius: 11, padding: '12px 13px', cursor: 'pointer', transition: '.13s' }}>
+              border: '1px solid ' + (on ? 'var(--primary)' : 'var(--border)'), background: on ? 'var(--primary-tint)' : '#fff', borderRadius: 11, padding: '12px 13px', cursor: 'pointer', transition: '.13s' }}>
               <span style={{ width: 18, height: 18, borderRadius: 5, flex: 'none', marginTop: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: on ? 'var(--primary)' : '#fff', border: on ? 'none' : '1.5px solid var(--line-2)', color: '#fff' }}>
+                background: on ? 'var(--primary)' : '#fff', border: on ? 'none' : '1.5px solid var(--border-strong)', color: '#fff' }}>
                 {on && <Icon name="check" size={12} sw={3} />}</span>
               <span style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{iss.label}</span>
-                <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-3)', marginTop: 2, lineHeight: 1.4 }}>{iss.sub}</span>
+                <span style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>{iss.label}</span>
+                <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted-foreground)', marginTop: 2, lineHeight: 1.4 }}>{iss.sub}</span>
               </span>
               <span className="kbd" style={{ flex: 'none', marginTop: 1 }}>{iss.n}</span>
             </button>);
@@ -456,14 +456,14 @@ function RvCoding({ sel, code, decision, setCode, toggleIssue }) {
       <SectionLabel main="Notes" />
       <textarea value={code.note || ''} onChange={(e) => setCode({ note: e.target.value })}
         placeholder="Add a note for the team \u2014 why this matters, follow-ups, deposition flags\u2026"
-        style={{ width: '100%', minHeight: 92, resize: 'vertical', border: '1px solid var(--line-2)', borderRadius: 10, padding: '11px 13px',
-          fontSize: 13, fontFamily: 'inherit', color: 'var(--ink)', outline: 'none', lineHeight: 1.5, background: 'var(--surface-2)', marginBottom: 24 }} />
+        style={{ width: '100%', minHeight: 92, resize: 'vertical', border: '1px solid var(--border-strong)', borderRadius: 10, padding: '11px 13px',
+          fontSize: 13, fontFamily: 'inherit', color: 'var(--foreground)', outline: 'none', lineHeight: 1.5, background: 'var(--background)', marginBottom: 24 }} />
 
       <SectionLabel main="Attach to brief" />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, border: '1px dashed var(--line-2)', borderRadius: 11, padding: '14px 15px',
-        background: 'var(--surface-2)', opacity: decision === 'relevant' ? 1 : .7 }}>
-        <Icon name="paperclip" size={16} style={{ color: 'var(--ink-3)', flex: 'none' }} />
-        <span style={{ fontSize: 12.5, color: 'var(--ink-3)', lineHeight: 1.45 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, border: '1px dashed var(--border-strong)', borderRadius: 11, padding: '14px 15px',
+        background: 'var(--background)', opacity: decision === 'relevant' ? 1 : .7 }}>
+        <Icon name="paperclip" size={16} style={{ color: 'var(--muted-foreground)', flex: 'none' }} />
+        <span style={{ fontSize: 12.5, color: 'var(--muted-foreground)', lineHeight: 1.45 }}>
           {decision === 'relevant'
             ? <React.Fragment>Ready &mdash; <span className="linkish">attach as an exhibit</span> to a brief.</React.Fragment>
             : <React.Fragment>Mark this document <b style={{ color: 'var(--lime)' }}>Relevant</b> to attach it to a brief as an exhibit.</React.Fragment>}
@@ -475,30 +475,30 @@ function RvCoding({ sel, code, decision, setCode, toggleIssue }) {
 function SectionLabel({ main, sub }) {
   return (
     <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 11 }}>
-      <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--ink-2)' }}>{main}</span>
+      <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--secondary-foreground)' }}>{main}</span>
       {sub && <span style={{ fontSize: 11.5, color: 'var(--ink-4)' }}>{sub}</span>}
     </div>);
 }
 
 function DecisionBtn({ active, accent, icon, label, k, onClick }) {
   return (
-    <button onClick={onClick} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, border: '1.5px solid ' + (active ? accent : 'var(--line)'),
+    <button onClick={onClick} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, border: '1.5px solid ' + (active ? accent : 'var(--border)'),
       background: active ? accent + '14' : '#fff', borderRadius: 12, padding: '15px 10px', cursor: 'pointer', transition: '.13s' }}>
-      <Icon name={icon} size={20} sw={2.2} style={{ color: active ? accent : 'var(--ink-3)' }} />
-      <span style={{ fontSize: 13.5, fontWeight: 650, color: active ? 'var(--ink)' : 'var(--ink-2)' }}>{label}</span>
+      <Icon name={icon} size={20} sw={2.2} style={{ color: active ? accent : 'var(--muted-foreground)' }} />
+      <span style={{ fontSize: 13.5, fontWeight: 650, color: active ? 'var(--foreground)' : 'var(--secondary-foreground)' }}>{label}</span>
       <span className="kbd">{k}</span>
     </button>);
 }
 
 function FlagRow({ on, icon, label, sub, k, accent, onClick }) {
   return (
-    <button onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: 11, textAlign: 'left', border: '1px solid ' + (on ? accent : 'var(--line)'),
+    <button onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: 11, textAlign: 'left', border: '1px solid ' + (on ? accent : 'var(--border)'),
       background: on ? accent + '12' : '#fff', borderRadius: 11, padding: '11px 13px', cursor: 'pointer', transition: '.13s' }}>
       <span style={{ width: 30, height: 30, borderRadius: 8, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: on ? accent + '22' : 'var(--surface-2)', color: on ? accent : 'var(--ink-3)' }}><Icon name={icon} size={16} /></span>
+        background: on ? accent + '22' : 'var(--background)', color: on ? accent : 'var(--muted-foreground)' }}><Icon name={icon} size={16} /></span>
       <span style={{ flex: 1, minWidth: 0 }}>
-        <span style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{label}</span>
-        <span style={{ display: 'block', fontSize: 11.5, color: 'var(--ink-3)', marginTop: 1 }}>{sub}</span>
+        <span style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>{label}</span>
+        <span style={{ display: 'block', fontSize: 11.5, color: 'var(--muted-foreground)', marginTop: 1 }}>{sub}</span>
       </span>
       <span className="kbd" style={{ flex: 'none' }}>{k}</span>
     </button>);
@@ -513,9 +513,9 @@ function RvStub({ tab, sel }) {
         <SectionLabel main="Document metadata" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           {rows.map(([k, v]) => (
-            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 14, padding: '11px 2px', borderBottom: '1px solid var(--line)', fontSize: 13 }}>
-              <span style={{ color: 'var(--ink-3)' }}>{k}</span>
-              <span style={{ color: 'var(--ink)', fontWeight: 550, textAlign: 'right', wordBreak: 'break-word' }}>{v}</span>
+            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 14, padding: '11px 2px', borderBottom: '1px solid var(--border)', fontSize: 13 }}>
+              <span style={{ color: 'var(--muted-foreground)' }}>{k}</span>
+              <span style={{ color: 'var(--foreground)', fontWeight: 550, textAlign: 'right', wordBreak: 'break-word' }}>{v}</span>
             </div>
           ))}
         </div>
@@ -525,20 +525,20 @@ function RvStub({ tab, sel }) {
     return (
       <div>
         <SectionLabel main="Detected entities" sub="1 person" />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 11, border: '1px solid var(--line)', borderRadius: 11, padding: '12px 13px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 11, border: '1px solid var(--border)', borderRadius: 11, padding: '12px 13px' }}>
           <RvAvatar who={sel.who} size={32} />
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)' }}>{sel.who}</div>
-            <div style={{ fontSize: 11.5, color: 'var(--ink-3)' }}>Custodian &middot; mentioned in this document</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>{sel.who}</div>
+            <div style={{ fontSize: 11.5, color: 'var(--muted-foreground)' }}>Custodian &middot; mentioned in this document</div>
           </div>
         </div>
       </div>);
   }
   const empty = { comments: ['comment', 'No comments yet', 'Start a thread for the trial team on this document.'], history: ['history', 'No activity', 'Coding actions on this document will appear here.'] }[tab];
   return (
-    <div style={{ textAlign: 'center', padding: '46px 16px', color: 'var(--ink-3)' }}>
-      <span style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--surface-2)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={empty[0]} size={21} style={{ color: 'var(--ink-4)' }} /></span>
-      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--ink)', marginTop: 12 }}>{empty[1]}</div>
+    <div style={{ textAlign: 'center', padding: '46px 16px', color: 'var(--muted-foreground)' }}>
+      <span style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--background)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}><Icon name={empty[0]} size={21} style={{ color: 'var(--ink-4)' }} /></span>
+      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--foreground)', marginTop: 12 }}>{empty[1]}</div>
       <div style={{ fontSize: 12.5, marginTop: 4, maxWidth: 220, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.5 }}>{empty[2]}</div>
     </div>);
 }

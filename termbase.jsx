@@ -164,7 +164,7 @@ function Verified({size=18}){
 }
 function LangPair({src, tgt}){
   return (
-    <span style={{display:'inline-flex',alignItems:'center',gap:6,fontSize:11,fontWeight:700,color:'var(--ink-3)',letterSpacing:'.03em'}}>
+    <span style={{display:'inline-flex',alignItems:'center',gap:6,fontSize:11,fontWeight:700,color:'var(--muted-foreground)',letterSpacing:'.03em'}}>
       <span>{src}</span><Icon name="arrow_right" size={12} sw={2} style={{opacity:.6}}/><span>{tgt}</span>
     </span>
   );
@@ -194,22 +194,22 @@ function TermbaseWorkspace({setPage, flash}){
   return (
     <div className="rise">
       {/* header band */}
-      <div style={{borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
+      <div style={{borderBottom:'1px solid var(--border)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
         <div style={{maxWidth:1320,margin:'0 auto',padding:'0 28px'}}>
-          <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--ink-3)',fontWeight:500,padding:'14px 0 0'}}>
+          <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--muted-foreground)',fontWeight:500,padding:'14px 0 0'}}>
             <span style={{cursor:'pointer'}} onClick={()=>setPage('dashboard')}>Home</span>
             <Icon name="chevron_right" size={13} style={{opacity:.6}}/>
-            <span style={{cursor:inGlossary?'pointer':'default',color:inGlossary?'var(--ink-3)':'var(--ink-2)'}} onClick={()=>inGlossary&&backToIndex()}>Glossaries</span>
-            {inGlossary && <React.Fragment><Icon name="chevron_right" size={13} style={{opacity:.6}}/><span style={{color:'var(--ink-2)'}}>{glossary.name}</span></React.Fragment>}
+            <span style={{cursor:inGlossary?'pointer':'default',color:inGlossary?'var(--muted-foreground)':'var(--secondary-foreground)'}} onClick={()=>inGlossary&&backToIndex()}>Glossaries</span>
+            {inGlossary && <React.Fragment><Icon name="chevron_right" size={13} style={{opacity:.6}}/><span style={{color:'var(--secondary-foreground)'}}>{glossary.name}</span></React.Fragment>}
           </div>
           <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:24,marginTop:6}}>
             <div style={{display:'flex',alignItems:'flex-end',gap:24,minWidth:0}}>
-              <h1 style={{fontSize:18.5,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)',paddingBottom:13,flex:'none'}}>Term base</h1>
+              <h1 style={{fontSize:18.5,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--foreground)',paddingBottom:13,flex:'none'}}>Term base</h1>
               <div style={{display:'flex',gap:22}}>
                 {[['glossary','Glossaries','book'],['queue','Review Queue','clock']].map(([id,label,icon])=>(
                   <button key={id} onClick={()=>setTab(id)} style={{display:'flex',alignItems:'center',gap:7,border:0,background:'transparent',
                     padding:'13px 0',cursor:'pointer',fontSize:13.5,fontWeight:tab===id?600:500,position:'relative',
-                    color:tab===id?'var(--blue)':'var(--ink-3)'}}>
+                    color:tab===id?'var(--blue)':'var(--muted-foreground)'}}>
                     <Icon name={icon} size={15}/>{label}
                     {id==='queue' && <span style={{fontSize:11,fontWeight:700,background:'#FFFBEB',color:'#B5851C',borderRadius:999,padding:'1px 7px'}}>{TB_QUEUE.length}</span>}
                     {tab===id && <span style={{position:'absolute',left:0,right:0,bottom:-1,height:2.5,background:'var(--blue)',borderRadius:2}}></span>}
@@ -239,7 +239,7 @@ function GlossaryIndex({onOpen, flash}){
     <div style={{maxWidth:1320,margin:'0 auto',padding:'24px 28px 48px'}}>
       <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:16,marginBottom:18}}>
         <div>
-          <div style={{fontSize:15.5,fontWeight:700,letterSpacing:'-.01em',color:'var(--ink)'}}>Your glossaries</div>
+          <div style={{fontSize:15.5,fontWeight:700,letterSpacing:'-.01em',color:'var(--foreground)'}}>Your glossaries</div>
           <div className="muted" style={{fontSize:12.5,marginTop:2}}>Pick a glossary to browse, search and propose entries. Every entry is Level-Expert ratified.</div>
         </div>
         <span className="badge" style={{background:'#FFFBEB',color:'#B5851C',height:24,fontWeight:700,border:'1px solid #EBDFC2'}}><Icon name="shield_check" size={13}/>Gold Copy</span>
@@ -255,27 +255,27 @@ function GlossaryIndex({onOpen, flash}){
             <div key={g.id} onClick={()=>onOpen(g)} className="card card-hover" style={{padding:0,overflow:'hidden',cursor:'pointer',display:'flex',flexDirection:'column'}}>
               <div style={{padding:'17px 18px 15px',display:'flex',flexDirection:'column',gap:11,flex:1}}>
                 <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:10}}>
-                  <span style={{width:42,height:42,borderRadius:11,background:'var(--surface-2)',color:'var(--ink-3)',border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={g.icon} size={21}/></span>
-                  <span style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,color:'var(--ink-3)',letterSpacing:'.03em',background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:999,padding:'3px 9px'}}>
+                  <span style={{width:42,height:42,borderRadius:11,background:'var(--background)',color:'var(--muted-foreground)',border:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={g.icon} size={21}/></span>
+                  <span style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:11,fontWeight:700,color:'var(--muted-foreground)',letterSpacing:'.03em',background:'var(--background)',border:'1px solid var(--border)',borderRadius:999,padding:'3px 9px'}}>
                     {g.pair[0]}<Icon name="arrow_right" size={11} sw={2} style={{opacity:.6}}/>{g.pair[1]}
                   </span>
                 </div>
                 <div>
-                  <div style={{fontFamily:TB_SERIF,fontSize:17,fontWeight:650,letterSpacing:'-.01em',color:'var(--ink)'}}>{g.name}</div>
+                  <div style={{fontFamily:TB_SERIF,fontSize:17,fontWeight:650,letterSpacing:'-.01em',color:'var(--foreground)'}}>{g.name}</div>
                   <div className="muted" style={{fontSize:11.5,fontWeight:600,marginTop:2,color:'var(--accent)'}}>{g.domain}</div>
                 </div>
-                <p style={{fontSize:12.5,color:'var(--ink-2)',lineHeight:1.5,margin:0,flex:1}}>{g.desc}</p>
+                <p style={{fontSize:12.5,color:'var(--secondary-foreground)',lineHeight:1.5,margin:0,flex:1}}>{g.desc}</p>
                 <div style={{display:'flex',alignItems:'center',gap:9,flexWrap:'wrap'}}>
-                  <span style={{fontSize:13,fontWeight:700,color:'var(--ink)'}}>{ents.length}<span className="muted" style={{fontWeight:500,fontSize:11.5}}> entries</span></span>
+                  <span style={{fontSize:13,fontWeight:700,color:'var(--foreground)'}}>{ents.length}<span className="muted" style={{fontWeight:500,fontSize:11.5}}> entries</span></span>
                   {gold>0 && <span style={{display:'inline-flex',alignItems:'center',gap:4,fontSize:11,fontWeight:600,color:'#B5851C'}}><span style={{width:7,height:7,borderRadius:'50%',background:'#B5851C'}}></span>{gold} gold</span>}
                   {review>0 && <span style={{display:'inline-flex',alignItems:'center',gap:4,fontSize:11,fontWeight:600,color:'#0073E6'}}><span style={{width:7,height:7,borderRadius:'50%',background:'#0073E6'}}></span>{review} review</span>}
                   {dnt>0 && <span style={{display:'inline-flex',alignItems:'center',gap:4,fontSize:11,fontWeight:600,color:'#DC2626'}}><span style={{width:7,height:7,borderRadius:'50%',background:'#DC2626'}}></span>{dnt} DNT</span>}
                 </div>
               </div>
-              <div style={{borderTop:'1px solid var(--line)',background:'var(--surface-2)',padding:'10px 18px',display:'flex',alignItems:'center',gap:9}}>
+              <div style={{borderTop:'1px solid var(--border)',background:'var(--background)',padding:'10px 18px',display:'flex',alignItems:'center',gap:9}}>
                 <Avatar id={g.owner} size={22}/>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:11.5,fontWeight:600,color:'var(--ink-2)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{PEOPLE[g.owner].name}</div>
+                  <div style={{fontSize:11.5,fontWeight:600,color:'var(--secondary-foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{PEOPLE[g.owner].name}</div>
                   <div className="muted" style={{fontSize:10.5}}>Updated {g.updated}</div>
                 </div>
                 <span style={{display:'inline-flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,color:g.color}}>Open<Icon name="arrow_right" size={14}/></span>
@@ -286,12 +286,12 @@ function GlossaryIndex({onOpen, flash}){
 
         {/* create */}
         <button onClick={()=>flash&&flash('New glossary — name it and pick a language pair')}
-          style={{border:'1.5px dashed var(--line-2)',background:'var(--surface-2)',borderRadius:'var(--radius-xl)',cursor:'pointer',
+          style={{border:'1.5px dashed var(--border-strong)',background:'var(--background)',borderRadius:'var(--radius-xl)',cursor:'pointer',
             display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:10,padding:'30px 20px',minHeight:200,transition:'.14s',fontFamily:'inherit'}}
           onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--blue)';e.currentTarget.style.background='var(--blue-t)';}}
-          onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--line-2)';e.currentTarget.style.background='var(--surface-2)';}}>
-          <span style={{width:42,height:42,borderRadius:11,background:'#fff',color:'var(--blue)',border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="plus" size={21} sw={2.2}/></span>
-          <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink-2)'}}>New glossary</div>
+          onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--border-strong)';e.currentTarget.style.background='var(--background)';}}>
+          <span style={{width:42,height:42,borderRadius:11,background:'#fff',color:'var(--blue)',border:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="plus" size={21} sw={2.2}/></span>
+          <div style={{fontSize:13.5,fontWeight:600,color:'var(--secondary-foreground)'}}>New glossary</div>
           <div className="muted" style={{fontSize:11.5,textAlign:'center',maxWidth:200,lineHeight:1.45}}>Start a glossary for a new domain or language pair.</div>
         </button>
       </div>
@@ -309,8 +309,8 @@ function FilterGroup({label, items, value, onSet}){
           return (
             <button key={it.id} onClick={()=>onSet(it.id)}
               style={{display:'flex',alignItems:'center',gap:9,width:'100%',padding:'7px 9px',border:0,borderRadius:8,cursor:'pointer',textAlign:'left',
-                background:on?'var(--blue-t)':'transparent',color:on?'var(--blue)':'var(--ink-2)',fontFamily:'inherit'}}
-              onMouseEnter={e=>{if(!on)e.currentTarget.style.background='var(--hover)';}}
+                background:on?'var(--blue-t)':'transparent',color:on?'var(--blue)':'var(--secondary-foreground)',fontFamily:'inherit'}}
+              onMouseEnter={e=>{if(!on)e.currentTarget.style.background='var(--secondary)';}}
               onMouseLeave={e=>{if(!on)e.currentTarget.style.background='transparent';}}>
               {it.dot && <span style={{width:8,height:8,borderRadius:'50%',background:it.dot,flex:'none'}}></span>}
               {it.icon && <Icon name={it.icon} size={15} style={{flex:'none',opacity:.85}}/>}
@@ -355,7 +355,7 @@ function Glossary({glossary,onBack,cat,setCat,status,setStatus,q,setQ,sort,setSo
 
       {/* LEFT RAIL */}
       <div style={wide?stick:undefined}>
-        <button onClick={onBack} style={{display:'inline-flex',alignItems:'center',gap:6,border:0,background:'transparent',color:'var(--ink-3)',
+        <button onClick={onBack} style={{display:'inline-flex',alignItems:'center',gap:6,border:0,background:'transparent',color:'var(--muted-foreground)',
           fontSize:12,fontWeight:600,cursor:'pointer',padding:0,marginBottom:12}}>
           <Icon name="chevron_left" size={14} sw={2.2}/>All glossaries
         </button>
@@ -364,10 +364,10 @@ function Glossary({glossary,onBack,cat,setCat,status,setStatus,q,setQ,sort,setSo
             <span style={{width:30,height:30,borderRadius:8,background:glossary.color,color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={glossary.icon} size={17}/></span>
             <div style={{minWidth:0}}>
               <div className="eyebrow" style={{color:glossary.color,marginBottom:1}}>{glossary.pair[0]} → {glossary.pair[1]}</div>
-              <div style={{fontSize:13.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{glossary.name}</div>
+              <div style={{fontSize:13.5,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{glossary.name}</div>
             </div>
           </div>
-          <p style={{fontSize:11.5,color:'var(--ink-3)',lineHeight:1.5,margin:'10px 0 0'}}>{glossary.desc}</p>
+          <p style={{fontSize:11.5,color:'var(--muted-foreground)',lineHeight:1.5,margin:'10px 0 0'}}>{glossary.desc}</p>
         </div>
 
         <FilterGroup label="Category" value={cat} onSet={setCat} items={[
@@ -387,16 +387,16 @@ function Glossary({glossary,onBack,cat,setCat,status,setStatus,q,setQ,sort,setSo
 
       {/* MIDDLE — list */}
       <div style={{minWidth:0}}>
-        <div style={{display:'flex',alignItems:'center',gap:8,height:42,padding:'0 14px',border:'1px solid var(--line-2)',background:'#fff',borderRadius:10,boxShadow:'var(--shadow-sm)',marginBottom:14}}>
-          <Icon name="search" size={17} style={{color:'var(--ink-3)'}}/>
-          <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search the glossary…" style={{flex:1,border:0,outline:'none',fontSize:13.5,fontFamily:'inherit',background:'transparent',color:'var(--ink)'}}/>
+        <div style={{display:'flex',alignItems:'center',gap:8,height:42,padding:'0 14px',border:'1px solid var(--border-strong)',background:'#fff',borderRadius:10,boxShadow:'var(--shadow-sm)',marginBottom:14}}>
+          <Icon name="search" size={17} style={{color:'var(--muted-foreground)'}}/>
+          <input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search the glossary…" style={{flex:1,border:0,outline:'none',fontSize:13.5,fontFamily:'inherit',background:'transparent',color:'var(--foreground)'}}/>
         </div>
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
           <span className="muted" style={{fontSize:12.5,fontWeight:500}}>{list.length} of {scoped.length} entries</span>
-          <div style={{display:'flex',gap:3,background:'var(--surface-2)',padding:3,borderRadius:8,border:'1px solid var(--line)'}}>
+          <div style={{display:'flex',gap:3,background:'var(--background)',padding:3,borderRadius:8,border:'1px solid var(--border)'}}>
             {[['gold','Gold first'],['az','A–Z']].map(([id,label])=>(
               <button key={id} onClick={()=>setSort(id)} style={{height:26,padding:'0 11px',borderRadius:6,border:0,cursor:'pointer',fontSize:12,fontWeight:600,fontFamily:'inherit',
-                background:sort===id?'#fff':'transparent',color:sort===id?'var(--ink)':'var(--ink-3)',boxShadow:sort===id?'0 1px 2px rgba(29,53,87,.1)':'none'}}>{label}</button>
+                background:sort===id?'#fff':'transparent',color:sort===id?'var(--foreground)':'var(--muted-foreground)',boxShadow:sort===id?'0 1px 2px rgba(29,53,87,.1)':'none'}}>{label}</button>
             ))}
           </div>
         </div>
@@ -405,10 +405,10 @@ function Glossary({glossary,onBack,cat,setCat,status,setStatus,q,setQ,sort,setSo
             const st=TB_STATUS[e.status], k=TB_CAT[e.cat], on=sel===e.id;
             return (
               <div key={e.id} onClick={()=>setSel(e.id)} className="card card-hover"
-                style={{padding:'14px 16px',cursor:'pointer',borderColor:on?'var(--blue)':'var(--line)',boxShadow:on?'0 0 0 1px var(--blue), var(--shadow-sm)':'var(--shadow-sm)'}}>
+                style={{padding:'14px 16px',cursor:'pointer',borderColor:on?'var(--blue)':'var(--border)',boxShadow:on?'0 0 0 1px var(--blue), var(--shadow-sm)':'var(--shadow-sm)'}}>
                 <div style={{display:'flex',alignItems:'center',gap:9,justifyContent:'space-between'}}>
                   <div style={{display:'flex',alignItems:'center',gap:9,minWidth:0}}>
-                    <span style={{fontFamily:TB_SERIF,fontSize:18,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{e.term}</span>
+                    <span style={{fontFamily:TB_SERIF,fontSize:18,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{e.term}</span>
                     {e.status==='gold' && <Verified size={16}/>}
                     {e.status==='review' && <Icon name="clock" size={15} style={{color:TB_STATUS.review.color,flex:'none'}}/>}
                     {e.status==='deprecated' && <Icon name="history" size={15} style={{color:TB_STATUS.deprecated.color,flex:'none'}}/>}
@@ -416,25 +416,25 @@ function Glossary({glossary,onBack,cat,setCat,status,setStatus,q,setQ,sort,setSo
                   <LangPair src={e.src} tgt={e.tgt}/>
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:8,marginTop:8,flexWrap:'wrap'}}>
-                  <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-2)',border:'1px solid var(--line)',height:20}}><Icon name={k.icon} size={11}/>{k.short}</span>
+                  <span className="badge" style={{background:'var(--background)',color:'var(--secondary-foreground)',border:'1px solid var(--border)',height:20}}><Icon name={k.icon} size={11}/>{k.short}</span>
                   <span className="muted" style={{fontSize:11.5}}>·  {e.domain}</span>
                   {e.status==='dnt' && <span className="badge" style={{background:st.tint,color:st.color,height:20,fontSize:10.5,fontWeight:700}}>DNT</span>}
                 </div>
-                {e.gloss && <div style={{fontSize:12.5,color:'var(--ink-2)',lineHeight:1.5,marginTop:9}}>
-                  <span style={{fontWeight:600,color:e.status==='dnt'?'var(--ink)':'var(--blue)'}}>{e.primary}</span>
+                {e.gloss && <div style={{fontSize:12.5,color:'var(--secondary-foreground)',lineHeight:1.5,marginTop:9}}>
+                  <span style={{fontWeight:600,color:e.status==='dnt'?'var(--foreground)':'var(--blue)'}}>{e.primary}</span>
                   <span className="muted"> — {e.gloss}</span>
                 </div>}
               </div>
             );
           })}
-          {!list.length && <div style={{textAlign:'center',padding:'40px',color:'var(--ink-3)',fontSize:13,border:'1.5px dashed var(--line-2)',borderRadius:12}}>No entries match these filters.</div>}
+          {!list.length && <div style={{textAlign:'center',padding:'40px',color:'var(--muted-foreground)',fontSize:13,border:'1.5px dashed var(--border-strong)',borderRadius:12}}>No entries match these filters.</div>}
         </div>
       </div>
 
       {/* RIGHT — detail */}
       <div style={wide?stick:{gridColumn:'1 / -1'}}>
         {cur ? <TermDetail e={cur} flash={flash}/> : (
-          <div className="card card-pad" style={{textAlign:'center',padding:'48px 24px',color:'var(--ink-3)'}}>
+          <div className="card card-pad" style={{textAlign:'center',padding:'48px 24px',color:'var(--muted-foreground)'}}>
             <Icon name="comment" size={26} style={{opacity:.4}}/>
             <div style={{fontSize:13,marginTop:10}}>Select a term to see its full entry.</div>
           </div>
@@ -446,9 +446,9 @@ function Glossary({glossary,onBack,cat,setCat,status,setStatus,q,setQ,sort,setSo
 
 function MetaRow({label, value, last}){
   return (
-    <div style={{display:'flex',gap:12,padding:'8px 0',borderTop:'1px solid var(--line)'}}>
-      <span style={{fontSize:11,fontWeight:600,letterSpacing:'.04em',textTransform:'uppercase',color:'var(--ink-3)',width:108,flex:'none',paddingTop:1}}>{label}</span>
-      <span style={{flex:1,fontSize:12.5,color:'var(--ink)',fontWeight:550,lineHeight:1.4}}>{value}</span>
+    <div style={{display:'flex',gap:12,padding:'8px 0',borderTop:'1px solid var(--border)'}}>
+      <span style={{fontSize:11,fontWeight:600,letterSpacing:'.04em',textTransform:'uppercase',color:'var(--muted-foreground)',width:108,flex:'none',paddingTop:1}}>{label}</span>
+      <span style={{flex:1,fontSize:12.5,color:'var(--foreground)',fontWeight:550,lineHeight:1.4}}>{value}</span>
     </div>
   );
 }
@@ -460,18 +460,18 @@ function TermDetail({e, flash}){
       <div style={{overflowY:'auto',padding:'18px 20px'}}>
         {/* header */}
         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:10,marginBottom:10}}>
-          <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-2)',border:'1px solid var(--line)',height:21}}><Icon name={k.icon} size={11}/>{k.label}</span>
+          <span className="badge" style={{background:'var(--background)',color:'var(--secondary-foreground)',border:'1px solid var(--border)',height:21}}><Icon name={k.icon} size={11}/>{k.label}</span>
           <LangPair src={e.src} tgt={e.tgt}/>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <h2 style={{fontFamily:TB_SERIF,fontSize:27,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',margin:0,lineHeight:1.1}}>{e.term}</h2>
+          <h2 style={{fontFamily:TB_SERIF,fontSize:27,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em',margin:0,lineHeight:1.1}}>{e.term}</h2>
           {e.status==='gold' && <Verified size={20}/>}
         </div>
         <div style={{display:'flex',alignItems:'center',gap:10,marginTop:8,flexWrap:'wrap'}}>
-          <span style={{fontFamily:TB_SERIF,fontStyle:'italic',fontSize:14,color:'var(--ink-3)'}}>{e.pos}</span>
+          <span style={{fontFamily:TB_SERIF,fontStyle:'italic',fontSize:14,color:'var(--muted-foreground)'}}>{e.pos}</span>
           <span className="badge" style={{background:st.tint,color:st.color,height:21,fontWeight:600}}>{e.status==='gold'&&<Icon name="check" size={12}/>}{st.label}</span>
         </div>
-        <p style={{fontSize:13.5,color:'var(--ink-2)',lineHeight:1.55,margin:'14px 0 0'}}>{e.def}</p>
+        <p style={{fontSize:13.5,color:'var(--secondary-foreground)',lineHeight:1.55,margin:'14px 0 0'}}>{e.def}</p>
 
         {/* variants */}
         {e.variants && e.variants.length>0 && (
@@ -484,19 +484,19 @@ function TermDetail({e, flash}){
               {e.variants.map((v,i)=>{
                 const rejected=v.reg==='Rejected', pos=v.votes>=0;
                 return (
-                  <div key={i} style={{display:'flex',gap:11,padding:'10px 12px',border:'1px solid var(--line)',borderRadius:10,background:rejected?'#FCF4F4':'#fff',opacity:rejected?.85:1}}>
+                  <div key={i} style={{display:'flex',gap:11,padding:'10px 12px',border:'1px solid var(--border)',borderRadius:10,background:rejected?'#FCF4F4':'#fff',opacity:rejected?.85:1}}>
                     <span style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',width:40,flex:'none',borderRadius:8,
-                      background:rejected?'var(--coral-t)':pos?'#E9F4EE':'var(--surface-2)',color:rejected?'var(--coral)':pos?'#16A34A':'var(--ink-3)'}}>
+                      background:rejected?'var(--coral-t)':pos?'#E9F4EE':'var(--background)',color:rejected?'var(--coral)':pos?'#16A34A':'var(--muted-foreground)'}}>
                       <Icon name={pos?'arrow_up':'arrow_down'} size={13} sw={2.4}/>
                       <span style={{fontSize:12,fontWeight:700,lineHeight:1,marginTop:1,fontVariantNumeric:'tabular-nums'}}>{Math.abs(v.votes)}</span>
                     </span>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{display:'flex',alignItems:'center',gap:7,flexWrap:'wrap'}}>
-                        <span style={{fontSize:13.5,fontWeight:600,color:rejected?'var(--ink-3)':'var(--ink)',textDecoration:rejected?'line-through':'none'}}>{v.term}</span>
-                        <span style={{fontSize:11,fontStyle:'italic',color:rejected?'var(--coral)':'var(--ink-3)'}}>{v.reg}</span>
-                        {v.region && <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',border:'1px solid var(--line)',height:17,fontSize:10}}>{v.region}</span>}
+                        <span style={{fontSize:13.5,fontWeight:600,color:rejected?'var(--muted-foreground)':'var(--foreground)',textDecoration:rejected?'line-through':'none'}}>{v.term}</span>
+                        <span style={{fontSize:11,fontStyle:'italic',color:rejected?'var(--coral)':'var(--muted-foreground)'}}>{v.reg}</span>
+                        {v.region && <span className="badge" style={{background:'var(--background)',color:'var(--muted-foreground)',border:'1px solid var(--border)',height:17,fontSize:10}}>{v.region}</span>}
                       </div>
-                      <div style={{fontSize:12,color:'var(--ink-2)',lineHeight:1.45,marginTop:3}}>{v.note}</div>
+                      <div style={{fontSize:12,color:'var(--secondary-foreground)',lineHeight:1.45,marginTop:3}}>{v.note}</div>
                     </div>
                   </div>
                 );
@@ -512,11 +512,11 @@ function TermDetail({e, flash}){
             <div style={{marginTop:9,borderLeft:'3px solid var(--blue)',paddingLeft:13,display:'flex',flexDirection:'column',gap:9}}>
               <div>
                 <span className="kbd" style={{marginBottom:4}}>EN</span>
-                <p style={{fontFamily:TB_SERIF,fontSize:14.5,color:'var(--ink)',lineHeight:1.5,margin:'5px 0 0'}}>{e.context.en}</p>
+                <p style={{fontFamily:TB_SERIF,fontSize:14.5,color:'var(--foreground)',lineHeight:1.5,margin:'5px 0 0'}}>{e.context.en}</p>
               </div>
               <div>
                 <span className="kbd" style={{marginBottom:4}}>ES</span>
-                <p style={{fontFamily:TB_SERIF,fontStyle:'italic',fontSize:14.5,color:'var(--ink-2)',lineHeight:1.5,margin:'5px 0 0'}}>{e.context.es}</p>
+                <p style={{fontFamily:TB_SERIF,fontStyle:'italic',fontSize:14.5,color:'var(--secondary-foreground)',lineHeight:1.5,margin:'5px 0 0'}}>{e.context.es}</p>
               </div>
             </div>
           </div>
@@ -529,7 +529,7 @@ function TermDetail({e, flash}){
               <Icon name="bulb" size={14} style={{color:'#0073E6'}}/>
               <span className="eyebrow" style={{color:'#0073E6'}}>Lexicographer’s Note</span>
             </div>
-            <p style={{fontSize:12.5,color:'var(--ink-2)',lineHeight:1.55,margin:0}}>{e.note}</p>
+            <p style={{fontSize:12.5,color:'var(--secondary-foreground)',lineHeight:1.55,margin:0}}>{e.note}</p>
           </div>
         )}
 
@@ -545,8 +545,8 @@ function TermDetail({e, flash}){
             <MetaRow label="Colloquial / Slang" value={e.colloquial}/>
             <MetaRow label="Orthography" value={e.orthography}/>
             {e.related && e.related.length>0 && (
-              <div style={{display:'flex',gap:12,padding:'8px 0',borderTop:'1px solid var(--line)'}}>
-                <span style={{fontSize:11,fontWeight:600,letterSpacing:'.04em',textTransform:'uppercase',color:'var(--ink-3)',width:108,flex:'none',paddingTop:3}}>Related</span>
+              <div style={{display:'flex',gap:12,padding:'8px 0',borderTop:'1px solid var(--border)'}}>
+                <span style={{fontSize:11,fontWeight:600,letterSpacing:'.04em',textTransform:'uppercase',color:'var(--muted-foreground)',width:108,flex:'none',paddingTop:3}}>Related</span>
                 <div style={{flex:1,display:'flex',gap:6,flexWrap:'wrap'}}>
                   {e.related.map(r=><span key={r} className="badge" style={{background:'var(--blue-t)',color:'var(--blue)',height:20}}>{r}</span>)}
                 </div>
@@ -557,12 +557,12 @@ function TermDetail({e, flash}){
       </div>
 
       {/* footer — approval */}
-      <div style={{borderTop:'1px solid var(--line)',background:'var(--surface-2)',padding:'12px 18px',display:'flex',alignItems:'center',gap:11}}>
+      <div style={{borderTop:'1px solid var(--border)',background:'var(--background)',padding:'12px 18px',display:'flex',alignItems:'center',gap:11}}>
         {e.approver ? (
           <>
             <Verified size={20}/>
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:12.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>Approved by {e.approver.name}</div>
+              <div style={{fontSize:12.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>Approved by {e.approver.name}</div>
               <div className="muted" style={{fontSize:11}}>{e.approver.level} · {e.approver.lang} · {e.approver.date}</div>
             </div>
           </>
@@ -570,7 +570,7 @@ function TermDetail({e, flash}){
           <>
             <Icon name="clock" size={18} style={{color:TB_STATUS.review.color,flex:'none'}}/>
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:12.5,fontWeight:600,color:'var(--ink)'}}>Awaiting ratification</div>
+              <div style={{fontSize:12.5,fontWeight:600,color:'var(--foreground)'}}>Awaiting ratification</div>
               <div className="muted" style={{fontSize:11}}>No Expert sign-off yet</div>
             </div>
           </>
@@ -588,7 +588,7 @@ function TermReviewQueue({setTab, setSel, setStatus, flash}){
       <div className="card card-pad" style={{marginBottom:18,display:'flex',alignItems:'center',gap:13,background:'linear-gradient(180deg,#FFFCF4,#fff)',borderColor:'#F4E6C2'}}>
         <span style={{width:38,height:38,borderRadius:10,background:'#FFFBEB',color:'#B5851C',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="clock" size={19}/></span>
         <div style={{flex:1}}>
-          <div style={{fontSize:14.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{TB_QUEUE.length} proposals awaiting ratification</div>
+          <div style={{fontSize:14.5,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em'}}>{TB_QUEUE.length} proposals awaiting ratification</div>
           <div className="muted" style={{fontSize:12.5,marginTop:2}}>Expert lexicographers review new terms, edits and deprecations before they enter the Gold Copy.</div>
         </div>
       </div>
@@ -601,12 +601,12 @@ function TermReviewQueue({setTab, setSel, setStatus, flash}){
                 <span style={{width:36,height:36,borderRadius:9,background:kk.tint,color:kk.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={kk.icon} size={17}/></span>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{display:'flex',alignItems:'center',gap:9,flexWrap:'wrap'}}>
-                    <span style={{fontFamily:TB_SERIF,fontSize:17,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em'}}>{item.term}</span>
+                    <span style={{fontFamily:TB_SERIF,fontSize:17,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em'}}>{item.term}</span>
                     <span className="badge" style={{background:kk.tint,color:kk.color,height:20,fontWeight:600}}>{item.kind}</span>
-                    <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',border:'1px solid var(--line)',height:20,fontSize:10.5}}>EN→{item.target}</span>
+                    <span className="badge" style={{background:'var(--background)',color:'var(--muted-foreground)',border:'1px solid var(--border)',height:20,fontSize:10.5}}>EN→{item.target}</span>
                   </div>
-                  <div style={{fontSize:12.5,color:'var(--ink-2)',lineHeight:1.5,marginTop:6}}>{item.note}</div>
-                  <div style={{display:'flex',alignItems:'center',gap:7,marginTop:9,fontSize:11.5,color:'var(--ink-3)'}}>
+                  <div style={{fontSize:12.5,color:'var(--secondary-foreground)',lineHeight:1.5,marginTop:6}}>{item.note}</div>
+                  <div style={{display:'flex',alignItems:'center',gap:7,marginTop:9,fontSize:11.5,color:'var(--muted-foreground)'}}>
                     <Avatar id={item.src} size={18}/>Proposed by {PEOPLE[item.src].name.split(' ')[0]}<span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{item.when} ago
                   </div>
                 </div>

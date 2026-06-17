@@ -29,7 +29,7 @@ function TeamModal({ onClose }) {
     <div style={{ position: 'fixed', inset: 0, zIndex: 320, display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: '8vh', paddingBottom: '4vh', overflowY: 'auto' }}>
       <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(36,39,45,.32)', backdropFilter: 'blur(2px)', animation: 'fade .2s' }}></div>
       <div className="pop card" style={{ position: 'relative', width: 'min(600px,94vw)', boxShadow: 'var(--shadow-lg)', borderRadius: 16, overflow: 'hidden' }}>
-        <div style={{ padding: '17px 20px', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ padding: '17px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{ width: 34, height: 34, borderRadius: 9, background: 'var(--primary-tint)', color: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name="users" size={18} /></span>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-.02em' }}>Team Workload</div>
@@ -47,13 +47,13 @@ function TeamModal({ onClose }) {
                 <div key={w.who} style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
                   <Avatar id={w.who} size={30} />
                   <div style={{ width: 120, flex: 'none' }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--foreground)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
                     <div className="muted" style={{ fontSize: 11 }}>{p.role}</div>
                   </div>
                   <div style={{ flex: 1, height: 8, background: '#F1F5F9', borderRadius: 5, overflow: 'hidden' }}>
                     <div style={{ width: w.load + '%', height: '100%', background: c, borderRadius: 5, transition: 'width .8s cubic-bezier(.2,.8,.3,1)' }}></div>
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 600, width: 40, textAlign: 'right', color: over ? 'var(--coral)' : 'var(--ink-2)' }}>{w.load}%</span>
+                  <span style={{ fontSize: 13, fontWeight: 600, width: 40, textAlign: 'right', color: over ? 'var(--coral)' : 'var(--secondary-foreground)' }}>{w.load}%</span>
                   {over && <span className="badge" style={{ background: 'var(--coral-t)', color: 'var(--coral)' }}>Bottleneck</span>}
                 </div>);
 
@@ -76,7 +76,7 @@ function DashHero({ openCreate, setPage, openTeam }) {
             <div className="muted" style={{ fontSize: 13, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 8 }}>
               <Icon name="calendar" size={14} /> Friday, June 5, 2026
             </div>
-            <h1 style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-.03em', margin: '8px 0 0', color: 'var(--ink)' }}>
+            <h1 style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-.03em', margin: '8px 0 0', color: 'var(--foreground)' }}>
               Welcome back, Tyler!
             </h1>
             <p className="sec" style={{ fontSize: 14.5, margin: '6px 0 0', maxWidth: 520 }}>
@@ -91,7 +91,7 @@ function DashHero({ openCreate, setPage, openTeam }) {
             onMouseLeave={(e) => {e.currentTarget.style.transform = 'none';e.currentTarget.style.boxShadow = 'var(--shadow-sm)';}}>
               <FleetToken size={36} />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-.01em', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 7 }}>Ask Donovan</div>
+                <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: '-.01em', color: 'var(--foreground)', display: 'flex', alignItems: 'center', gap: 7 }}>Ask Donovan</div>
                 <div className="muted" style={{ fontSize: 11.5, marginTop: 1 }}>Chat, delegate & watch your agents</div>
               </div>
               <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 30, height: 30, borderRadius: 9, background: 'var(--primary)', color: '#fff', flex: 'none' }}><Icon name="message" size={16} /></span>
@@ -116,7 +116,7 @@ function SnapshotRow({ setPage }) {
     <div className="card card-pad" style={{ marginTop: 20 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Icon name="chart" size={17} style={{ color: 'var(--ink-3)' }} />
+          <Icon name="chart" size={17} style={{ color: 'var(--muted-foreground)' }} />
           <div>
             <div className="card-title" style={{ fontSize: 15.5 }}>Snapshot</div>
             <div className="muted" style={{ fontSize: 12.5, marginTop: 1 }}>This week at a glance</div>
@@ -130,16 +130,16 @@ function SnapshotRow({ setPage }) {
           const lineC = '#0073E6';
           return (
             <button key={k.label} onClick={() => setPage('metrics')} title="Open detailed metrics"
-            style={{ textAlign: 'left', border: 0, borderLeft: i ? '1px solid var(--line)' : '0', background: 'transparent', cursor: 'pointer',
+            style={{ textAlign: 'left', border: 0, borderLeft: i ? '1px solid var(--border)' : '0', background: 'transparent', cursor: 'pointer',
               padding: i ? '4px 18px' : '4px 18px 4px 2px', display: 'flex', flexDirection: 'column', gap: 8, borderRadius: i ? 0 : 6, transition: 'background .12s' }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--background)'}
             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 12, fontWeight: 550, color: 'var(--ink-2)' }}>{k.label}</span>
+                <span style={{ fontSize: 12, fontWeight: 550, color: 'var(--secondary-foreground)' }}>{k.label}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
-                <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-.03em', lineHeight: 1, color: 'var(--ink)' }}>{k.value}</span>
-                <span style={{ fontSize: 11.5, fontWeight: 600, color: attention ? 'var(--danger)' : 'var(--ink-3)', display: 'flex', alignItems: 'center', gap: 1 }}>
+                <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-.03em', lineHeight: 1, color: 'var(--foreground)' }}>{k.value}</span>
+                <span style={{ fontSize: 11.5, fontWeight: 600, color: attention ? 'var(--destructive)' : 'var(--muted-foreground)', display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Icon name={k.dir === 'up' ? 'arrow_up' : 'arrow_down'} size={11} sw={2.4} />{Math.abs(k.delta)}
                 </span>
               </div>
@@ -161,14 +161,14 @@ function DashFavorites({ setPage }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(240px,1fr))', gap: 10 }}>
         {favs.map((f) =>
         <button key={f.id} onClick={() => setPage('explore')}
-          style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 13px', border: '1px solid var(--line)', borderRadius: 11,
+          style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 13px', border: '1px solid var(--border)', borderRadius: 11,
             background: '#fff', cursor: 'pointer', textAlign: 'left', transition: '.15s' }}
-          onMouseEnter={(e) => {e.currentTarget.style.borderColor = 'var(--line-2)';e.currentTarget.style.background = 'var(--surface-2)';}}
-          onMouseLeave={(e) => {e.currentTarget.style.borderColor = 'var(--line)';e.currentTarget.style.background = '#fff';}}>
+          onMouseEnter={(e) => {e.currentTarget.style.borderColor = 'var(--border-strong)';e.currentTarget.style.background = 'var(--background)';}}
+          onMouseLeave={(e) => {e.currentTarget.style.borderColor = 'var(--border)';e.currentTarget.style.background = '#fff';}}>
             <span style={{ width: 38, height: 38, borderRadius: 10, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', background: f.color + '18', color: f.color }}><Icon name="folder" size={19} /></span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.name}</span>
+                <span style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--foreground)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{f.name}</span>
                 <Icon name="star_fill" size={13} style={{ color: '#E8B53D', flex: 'none' }} />
               </div>
               <div className="muted" style={{ fontSize: 11.5, marginTop: 2 }}>{f.files} files · {f.size}</div>
@@ -191,10 +191,10 @@ function MyWork({ openTask, setPage }) {
   return (
     <div className="card card-pad">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><Icon name="check_square" size={17} style={{ color: 'var(--ink-3)' }} /><span className="card-title" style={{ fontSize: 15.5 }}>My Work</span></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><Icon name="check_square" size={17} style={{ color: 'var(--muted-foreground)' }} /><span className="card-title" style={{ fontSize: 15.5 }}>My Work</span></div>
         <div style={{ display: 'flex', gap: 4, background: '#F2F5F9', padding: 3, borderRadius: 8 }}>
           {tabs.map((t) =>
-          <button key={t} onClick={() => setTab(t)} style={{ border: 0, background: tab === t ? '#fff' : 'transparent', color: tab === t ? 'var(--ink)' : 'var(--ink-3)',
+          <button key={t} onClick={() => setTab(t)} style={{ border: 0, background: tab === t ? '#fff' : 'transparent', color: tab === t ? 'var(--foreground)' : 'var(--muted-foreground)',
             fontSize: 12.5, fontWeight: 550, padding: '5px 10px', borderRadius: 6, cursor: 'pointer', boxShadow: tab === t ? 'var(--shadow-sm)' : 'none', transition: '.12s' }}>{t}</button>
           )}
         </div>
@@ -202,19 +202,19 @@ function MyWork({ openTask, setPage }) {
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {list.map((t, i) =>
         <div key={t.id} onClick={() => openTask(t.id)} style={{ display: 'flex', alignItems: 'center', gap: 13, padding: '11px 6px',
-          borderTop: i ? '1px solid var(--line)' : '0', cursor: 'pointer', borderRadius: 8, transition: '.12s' }}
-        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
+          borderTop: i ? '1px solid var(--border)' : '0', cursor: 'pointer', borderRadius: 8, transition: '.12s' }}
+        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--background)'}
         onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}>
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: STATUS[t.col].color, flex: 'none' }}></span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13.5, fontWeight: 550, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.file}</div>
+              <div style={{ fontSize: 13.5, fontWeight: 550, color: 'var(--foreground)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.file}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 3 }}>
                 {t.tags.slice(0, 2).map((tg) => <Tag key={tg} k={tg} sm />)}
                 <span className="muted" style={{ fontSize: 11.5 }}>{t.id}</span>
               </div>
             </div>
             {t.priority && (t.priority === 'urgent' || t.priority === 'high') && <PriorityFlag k={t.priority} />}
-            <span style={{ fontSize: 12, fontWeight: 550, color: t.due === 'Jun 4' || t.due === 'Jun 5' ? 'var(--coral)' : 'var(--ink-2)', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ fontSize: 12, fontWeight: 550, color: t.due === 'Jun 4' || t.due === 'Jun 5' ? 'var(--coral)' : 'var(--secondary-foreground)', display: 'flex', alignItems: 'center', gap: 5 }}>
               <Icon name="clock" size={13} />{t.due}
             </span>
             <AvatarStack ids={t.assignees} size={24} max={2} />
@@ -250,15 +250,15 @@ function RequestsQueue({ openTask }) {
               const sm = REQ_STATE[r.status] || REQ_STATE._default;
               return (
                 <tr key={r.id}>
-                  <td style={{ color: 'var(--ink)', fontWeight: 600, maxWidth: 220 }}>
+                  <td style={{ color: 'var(--foreground)', fontWeight: 600, maxWidth: 220 }}>
                     <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</div>
                     <span className="muted" style={{ fontSize: 11, fontWeight: 400 }}>{r.id}</span>
                   </td>
-                  <td><span className="badge" style={{ background: 'var(--surface-2)', border: '1px solid var(--line)', color: 'var(--ink-2)', fontWeight: 550 }}>{r.type}</span></td>
+                  <td><span className="badge" style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--secondary-foreground)', fontWeight: 550 }}>{r.type}</span></td>
                   <td>{r.submitted}</td>
                   <td><span className="st" style={{ background: sm.bg, color: sm.fg, padding: '0 10px' }}>{r.status}</span></td>
-                  <td><span style={{ fontSize: 12.5, color: 'var(--ink-2)', fontWeight: 550 }}>{PEOPLE[r.reviewer].name.split(' ')[0]}</span></td>
-                  <td style={{ color: r.due === 'Jun 5' || r.due === 'Jun 6' ? 'var(--danger)' : 'var(--ink-2)', fontWeight: 550 }}>{r.due}</td>
+                  <td><span style={{ fontSize: 12.5, color: 'var(--secondary-foreground)', fontWeight: 550 }}>{PEOPLE[r.reviewer].name.split(' ')[0]}</span></td>
+                  <td style={{ color: r.due === 'Jun 5' || r.due === 'Jun 6' ? 'var(--destructive)' : 'var(--secondary-foreground)', fontWeight: 550 }}>{r.due}</td>
                 </tr>);
 
             })}
@@ -282,13 +282,13 @@ function Workload() {
             <div key={w.who} style={{ display: 'flex', alignItems: 'center', gap: 13 }}>
               <Avatar id={w.who} size={28} />
               <div style={{ width: 96, flex: 'none' }}>
-                <div style={{ fontSize: 12.5, fontWeight: 550, color: 'var(--ink)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name.split(' ')[0]} {p.name.split(' ')[1][0]}.</div>
+                <div style={{ fontSize: 12.5, fontWeight: 550, color: 'var(--foreground)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name.split(' ')[0]} {p.name.split(' ')[1][0]}.</div>
                 <div className="muted" style={{ fontSize: 10.5 }}>{p.role}</div>
               </div>
               <div style={{ flex: 1, height: 8, background: '#F1F5F9', borderRadius: 5, overflow: 'hidden' }}>
                 <div style={{ width: w.load + '%', height: '100%', background: c, borderRadius: 5, transition: 'width .8s cubic-bezier(.2,.8,.3,1)' }}></div>
               </div>
-              <span style={{ fontSize: 12.5, fontWeight: 600, width: 38, textAlign: 'right', color: over ? 'var(--coral)' : 'var(--ink-2)' }}>{w.load}%</span>
+              <span style={{ fontSize: 12.5, fontWeight: 600, width: 38, textAlign: 'right', color: over ? 'var(--coral)' : 'var(--secondary-foreground)' }}>{w.load}%</span>
               {over && <span className="badge" style={{ background: 'var(--coral-t)', color: 'var(--coral)' }}>Bottleneck</span>}
             </div>);
 
@@ -321,23 +321,23 @@ function ActionCenter({ setPage }) {
         onMouseLeave={(e) => {e.currentTarget.style.borderColor = '#CBDDF5';e.currentTarget.style.background = 'linear-gradient(180deg,#F7FAFE,#fff)';}}>
             <span style={{ flex: 'none' }}><FleetToken size={36} /></span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)' }}>{agent.label}</div>
+              <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--foreground)' }}>{agent.label}</div>
             </div>
-            <span style={{ fontSize: 19, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-.02em' }}>{agent.count}</span>
+            <span style={{ fontSize: 19, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-.02em' }}>{agent.count}</span>
             <Icon name="chevron_right" size={16} style={{ color: 'var(--ink-4)' }} />
           </button>}
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
           {rest.map((it) =>
           <button key={it.label} onClick={() => goItem(it)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 11, padding: '13px 14px',
-            border: '1px solid var(--line)', borderRadius: 10, background: '#fff', cursor: 'pointer', textAlign: 'left', transition: '.15s' }}
-          onMouseEnter={(e) => {e.currentTarget.style.borderColor = 'var(--line-2)';e.currentTarget.style.background = 'var(--surface-2)';}}
-          onMouseLeave={(e) => {e.currentTarget.style.borderColor = 'var(--line)';e.currentTarget.style.background = '#fff';}}>
+            border: '1px solid var(--border)', borderRadius: 10, background: '#fff', cursor: 'pointer', textAlign: 'left', transition: '.15s' }}
+          onMouseEnter={(e) => {e.currentTarget.style.borderColor = 'var(--border-strong)';e.currentTarget.style.background = 'var(--background)';}}
+          onMouseLeave={(e) => {e.currentTarget.style.borderColor = 'var(--border)';e.currentTarget.style.background = '#fff';}}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <span style={{ width: 34, height: 34, borderRadius: 9, background: it.tint, color: it.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><Icon name={it.icon} size={18} /></span>
-                <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-.02em', lineHeight: 1 }}>{it.count}</span>
+                <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--foreground)', letterSpacing: '-.02em', lineHeight: 1 }}>{it.count}</span>
               </div>
-              <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--ink)' }}>{it.label}</div>
+              <div style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--foreground)' }}>{it.label}</div>
             </button>
           )}
         </div>
@@ -351,15 +351,15 @@ function ActivityFeed() {
     <div className="card card-pad">
       <SectionHead title="Team Activity" icon="history" />
       <div style={{ position: 'relative' }}>
-        <div style={{ position: 'absolute', left: 14, top: 6, bottom: 6, width: 2, background: 'var(--line)' }}></div>
+        <div style={{ position: 'absolute', left: 14, top: 6, bottom: 6, width: 2, background: 'var(--border)' }}></div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {ACTIVITY.map((a, i) => {
             const k = ACT_KIND[a.kind];
             return (
               <div key={i} style={{ display: 'flex', gap: 13, padding: '8px 0', position: 'relative' }}>
-                <span style={{ width: 30, height: 30, borderRadius: 9, background: 'var(--hover)', color: 'var(--ink-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', zIndex: 1, boxShadow: '0 0 0 3px #fff' }}><Icon name={k.icon} size={15} /></span>
-                <div style={{ flex: 1, fontSize: 12.5, lineHeight: 1.5, color: 'var(--ink-2)', paddingTop: 2 }}>
-                  <b style={{ color: 'var(--ink)', fontWeight: 600 }}>{PEOPLE[a.who].name.split(' ')[0]}</b> {a.verb} <span style={{ color: 'var(--ink)', fontWeight: 500 }}>{a.what}</span>
+                <span style={{ width: 30, height: 30, borderRadius: 9, background: 'var(--secondary)', color: 'var(--secondary-foreground)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', zIndex: 1, boxShadow: '0 0 0 3px #fff' }}><Icon name={k.icon} size={15} /></span>
+                <div style={{ flex: 1, fontSize: 12.5, lineHeight: 1.5, color: 'var(--secondary-foreground)', paddingTop: 2 }}>
+                  <b style={{ color: 'var(--foreground)', fontWeight: 600 }}>{PEOPLE[a.who].name.split(' ')[0]}</b> {a.verb} <span style={{ color: 'var(--foreground)', fontWeight: 500 }}>{a.what}</span>
                   <div className="muted" style={{ fontSize: 11, marginTop: 1 }}>{a.t} ago</div>
                 </div>
               </div>);
@@ -381,11 +381,11 @@ function RecentWorkspaces({ setPage }) {
             <Icon name="arrow_right" size={17} style={{ color: 'var(--ink-4)' }} />
           </div>
           <div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--ink)' }}>{w.name}</div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--foreground)' }}>{w.name}</div>
             <div className="muted" style={{ fontSize: 12, marginTop: 2, lineHeight: 1.4 }}>{w.desc}</div>
           </div>
-          <div style={{ display: 'flex', gap: 16, paddingTop: 2, borderTop: '1px solid var(--line)', marginTop: 2, paddingTop: 11 }}>
-            <div><span style={{ fontSize: 17, fontWeight: 700, color: 'var(--ink)' }}>{w.active}</span><span className="muted" style={{ fontSize: 11, marginLeft: 5 }}>active</span></div>
+          <div style={{ display: 'flex', gap: 16, paddingTop: 2, borderTop: '1px solid var(--border)', marginTop: 2, paddingTop: 11 }}>
+            <div><span style={{ fontSize: 17, fontWeight: 700, color: 'var(--foreground)' }}>{w.active}</span><span className="muted" style={{ fontSize: 11, marginLeft: 5 }}>active</span></div>
             <div><span style={{ fontSize: 17, fontWeight: 700, color: w.color }}>{w.today}</span><span className="muted" style={{ fontSize: 11, marginLeft: 5 }}>today</span></div>
           </div>
         </div>

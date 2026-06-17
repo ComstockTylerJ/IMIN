@@ -1,0 +1,133 @@
+/* ============================================================
+   tokens.css — SINGLE SOURCE OF TRUTH for IMIN design tokens.
+
+   Linked by BOTH:
+     • the prototype  → styles.css does `@import "tokens.css";`
+     • the style guide → style-guide.html does `<link href="tokens.css">`
+   Edit a value here ONCE and both update on reload.
+
+   Mirrors DESIGN_SYSTEM.md v2.1 / _design-system.scss. When this
+   graduates to a real React/shadcn build, _design-system.scss is the
+   compile source; keep the two in sync (same hex values).
+   ============================================================ */
+
+:root, [data-theme="light"] {
+
+  /* ── shadcn/ui core (canonical names — source of truth) ─────── */
+  --background:#F8FAFC;            /* page surface           */
+  --foreground:#24272D;           /* text-primary           */
+  --card:#FFFFFF;                 /* raised surface         */
+  --card-foreground:#24272D;
+  --primary:#1D3557;
+  --primary-foreground:#FFFFFF;
+  --secondary:#F1F5F9;            /* subtle surface / hover */
+  --secondary-foreground:#475569; /* text-secondary         */
+  --muted:#F1F5F9;
+  --muted-foreground:#64748B;     /* text-tertiary — corrected v2.1 (was #94A3B8, 2.48:1 fail → 4.84:1 AA) */
+  --accent:#0073E6;
+  --accent-foreground:#FFFFFF;
+  --destructive:#DC2626;
+  --destructive-foreground:#FFFFFF;
+  --border:#E2E8F0;               /* border-default */
+  --border-strong:#CBD5E1;        /* neutral-300    */
+  --ring:#0073E6;
+
+  /* ── IMIN semantic extensions (no shadcn equivalent) ────────── */
+  --success:#16A34A; --success-subtle:#F0FDF4;
+  --warning:#EABA1C; --warning-foreground:#92600A; --warning-subtle:#FFFBEB;
+  --info:#0EA5E9;    --info-subtle:#F0F9FF;
+  --destructive-subtle:#FEF2F2;
+  --accent-subtle:#EBF4FF;
+
+  /* ── brand depth — navy + accent steps ──────────────────────── */
+  --primary-700:#162840; --primary-900:#0F1E30; --primary-tint:#EAF0F7;
+  --accent-hover:#005DC0; --accent-active:#004899;
+
+  /* ── Legacy aliases → canonical (prototype markup resolves) ─── */
+  --ink:var(--foreground);
+  --ink-2:var(--secondary-foreground);
+  --ink-3:var(--muted-foreground);
+  --ink-4:#CBD5E1;                 /* subtle slate tone — product extension */
+  --surface:var(--card);
+  --surface-2:var(--background);
+  --line:var(--border);
+  --line-2:var(--border-strong);
+  --hover:var(--secondary);
+  --danger:var(--destructive); --danger-t:var(--destructive-subtle);
+  --success-t:var(--success-subtle);
+  --warning-text:var(--warning-foreground); --warning-t:var(--warning-subtle);
+  --info-t:var(--info-subtle);
+
+  /* ── legacy categorical vars — remapped onto restrained palette ─ */
+  --cyan:#0073E6;   --blue:#0073E6;   --indigo:#1D3557;  --violet:#475569;
+  --coral:#DC2626;  --orange:#B5851C; --lime:#16A34A;    --pink:#0EA5E9;  --teal:#0EA5E9;
+  --cyan-t:#EBF4FF; --blue-t:#EBF4FF; --indigo-t:#EAF0F7; --violet-t:#F1F5F9;
+  --coral-t:#FEF2F2;--orange-t:#FFFBEB;--lime-t:#F0FDF4;  --pink-t:#F0F9FF;
+
+  /* ── guide-named aliases (used by style-guide.html + legacy code) ─ */
+  --color-primary:var(--primary); --color-primary-hover:var(--primary-700); --color-primary-active:var(--primary-900);
+  --color-accent:var(--accent); --color-accent-hover:var(--accent-hover); --color-accent-active:var(--accent-active); --color-accent-subtle:var(--accent-subtle);
+  --color-success:var(--success); --color-success-subtle:var(--success-subtle);
+  --color-warning:var(--warning); --color-warning-subtle:var(--warning-subtle);
+  --color-info:var(--info); --color-info-subtle:var(--info-subtle);
+  --color-danger:var(--destructive); --color-danger-subtle:var(--destructive-subtle);
+  --color-disabled:#CBD5E1;
+  --text-primary:var(--foreground); --text-secondary:var(--secondary-foreground); --text-tertiary:var(--muted-foreground);
+  --text-inverse:#FFFFFF; --text-accent:var(--accent); --text-danger:var(--destructive);
+  --text-success:var(--success); --text-warning:var(--warning-foreground);
+  --surface-base:var(--card); --surface-subtle:var(--secondary); --surface-page:var(--background);
+  --border-default:var(--border);
+  --border-accent:var(--accent); --border-danger:var(--destructive); --border-success:var(--success);
+
+  /* ── neutral scale ──────────────────────────────────────────── */
+  --neutral-0:#FFFFFF; --neutral-50:#F8FAFC; --neutral-100:#F1F5F9; --neutral-200:#E2E8F0;
+  --neutral-300:#CBD5E1; --neutral-400:#94A3B8; --neutral-500:#64748B; --neutral-600:#475569;
+  --neutral-700:#334155; --neutral-800:#1E293B; --neutral-900:#0F172A; --neutral-950:#020617;
+
+  /* ── type ───────────────────────────────────────────────────── */
+  --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;
+
+  /* ── spacing (8-pt grid) ────────────────────────────────────── */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px;
+  --space-16:64px; --space-24:96px;
+
+  /* ── radii — both naming schemes (prototype uses --radius; guide --radius-md) ─ */
+  --radius-sm:4px; --radius:6px; --radius-md:6px; --radius-lg:9px; --radius-xl:12px; --radius-pill:9999px;
+
+  /* ── elevation — both schemes (prototype --shadow; guide --shadow-none) ─ */
+  --shadow-none:none;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06);
+  --shadow:0 2px 6px rgba(15,23,42,.07);
+  --shadow-md:0 4px 12px rgba(15,23,42,.10);
+  --shadow-lg:0 12px 24px rgba(15,23,42,.14);
+
+  /* ── motion ─────────────────────────────────────────────────── */
+  --duration-fast:120ms; --duration-base:180ms; --duration-slow:240ms;
+  --ease-out:cubic-bezier(0.0,0.0,0.2,1);
+
+  /* ── component tokens (style guide) ─────────────────────────── */
+  --btn-sm-h:28px; --btn-sm-r:var(--radius-sm); --btn-sm-fs:12px; --btn-sm-px:10px;
+  --btn-md-h:36px; --btn-md-r:var(--radius-md); --btn-md-fs:14px; --btn-md-px:14px;
+  --btn-lg-h:42px; --btn-lg-r:var(--radius-md); --btn-lg-fs:14px; --btn-lg-px:18px;
+  --card-radius:var(--radius-xl); --card-padding:17px 18px 16px;
+  --card-min-height:168px; --card-gap:12px;
+  --card-logo-size:38px; --card-logo-radius:var(--radius-lg);
+
+  /* ── app chrome + brand moments ─────────────────────────────── */
+  --header-h:64px;
+  --maxw:1320px;
+  --mesh-a:#E6F1FB;
+  --mesh-b:#ECEBFF;
+  --logo-grad: linear-gradient(135deg,#2FB2F3 0%,#1D6BD0 22%,#7364C2 42%,#E0648F 60%,#F86566 74%,#FF9A4E 88%,#9FD06E 100%);
+
+  font-synthesis-weight:none;
+}
+
+/* ── Dark theme (style guide toggle; prototype never sets the attr) ─ */
+[data-theme="dark"] {
+  --surface-page:#0F172A; --surface-base:#1E293B; --surface-subtle:#334155;
+  --text-primary:#F1F5F9; --text-secondary:#94A3B8; --text-tertiary:#475569;
+  --border-default:#334155; --border-strong:#475569;
+}

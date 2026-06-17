@@ -15,10 +15,10 @@ function TaskDrawer({task, onClose, moveTask}){
       <div style={{position:'absolute',top:0,right:0,bottom:0,width:'min(540px,94vw)',background:'#fff',
         boxShadow:'-20px 0 60px rgba(29,53,87,.18)',animation:'slidein .26s cubic-bezier(.2,.8,.3,1)',display:'flex',flexDirection:'column'}}>
         {/* header */}
-        <div style={{padding:'18px 22px 16px',borderBottom:'1px solid var(--line)'}}>
+        <div style={{padding:'18px 22px 16px',borderBottom:'1px solid var(--border)'}}>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:14}}>
             <div style={{display:'flex',alignItems:'center',gap:9}}>
-              <span className="badge" style={{background:'#F2F5F9',color:'var(--ink-3)'}}>{task.id}</span>
+              <span className="badge" style={{background:'#F2F5F9',color:'var(--muted-foreground)'}}>{task.id}</span>
               <span className="muted" style={{fontSize:12}}>{task.workspace} workspace</span>
             </div>
             <div style={{display:'flex',gap:4}}>
@@ -29,37 +29,37 @@ function TaskDrawer({task, onClose, moveTask}){
           </div>
           <div style={{display:'flex',alignItems:'flex-start',gap:11}}>
             <span style={{width:38,height:38,borderRadius:10,background:STATUS[task.col].tint,color:STATUS[task.col].color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="file" size={19}/></span>
-            <h2 style={{fontSize:18.5,fontWeight:700,letterSpacing:'-.02em',margin:0,color:'var(--ink)',lineHeight:1.25}}>{task.file}</h2>
+            <h2 style={{fontSize:18.5,fontWeight:700,letterSpacing:'-.02em',margin:0,color:'var(--foreground)',lineHeight:1.25}}>{task.file}</h2>
           </div>
         </div>
 
         <div style={{flex:1,overflowY:'auto'}}>
           {/* overview meta */}
-          <div style={{padding:'18px 22px',borderBottom:'1px solid var(--line)'}}>
+          <div style={{padding:'18px 22px',borderBottom:'1px solid var(--border)'}}>
             <Meta label="Status">
-              <select value={task.col} onChange={e=>moveTask(task.id,e.target.value)} style={{appearance:'none',border:'1px solid var(--line-2)',borderRadius:7,
+              <select value={task.col} onChange={e=>moveTask(task.id,e.target.value)} style={{appearance:'none',border:'1px solid var(--border-strong)',borderRadius:7,
                 padding:'5px 28px 5px 10px',fontSize:12.5,fontWeight:550,color:STATUS[task.col].color,background:`${STATUS[task.col].tint} url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%238C94A3' stroke-width='2'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E") no-repeat right 9px center`,cursor:'pointer',fontFamily:'inherit'}}>
                 {COLUMNS.map(c=><option key={c.id} value={c.id}>{STATUS[c.id].label}</option>)}
               </select>
             </Meta>
-            <Meta label="Due date"><span style={{fontSize:13,fontWeight:550,whiteSpace:'nowrap',color:['Jun 4','Jun 5'].includes(task.due)?'var(--coral)':'var(--ink)',display:'flex',alignItems:'center',gap:6}}><Icon name="calendar" size={14}/>{task.due}, 2026</span></Meta>
+            <Meta label="Due date"><span style={{fontSize:13,fontWeight:550,whiteSpace:'nowrap',color:['Jun 4','Jun 5'].includes(task.due)?'var(--coral)':'var(--foreground)',display:'flex',alignItems:'center',gap:6}}><Icon name="calendar" size={14}/>{task.due}, 2026</span></Meta>
             <Meta label="Priority"><span className="badge" style={{background:PRIORITY[task.priority].color+'1a',color:PRIORITY[task.priority].color}}><Icon name="flame" size={12} sw={2}/>{PRIORITY[task.priority].label}</span></Meta>
             <Meta label="Assignees">
               <div style={{display:'flex',alignItems:'center',gap:8}}>
-                {task.assignees.map(a=><div key={a} style={{display:'flex',alignItems:'center',gap:6}}><Avatar id={a} size={24}/><span style={{fontSize:12.5,color:'var(--ink-2)'}}>{PEOPLE[a].name}</span></div>)}
+                {task.assignees.map(a=><div key={a} style={{display:'flex',alignItems:'center',gap:6}}><Avatar id={a} size={24}/><span style={{fontSize:12.5,color:'var(--secondary-foreground)'}}>{PEOPLE[a].name}</span></div>)}
               </div>
             </Meta>
             <Meta label="Tags" top>
               <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{task.tags.map(t=><Tag key={t} k={t}/>)}</div>
             </Meta>
-            {task.desc && <div style={{marginTop:14,fontSize:13,color:'var(--ink-2)',lineHeight:1.55}}>{task.desc}</div>}
+            {task.desc && <div style={{marginTop:14,fontSize:13,color:'var(--secondary-foreground)',lineHeight:1.55}}>{task.desc}</div>}
           </div>
 
           {/* tabs */}
-          <div style={{display:'flex',gap:2,padding:'0 22px',borderBottom:'1px solid var(--line)',position:'sticky',top:0,background:'#fff',zIndex:1}}>
+          <div style={{display:'flex',gap:2,padding:'0 22px',borderBottom:'1px solid var(--border)',position:'sticky',top:0,background:'#fff',zIndex:1}}>
             {tabs.map(t=>(
               <button key={t} onClick={()=>setTab(t)} style={{border:0,background:'transparent',padding:'13px 4px',marginRight:16,fontSize:13,
-                fontWeight:tab===t?600:500,color:tab===t?'var(--ink)':'var(--ink-3)',cursor:'pointer',position:'relative'}}>
+                fontWeight:tab===t?600:500,color:tab===t?'var(--foreground)':'var(--muted-foreground)',cursor:'pointer',position:'relative'}}>
                 {t}
                 {tab===t && <span style={{position:'absolute',left:0,right:0,bottom:-1,height:2,background:'var(--primary)',borderRadius:2}}></span>}
               </button>
@@ -76,9 +76,9 @@ function TaskDrawer({task, onClose, moveTask}){
         </div>
 
         {/* comment composer */}
-        <div style={{padding:'12px 22px',borderTop:'1px solid var(--line)',display:'flex',gap:10,alignItems:'center',background:'var(--surface-2)'}}>
+        <div style={{padding:'12px 22px',borderTop:'1px solid var(--border)',display:'flex',gap:10,alignItems:'center',background:'var(--background)'}}>
           <Avatar id="tyler" size={28}/>
-          <input placeholder="Write a comment…" style={{flex:1,height:36,border:'1px solid var(--line-2)',borderRadius:8,padding:'0 12px',fontSize:13,fontFamily:'inherit',outline:'none',background:'#fff'}}/>
+          <input placeholder="Write a comment…" style={{flex:1,height:36,border:'1px solid var(--border-strong)',borderRadius:8,padding:'0 12px',fontSize:13,fontFamily:'inherit',outline:'none',background:'#fff'}}/>
           <button className="btn btn-primary btn-icon"><Icon name="send" size={16}/></button>
         </div>
       </div>
@@ -89,7 +89,7 @@ function TaskDrawer({task, onClose, moveTask}){
 function Meta({label, children, top}){
   return (
     <div style={{display:'flex',alignItems:top?'flex-start':'center',gap:12,padding:'5px 0'}}>
-      <span style={{width:84,flex:'none',fontSize:12,fontWeight:550,color:'var(--ink-3)',paddingTop:top?3:0}}>{label}</span>
+      <span style={{width:84,flex:'none',fontSize:12,fontWeight:550,color:'var(--muted-foreground)',paddingTop:top?3:0}}>{label}</span>
       <div>{children}</div>
     </div>
   );
@@ -104,14 +104,14 @@ function DrawerActivity({task}){
   ];
   return (
     <div style={{position:'relative',marginBottom:22}}>
-      <div style={{position:'absolute',left:13,top:8,bottom:8,width:2,background:'var(--line)'}}></div>
+      <div style={{position:'absolute',left:13,top:8,bottom:8,width:2,background:'var(--border)'}}></div>
       {acts.map((a,i)=>{
         const k=ACT_KIND[a.kind];
         return (
           <div key={i} style={{display:'flex',gap:12,padding:'7px 0',position:'relative'}}>
             <span style={{width:28,height:28,borderRadius:8,background:k.tint,color:k.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none',zIndex:1,boxShadow:'0 0 0 3px #fff'}}><Icon name={k.icon} size={14}/></span>
-            <div style={{fontSize:12.5,color:'var(--ink-2)',paddingTop:5,lineHeight:1.4}}>
-              <b style={{color:'var(--ink)'}}>{PEOPLE[a.who].name.split(' ')[0]}</b> {a.verb} {a.what&&<b style={{color:'var(--ink)',fontWeight:550}}>{a.what}</b>} <span className="muted">· {a.t} ago</span>
+            <div style={{fontSize:12.5,color:'var(--secondary-foreground)',paddingTop:5,lineHeight:1.4}}>
+              <b style={{color:'var(--foreground)'}}>{PEOPLE[a.who].name.split(' ')[0]}</b> {a.verb} {a.what&&<b style={{color:'var(--foreground)',fontWeight:550}}>{a.what}</b>} <span className="muted">· {a.t} ago</span>
             </div>
           </div>
         );
@@ -131,10 +131,10 @@ function DrawerComments({task}){
           <Avatar id={c.who} size={30}/>
           <div style={{flex:1}}>
             <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
-              <span style={{fontSize:13,fontWeight:600,color:'var(--ink)'}}>{PEOPLE[c.who].name}</span>
+              <span style={{fontSize:13,fontWeight:600,color:'var(--foreground)'}}>{PEOPLE[c.who].name}</span>
               <span className="muted" style={{fontSize:11.5}}>{c.t} ago</span>
             </div>
-            <div style={{fontSize:13,color:'var(--ink-2)',lineHeight:1.55,background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:10,padding:'10px 13px'}}>{c.txt}</div>
+            <div style={{fontSize:13,color:'var(--secondary-foreground)',lineHeight:1.55,background:'var(--background)',border:'1px solid var(--border)',borderRadius:10,padding:'10px 13px'}}>{c.txt}</div>
           </div>
         </div>
       ))}
@@ -152,9 +152,9 @@ function DrawerHistory(){
   return (
     <div style={{marginBottom:22}}>
       {h.map((x,i)=>(
-        <div key={i} style={{display:'flex',gap:12,padding:'9px 0',borderBottom:i<h.length-1?'1px solid var(--line)':'0'}}>
-          <span style={{width:118,flex:'none',fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}>{x.t}</span>
-          <span style={{fontSize:12.5,color:'var(--ink-2)'}}>{x.txt} <span className="muted">· {x.who}</span></span>
+        <div key={i} style={{display:'flex',gap:12,padding:'9px 0',borderBottom:i<h.length-1?'1px solid var(--border)':'0'}}>
+          <span style={{width:118,flex:'none',fontSize:11.5,color:'var(--muted-foreground)',fontWeight:500}}>{x.t}</span>
+          <span style={{fontSize:12.5,color:'var(--secondary-foreground)'}}>{x.txt} <span className="muted">· {x.who}</span></span>
         </div>
       ))}
     </div>
@@ -169,10 +169,10 @@ function DrawerAttachments({task}){
   return (
     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:22}}>
       {files.map((f,i)=>(
-        <div key={i} style={{display:'flex',alignItems:'center',gap:10,padding:'11px 12px',border:'1px solid var(--line)',borderRadius:10,cursor:'pointer'}}>
+        <div key={i} style={{display:'flex',alignItems:'center',gap:10,padding:'11px 12px',border:'1px solid var(--border)',borderRadius:10,cursor:'pointer'}}>
           <span style={{width:32,height:32,borderRadius:8,background:f.c+'1a',color:f.c,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="file" size={16}/></span>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:12.5,fontWeight:550,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.n}</div>
+            <div style={{fontSize:12.5,fontWeight:550,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{f.n}</div>
             <div className="muted" style={{fontSize:11}}>{f.s}</div>
           </div>
           <Icon name="download" size={15} style={{color:'var(--ink-4)'}}/>
@@ -187,10 +187,10 @@ function RelatedWork(){
       <div className="eyebrow" style={{marginBottom:10}}>Related work</div>
       <div style={{display:'flex',flexDirection:'column',gap:8}}>
         {[['R-84','Q3 Hero Cut — Legal Review','Review','#0073E6'],['R-90','Style Guide — Final Approval','Approval','#475569']].map(([id,n,ty,c])=>(
-          <div key={id} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',border:'1px solid var(--line)',borderRadius:10,cursor:'pointer'}}>
+          <div key={id} style={{display:'flex',alignItems:'center',gap:10,padding:'10px 12px',border:'1px solid var(--border)',borderRadius:10,cursor:'pointer'}}>
             <span style={{width:7,height:7,borderRadius:'50%',background:c}}></span>
-            <span style={{fontSize:12.5,fontWeight:550,color:'var(--ink)',flex:1}}>{n}</span>
-            <span className="badge" style={{background:'#F2F5F9',color:'var(--ink-3)'}}>{ty}</span>
+            <span style={{fontSize:12.5,fontWeight:550,color:'var(--foreground)',flex:1}}>{n}</span>
+            <span className="badge" style={{background:'#F2F5F9',color:'var(--muted-foreground)'}}>{ty}</span>
             <Icon name="external" size={14} style={{color:'var(--ink-4)'}}/>
           </div>
         ))}

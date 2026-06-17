@@ -45,7 +45,7 @@ function KnowledgeWorkspace({setPage, flash}){
             <div style={{display:'flex',alignItems:'center',gap:13,flex:1,minWidth:260}}>
               <span style={{width:46,height:46,borderRadius:12,background:'var(--lime-t)',color:'#16A34A',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="bulb" size={23}/></span>
               <div>
-                <div style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em',color:'var(--ink)'}}>Bring tribal knowledge into the ecosystem</div>
+                <div style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em',color:'var(--foreground)'}}>Bring tribal knowledge into the ecosystem</div>
                 <div className="muted" style={{fontSize:13,marginTop:2}}>Connect the places people already keep notes, then capture what only lives in their heads.</div>
               </div>
             </div>
@@ -67,15 +67,15 @@ function KnowledgeWorkspace({setPage, flash}){
                   <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>
                     {a.tags.map(t=><span key={t} className="badge" style={{background:K_TAG.tint,color:K_TAG.color,height:20}}>{t}</span>)}
                   </div>
-                  <div style={{fontSize:15,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',lineHeight:1.3}}>{a.title}</div>
+                  <div style={{fontSize:15,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em',lineHeight:1.3}}>{a.title}</div>
                   <div className="sec" style={{fontSize:12.5,lineHeight:1.5}}>{a.excerpt}</div>
-                  <div style={{display:'flex',alignItems:'center',gap:9,marginTop:'auto',paddingTop:11,borderTop:'1px solid var(--line)'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:9,marginTop:'auto',paddingTop:11,borderTop:'1px solid var(--border)'}}>
                     <Avatar id={a.who} size={22}/>
-                    <span style={{fontSize:12,color:'var(--ink-2)',fontWeight:500}}>{PEOPLE[a.who].name.split(' ')[0]}</span>
+                    <span style={{fontSize:12,color:'var(--secondary-foreground)',fontWeight:500}}>{PEOPLE[a.who].name.split(' ')[0]}</span>
                     <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
                     <span className="muted" style={{fontSize:11.5}}>{a.updated}</span>
                     <div style={{flex:1}}></div>
-                    <span style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,color:'var(--ink-3)'}}><Icon name="check" size={14} sw={2.4} style={{color:'#16A34A'}}/>{a.endorse}</span>
+                    <span style={{display:'flex',alignItems:'center',gap:5,fontSize:12,fontWeight:600,color:'var(--muted-foreground)'}}><Icon name="check" size={14} sw={2.4} style={{color:'#16A34A'}}/>{a.endorse}</span>
                   </div>
                 </div>
               ))}
@@ -90,10 +90,10 @@ function KnowledgeWorkspace({setPage, flash}){
                 {K_SOURCES.map((s,i)=>{
                   const st=K_STATE[s.state];
                   return (
-                    <div key={s.name} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 6px',borderTop:i?'1px solid var(--line)':0}}>
+                    <div key={s.name} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 6px',borderTop:i?'1px solid var(--border)':0}}>
                       <span style={{width:32,height:32,borderRadius:8,background:s.color,color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',fontWeight:700,fontSize:13}}>{s.name[0]}</span>
                       <div style={{flex:1,minWidth:0}}>
-                        <div style={{fontSize:13,fontWeight:600,color:'var(--ink)'}}>{s.name}</div>
+                        <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)'}}>{s.name}</div>
                         <div className="muted" style={{fontSize:11}}>{s.sub} · {s.count.toLocaleString()} items</div>
                       </div>
                       <span style={{display:'flex',alignItems:'center',gap:5,fontSize:11,fontWeight:600,color:st.color,flex:'none'}}>
@@ -110,25 +110,25 @@ function KnowledgeWorkspace({setPage, flash}){
               <SectionHead title="Suggested to capture" sub="Knowledge stuck in one person's notes" icon="bulb"/>
               <div style={{display:'flex',flexDirection:'column',gap:11}}>
                 {capture.map((c,i)=>(
-                  <div key={i} style={{border:'1px solid var(--line)',borderRadius:11,padding:'12px 13px',background:'var(--surface-2)'}}>
+                  <div key={i} style={{border:'1px solid var(--border)',borderRadius:11,padding:'12px 13px',background:'var(--background)'}}>
                     <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:7}}>
                       <Avatar id={c.who} size={20}/>
-                      <span style={{fontSize:12,fontWeight:600,color:'var(--ink)'}}>{PEOPLE[c.who].name.split(' ')[0]}</span>
-                      <span className="badge" style={{background:'#fff',border:'1px solid var(--line-2)',color:'var(--ink-3)',height:18,fontWeight:500}}>{c.kind}</span>
+                      <span style={{fontSize:12,fontWeight:600,color:'var(--foreground)'}}>{PEOPLE[c.who].name.split(' ')[0]}</span>
+                      <span className="badge" style={{background:'#fff',border:'1px solid var(--border-strong)',color:'var(--muted-foreground)',height:18,fontWeight:500}}>{c.kind}</span>
                       <div style={{flex:1}}></div>
                       <span className="muted" style={{fontSize:10.5,fontFamily:'ui-monospace,Menlo,monospace'}}>{c.where}</span>
                     </div>
-                    <div style={{fontSize:12.5,color:'var(--ink-2)',lineHeight:1.5,marginBottom:10}}>{c.text}</div>
+                    <div style={{fontSize:12.5,color:'var(--secondary-foreground)',lineHeight:1.5,marginBottom:10}}>{c.text}</div>
                     <div style={{display:'flex',gap:8}}>
                       <button className="btn btn-primary btn-sm" style={{flex:1}} onClick={()=>imp(i)}><Icon name="download" size={13}/>Import</button>
-                      <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--line-2)'}} onClick={()=>setCapture(cc=>cc.filter((_,j)=>j!==i))}>Dismiss</button>
+                      <button className="btn btn-ghost btn-sm" style={{border:'1px solid var(--border-strong)'}} onClick={()=>setCapture(cc=>cc.filter((_,j)=>j!==i))}>Dismiss</button>
                     </div>
                   </div>
                 ))}
                 {!capture.length && (
                   <div style={{textAlign:'center',padding:'22px 8px'}}>
                     <span style={{width:36,height:36,borderRadius:10,background:'#F0FDF4',color:'#16A34A',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={18} sw={2.4}/></span>
-                    <div style={{fontSize:13,color:'var(--ink-3)',marginTop:8,fontWeight:500}}>All caught up — nothing waiting to capture.</div>
+                    <div style={{fontSize:13,color:'var(--muted-foreground)',marginTop:8,fontWeight:500}}>All caught up — nothing waiting to capture.</div>
                   </div>
                 )}
               </div>

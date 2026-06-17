@@ -74,7 +74,7 @@ function SearchResults({query, setPage, onSearch}){
   return (
     <div className="rise" style={{display:'flex',alignItems:'flex-start',gap:0,maxWidth:1480,margin:'0 auto'}}>
       {/* Filters sidebar */}
-      <aside style={{width:280,flex:'none',borderRight:'1px solid var(--line)',background:'rgba(255,255,255,.55)',
+      <aside style={{width:280,flex:'none',borderRight:'1px solid var(--border)',background:'rgba(255,255,255,.55)',
         position:'sticky',top:'var(--header-h)',height:'calc(100vh - var(--header-h))',display:'flex',flexDirection:'column'}}>
         <div style={{padding:'18px 20px 14px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <span style={{fontSize:17,fontWeight:700,letterSpacing:'-.02em'}}>Filters</span>
@@ -87,8 +87,8 @@ function SearchResults({query, setPage, onSearch}){
           </button>
         </div>
         <div style={{padding:'0 20px 14px'}}>
-          <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 11px',border:'1px solid var(--line-2)',background:'#fff',borderRadius:8}}>
-            <Icon name="search" size={15} style={{color:'var(--ink-3)'}}/>
+          <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 11px',border:'1px solid var(--border-strong)',background:'#fff',borderRadius:8}}>
+            <Icon name="search" size={15} style={{color:'var(--muted-foreground)'}}/>
             <input value={filterQ} onChange={e=>setFilterQ(e.target.value)} placeholder="Search filters…" style={{flex:1,border:0,outline:'none',fontSize:13,fontFamily:'inherit',background:'transparent'}}/>
           </div>
         </div>
@@ -115,7 +115,7 @@ function SearchResults({query, setPage, onSearch}){
           </FacetSection>
         </div>
 
-        <div style={{padding:'14px 20px',borderTop:'1px solid var(--line)',background:'rgba(255,255,255,.7)'}}>
+        <div style={{padding:'14px 20px',borderTop:'1px solid var(--border)',background:'rgba(255,255,255,.7)'}}>
           <button className="btn btn-primary" disabled={!dirty}
             onClick={()=>window.scrollTo({top:0,behavior:'smooth'})}
             style={{width:'100%',opacity:dirty?1:.55,pointerEvents:dirty?'auto':'none'}}>
@@ -129,14 +129,14 @@ function SearchResults({query, setPage, onSearch}){
         {/* query bar */}
         <div style={{display:'flex',gap:12,alignItems:'center',marginBottom:16}}>
           <div className="card" style={{flex:1,display:'flex',alignItems:'center',gap:10,padding:'8px 12px',boxShadow:'var(--shadow-sm)'}}>
-            <Icon name="search" size={18} style={{color:'var(--ink-3)',flex:'none'}}/>
+            <Icon name="search" size={18} style={{color:'var(--muted-foreground)',flex:'none'}}/>
             <span className="badge" style={{background:'var(--primary-tint)',color:'var(--primary)',height:26,gap:7,fontSize:12.5}}>
               {q}<Icon name="x" size={13} style={{cursor:'pointer',opacity:.7}} onClick={()=>setPage('explore')}/>
             </span>
             <div style={{display:'flex',gap:2,background:'#F2F5F9',padding:2,borderRadius:7}}>
               {['AND','OR','NOT'].map((o,i)=>(
                 <span key={o} style={{fontSize:11,fontWeight:600,padding:'3px 8px',borderRadius:5,cursor:'pointer',
-                  color:i===0?'var(--primary)':'var(--ink-3)',background:i===0?'#fff':'transparent',boxShadow:i===0?'var(--shadow-sm)':'none'}}>{o}</span>
+                  color:i===0?'var(--primary)':'var(--muted-foreground)',background:i===0?'#fff':'transparent',boxShadow:i===0?'var(--shadow-sm)':'none'}}>{o}</span>
               ))}
             </div>
             <input placeholder="Add another term…" style={{flex:1,border:0,outline:'none',fontSize:13.5,fontFamily:'inherit',background:'transparent'}}/>
@@ -144,10 +144,10 @@ function SearchResults({query, setPage, onSearch}){
         </div>
 
         {/* type tabs */}
-        <div style={{display:'flex',gap:4,borderBottom:'1px solid var(--line)',marginBottom:14,overflowX:'auto'}}>
+        <div style={{display:'flex',gap:4,borderBottom:'1px solid var(--border)',marginBottom:14,overflowX:'auto'}}>
           {RESULT_TYPES.map(t=>(
             <button key={t.id} onClick={()=>setTab(t.id)} style={{border:0,background:'transparent',padding:'10px 12px',cursor:'pointer',
-              fontSize:13,fontWeight:tab===t.id?600:500,color:tab===t.id?'var(--blue)':'var(--ink-3)',position:'relative',whiteSpace:'nowrap',display:'flex',alignItems:'center',gap:7}}>
+              fontSize:13,fontWeight:tab===t.id?600:500,color:tab===t.id?'var(--blue)':'var(--muted-foreground)',position:'relative',whiteSpace:'nowrap',display:'flex',alignItems:'center',gap:7}}>
               {t.label}<span style={{fontSize:11.5,fontWeight:600,color:tab===t.id?'var(--blue)':'var(--ink-4)'}}>{t.n.toLocaleString()}</span>
               {tab===t.id && <span style={{position:'absolute',left:8,right:8,bottom:-1,height:2,background:'var(--blue)',borderRadius:2}}></span>}
             </button>
@@ -165,12 +165,12 @@ function SearchResults({query, setPage, onSearch}){
           <button className="btn btn-primary btn-sm" onClick={viewAll} title="Skip filters and browse everything">
             View all results<Icon name="arrow_right" size={14}/>
           </button>
-          <div style={{width:1,height:22,background:'var(--line-2)'}}></div>
+          <div style={{width:1,height:22,background:'var(--border-strong)'}}></div>
           <button className="btn btn-secondary btn-sm">Relevance<Icon name="chevron_down" size={13}/></button>
           <div style={{display:'flex',gap:2,background:'#EEF1F6',padding:3,borderRadius:8}}>
             {[['list','list'],['grid','grid']].map(([m,ic])=>(
               <button key={m} onClick={()=>setView(m)} className="btn-icon" style={{width:28,height:26,border:0,borderRadius:6,cursor:'pointer',
-                background:view===m?'#fff':'transparent',color:view===m?'var(--ink)':'var(--ink-3)',boxShadow:view===m?'var(--shadow-sm)':'none',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                background:view===m?'#fff':'transparent',color:view===m?'var(--foreground)':'var(--muted-foreground)',boxShadow:view===m?'var(--shadow-sm)':'none',display:'flex',alignItems:'center',justifyContent:'center'}}>
                 <Icon name={ic} size={15}/></button>
             ))}
           </div>
@@ -186,7 +186,7 @@ function SearchResults({query, setPage, onSearch}){
         {view==='list' ? (
           <div style={{display:'flex',flexDirection:'column',gap:12}}>
             {list.map(r=><ResultCard key={r.id} r={r} q={q} bulk={bulk} onDismiss={()=>setDismissed(d=>[...d,r.id])} onOpen={()=>setPreview(r)}/>)}
-            {!list.length && <div className="card" style={{padding:'40px',textAlign:'center',color:'var(--ink-3)'}}>No results in this category.</div>}
+            {!list.length && <div className="card" style={{padding:'40px',textAlign:'center',color:'var(--muted-foreground)'}}>No results in this category.</div>}
           </div>
         ) : (
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))',gap:14}}>
@@ -202,9 +202,9 @@ function SearchResults({query, setPage, onSearch}){
 function FacetSection({title, icon, children}){
   const [open,setOpen]=React.useState(true);
   return (
-    <div style={{borderTop:'1px solid var(--line)',padding:'14px 0 4px'}}>
+    <div style={{borderTop:'1px solid var(--border)',padding:'14px 0 4px'}}>
       <button onClick={()=>setOpen(o=>!o)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%',border:0,background:'transparent',cursor:'pointer',padding:0,marginBottom:open?12:0}}>
-        <span style={{display:'flex',alignItems:'center',gap:7,fontSize:11,fontWeight:600,letterSpacing:'.06em',textTransform:'uppercase',color:'var(--ink-3)'}}>
+        <span style={{display:'flex',alignItems:'center',gap:7,fontSize:11,fontWeight:600,letterSpacing:'.06em',textTransform:'uppercase',color:'var(--muted-foreground)'}}>
           {icon && <Icon name={icon} size={13}/>}{title}
         </span>
         <Icon name="chevron_down" size={15} style={{color:'var(--ink-4)',transform:open?'none':'rotate(-90deg)',transition:'.15s'}}/>
@@ -217,11 +217,11 @@ function FacetRow({checked, onClick, dot, label, count}){
   return (
     <button onClick={onClick} style={{display:'flex',alignItems:'center',gap:9,width:'100%',border:0,background:'transparent',cursor:'pointer',
       padding:'6px 8px',borderRadius:7,textAlign:'left',transition:'.12s'}}
-      onMouseEnter={e=>e.currentTarget.style.background='var(--hover)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-      <span style={{width:16,height:16,borderRadius:5,border:'1.5px solid',borderColor:checked?'var(--primary)':'var(--line-2)',background:checked?'var(--primary)':'#fff',
+      onMouseEnter={e=>e.currentTarget.style.background='var(--secondary)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+      <span style={{width:16,height:16,borderRadius:5,border:'1.5px solid',borderColor:checked?'var(--primary)':'var(--border-strong)',background:checked?'var(--primary)':'#fff',
         display:'flex',alignItems:'center',justifyContent:'center',flex:'none',transition:'.12s'}}>{checked && <Icon name="check" size={11} sw={3} style={{color:'#fff'}}/>}</span>
       {dot && <span style={{width:8,height:8,borderRadius:'50%',background:dot,flex:'none'}}></span>}
-      <span style={{flex:1,fontSize:13,color:'var(--ink)',fontWeight:500}}>{label}</span>
+      <span style={{flex:1,fontSize:13,color:'var(--foreground)',fontWeight:500}}>{label}</span>
       <span className="muted" style={{fontSize:11.5,fontVariantNumeric:'tabular-nums'}}>{count.toLocaleString()}</span>
     </button>
   );
@@ -232,16 +232,16 @@ function ResultCard({r, q, bulk, onDismiss, onOpen}){
   return (
     <div className="card card-hover" style={{padding:'16px 18px'}}>
       <div style={{display:'flex',gap:14}}>
-        {bulk && <span style={{width:18,height:18,borderRadius:5,border:'1.5px solid var(--line-2)',flex:'none',marginTop:2}}></span>}
-        <span onClick={onOpen} style={{width:44,height:44,borderRadius:10,background:'var(--surface-2)',border:'1px solid var(--line)',color:'var(--ink-3)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',cursor:'pointer'}}>
+        {bulk && <span style={{width:18,height:18,borderRadius:5,border:'1.5px solid var(--border-strong)',flex:'none',marginTop:2}}></span>}
+        <span onClick={onOpen} style={{width:44,height:44,borderRadius:10,background:'var(--background)',border:'1px solid var(--border)',color:'var(--muted-foreground)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',cursor:'pointer'}}>
           <Icon name={TYPE_ICON[r.type]||'file'} size={20}/></span>
         <div style={{flex:1,minWidth:0}}>
           <div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--ink-4)',fontWeight:500,marginBottom:3}}>
             {r.path.map((p,i)=>(<React.Fragment key={i}>{i>0 && <Icon name="chevron_right" size={11} style={{opacity:.6}}/>}<span>{p}</span></React.Fragment>))}
           </div>
-          <div className="rtitle" onClick={onOpen} style={{fontSize:15,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',display:'inline-block'}}>{hl(r.title,q)}</div>
+          <div className="rtitle" onClick={onOpen} style={{fontSize:15,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em',display:'inline-block'}}>{hl(r.title,q)}</div>
           <div className="sec" style={{fontSize:13,margin:'5px 0 9px',lineHeight:1.5}}>{hl(r.snippet,q)}</div>
-          <div style={{display:'flex',alignItems:'center',gap:10,fontSize:12,color:'var(--ink-3)',flexWrap:'wrap'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,fontSize:12,color:'var(--muted-foreground)',flexWrap:'wrap'}}>
             <span style={{display:'flex',alignItems:'center',gap:6}}><Avatar id={r.who} size={18}/>{PEOPLE[r.who]?PEOPLE[r.who].name.split(' ')[0]:'—'}</span>
             <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{r.time}
             <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{r.size}
@@ -262,11 +262,11 @@ function ResultGridCard({r, onOpen}){
   const m=MATCH[r.match];
   return (
     <div className="card card-hover" onClick={onOpen} style={{padding:14,display:'flex',flexDirection:'column',gap:10,cursor:'pointer'}}>
-      <div style={{height:100,borderRadius:9,background:'var(--surface-2)',border:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ink-4)'}}>
+      <div style={{height:100,borderRadius:9,background:'var(--background)',border:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ink-4)'}}>
         <Icon name={TYPE_ICON[r.type]||'file'} size={30}/></div>
       <div style={{fontSize:12,color:'var(--ink-4)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.path.join(' › ')}</div>
-      <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
-      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:11.5,color:'var(--ink-3)'}}>
+      <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
+      <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:11.5,color:'var(--muted-foreground)'}}>
         <span style={{display:'flex',alignItems:'center',gap:5,color:m.color,fontWeight:550}}><Icon name={m.icon} size={12}/>{m.label.split(' ')[0]}</span>
         <span>{r.size}</span>
       </div>
@@ -287,7 +287,7 @@ function SearchPreview({item, q, onClose, onDismiss}){
     <div style={{position:'fixed',inset:0,zIndex:200}}>
       <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(36,39,45,.28)',backdropFilter:'blur(1px)',animation:'fade .2s'}}></div>
       <div style={{position:'absolute',top:0,right:0,bottom:0,width:'min(540px,94vw)',background:'#fff',boxShadow:'-20px 0 60px rgba(29,53,87,.18)',animation:'slidein .26s cubic-bezier(.2,.8,.3,1)',display:'flex',flexDirection:'column'}}>
-        <div style={{padding:'16px 22px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <div style={{padding:'16px 22px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
           <div style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--ink-4)',fontWeight:500,minWidth:0}}>
             {item.path.map((p,i)=>(<React.Fragment key={i}>{i>0 && <Icon name="chevron_right" size={11} style={{opacity:.6,flex:'none'}}/>}<span style={{whiteSpace:'nowrap'}}>{p}</span></React.Fragment>))}
           </div>
@@ -295,12 +295,12 @@ function SearchPreview({item, q, onClose, onDismiss}){
         </div>
         <div style={{flex:1,overflowY:'auto'}}>
           <div style={{padding:'22px 22px 18px'}}>
-            <div style={{height:200,borderRadius:12,background:'var(--surface-2)',border:'1px solid var(--line)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:10,color:'var(--ink-4)'}}>
+            <div style={{height:200,borderRadius:12,background:'var(--background)',border:'1px solid var(--border)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:10,color:'var(--ink-4)'}}>
               <Icon name={TYPE_ICON[item.type]||'file'} size={44}/>
               <span style={{fontSize:12,fontWeight:500}}>{item.dims||item.size} · {item.type}</span>
             </div>
-            <h2 style={{fontSize:19,fontWeight:700,letterSpacing:'-.02em',margin:'18px 0 0',color:'var(--ink)',lineHeight:1.3}}>{hl(item.title,q)}</h2>
-            <div style={{display:'flex',alignItems:'center',gap:10,fontSize:12.5,color:'var(--ink-3)',margin:'10px 0 0',flexWrap:'wrap'}}>
+            <h2 style={{fontSize:19,fontWeight:700,letterSpacing:'-.02em',margin:'18px 0 0',color:'var(--foreground)',lineHeight:1.3}}>{hl(item.title,q)}</h2>
+            <div style={{display:'flex',alignItems:'center',gap:10,fontSize:12.5,color:'var(--muted-foreground)',margin:'10px 0 0',flexWrap:'wrap'}}>
               <span style={{display:'flex',alignItems:'center',gap:6}}><Avatar id={item.who} size={20}/>{PEOPLE[item.who]?PEOPLE[item.who].name:'—'}</span>
               <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{item.time}
               <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{item.size}
@@ -311,16 +311,16 @@ function SearchPreview({item, q, onClose, onDismiss}){
           </div>
           <div style={{padding:'0 22px 22px'}}>
             <div className="eyebrow" style={{marginBottom:8}}>Matched excerpt</div>
-            <div style={{fontSize:13.5,lineHeight:1.65,color:'var(--ink-2)',background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:10,padding:'14px 16px'}}>{hl(item.snippet,q)}</div>
+            <div style={{fontSize:13.5,lineHeight:1.65,color:'var(--secondary-foreground)',background:'var(--background)',border:'1px solid var(--border)',borderRadius:10,padding:'14px 16px'}}>{hl(item.snippet,q)}</div>
             <div className="eyebrow" style={{margin:'20px 0 10px'}}>Details</div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px 16px'}}>
               {[['Location',item.path.join(' / ')],['Type',item.type],['Size',item.size],['Dimensions',item.dims||'—'],['Owner',PEOPLE[item.who]?PEOPLE[item.who].name:'—'],['Modified',item.time]].map(([k,v])=>(
-                <div key={k}><div className="muted" style={{fontSize:11,marginBottom:2}}>{k}</div><div style={{fontSize:13,color:'var(--ink)',fontWeight:500,wordBreak:'break-word'}}>{v}</div></div>
+                <div key={k}><div className="muted" style={{fontSize:11,marginBottom:2}}>{k}</div><div style={{fontSize:13,color:'var(--foreground)',fontWeight:500,wordBreak:'break-word'}}>{v}</div></div>
               ))}
             </div>
           </div>
         </div>
-        <div style={{padding:'13px 22px',borderTop:'1px solid var(--line)',display:'flex',gap:9,background:'var(--surface-2)'}}>
+        <div style={{padding:'13px 22px',borderTop:'1px solid var(--border)',display:'flex',gap:9,background:'var(--background)'}}>
           <button className="btn btn-primary" style={{flex:1}}><Icon name="external" size={15}/>View File</button>
           <button className="btn btn-secondary btn-icon" title="Accept"><Icon name="check" size={16}/></button>
           <button className="btn btn-secondary btn-icon" title="Dismiss" onClick={onDismiss}><Icon name="x" size={16}/></button>
@@ -343,14 +343,14 @@ const OV_NOTABLE = [1, 5, 6]; // result ids
 
 function OvBar({color, pct}){
   return (
-    <div style={{height:5,borderRadius:3,background:'var(--line)',overflow:'hidden',flex:1}}>
+    <div style={{height:5,borderRadius:3,background:'var(--border)',overflow:'hidden',flex:1}}>
       <div style={{width:pct+'%',height:'100%',background:color,borderRadius:3,transition:'width .5s cubic-bezier(.2,.8,.3,1)'}}></div>
     </div>
   );
 }
 function OvShimmer({w}){
   return (
-    <div style={{position:'relative',overflow:'hidden',height:11,width:w,borderRadius:5,background:'var(--surface-2)'}}>
+    <div style={{position:'relative',overflow:'hidden',height:11,width:w,borderRadius:5,background:'var(--background)'}}>
       <div className="prog-sheen"></div>
     </div>
   );
@@ -367,19 +367,19 @@ function SearchOverview({q, count, analyzing, onClose, onOpen, onAsk}){
       <div style={{position:'absolute',left:0,top:0,bottom:0,width:3,background:'var(--logo-grad)'}}></div>
 
       {/* header */}
-      <div style={{display:'flex',alignItems:'center',gap:12,padding:'15px 18px 14px',borderBottom:'1px solid var(--line)'}}>
+      <div style={{display:'flex',alignItems:'center',gap:12,padding:'15px 18px 14px',borderBottom:'1px solid var(--border)'}}>
         <span style={{width:34,height:34,borderRadius:9,background:'var(--logo-grad)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',
           boxShadow:'0 2px 8px rgba(138,99,196,.3)'}}>
           <Icon name="sparkle" size={18} style={{color:'#fff'}}/>
         </span>
         <div style={{flex:1,minWidth:0}}>
           <div style={{display:'flex',alignItems:'center',gap:8}}>
-            <span style={{fontSize:14.5,fontWeight:700,letterSpacing:'-.01em',color:'var(--ink)'}}>AI overview</span>
+            <span style={{fontSize:14.5,fontWeight:700,letterSpacing:'-.01em',color:'var(--foreground)'}}>AI overview</span>
             <span className="badge" style={{background:'var(--violet-t)',color:'var(--violet)',height:18,fontSize:10,fontWeight:700,letterSpacing:'.04em'}}>BETA</span>
           </div>
           <div className="muted" style={{fontSize:12,marginTop:1}}>
             {analyzing ? <span style={{animation:'blink 1.1s ease-in-out infinite'}}>Reading the top matches…</span>
-              : <>Synthesized across <b style={{color:'var(--ink-2)',fontWeight:600}}>{count.toLocaleString()}</b> results for &ldquo;{q}&rdquo;</>}
+              : <>Synthesized across <b style={{color:'var(--secondary-foreground)',fontWeight:600}}>{count.toLocaleString()}</b> results for &ldquo;{q}&rdquo;</>}
           </div>
         </div>
         <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose} title="Hide overview" style={{flex:'none'}}><Icon name="x" size={16}/></button>
@@ -393,11 +393,11 @@ function SearchOverview({q, count, analyzing, onClose, onOpen, onAsk}){
       ) : (
         <div style={{padding:'17px 18px 16px'}}>
           {/* summary */}
-          <p style={{fontSize:13.5,lineHeight:1.6,color:'var(--ink-2)',margin:0,textWrap:'pretty'}}>
-            Most material clusters around <b style={{color:'var(--ink)',fontWeight:600}}>quarterly financial reporting and forecasting</b>. The
+          <p style={{fontSize:13.5,lineHeight:1.6,color:'var(--secondary-foreground)',margin:0,textWrap:'pretty'}}>
+            Most material clusters around <b style={{color:'var(--foreground)',fontWeight:600}}>quarterly financial reporting and forecasting</b>. The
             strongest matches are Q3/Q4 close documents and budget models; a reconciled ledger and two flagged line items are routed for
-            <b style={{color:'var(--ink)',fontWeight:600}}> legal review before filing</b>. Coverage spans 7 file types and 6 contributors,
-            concentrated in the <b style={{color:'var(--ink)',fontWeight:600}}>Finance</b> and <b style={{color:'var(--ink)',fontWeight:600}}>Strategy</b> folders.
+            <b style={{color:'var(--foreground)',fontWeight:600}}> legal review before filing</b>. Coverage spans 7 file types and 6 contributors,
+            concentrated in the <b style={{color:'var(--foreground)',fontWeight:600}}>Finance</b> and <b style={{color:'var(--foreground)',fontWeight:600}}>Strategy</b> folders.
           </p>
 
           {/* themes */}
@@ -407,11 +407,11 @@ function SearchOverview({q, count, analyzing, onClose, onOpen, onAsk}){
               <div key={t.label} style={{display:'flex',alignItems:'center',gap:12}}>
                 <span style={{width:8,height:8,borderRadius:'50%',background:t.color,flex:'none'}}></span>
                 <div style={{width:208,flex:'none',minWidth:0}}>
-                  <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.label}</div>
+                  <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.label}</div>
                   <div className="muted" style={{fontSize:11,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.note}</div>
                 </div>
                 <OvBar color={t.color} pct={Math.round(t.n/max*100)}/>
-                <span style={{fontSize:12.5,fontWeight:600,color:'var(--ink-2)',width:48,textAlign:'right',flex:'none',fontVariantNumeric:'tabular-nums'}}>{t.n.toLocaleString()}</span>
+                <span style={{fontSize:12.5,fontWeight:600,color:'var(--secondary-foreground)',width:48,textAlign:'right',flex:'none',fontVariantNumeric:'tabular-nums'}}>{t.n.toLocaleString()}</span>
               </div>
             ))}
           </div>
@@ -433,10 +433,10 @@ function SearchOverview({q, count, analyzing, onClose, onOpen, onAsk}){
               return (
                 <button key={r.id} onClick={()=>onOpen&&onOpen(r)} style={{display:'flex',alignItems:'center',gap:12,width:'100%',textAlign:'left',
                   border:0,background:'transparent',borderRadius:9,padding:'9px 8px',cursor:'pointer',transition:'.12s'}}
-                  onMouseEnter={e=>e.currentTarget.style.background='var(--hover)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                  <span style={{width:30,height:30,borderRadius:8,background:'var(--surface-2)',border:'1px solid var(--line)',color:'var(--ink-3)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={TYPE_ICON[r.type]||'file'} size={15}/></span>
+                  onMouseEnter={e=>e.currentTarget.style.background='var(--secondary)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                  <span style={{width:30,height:30,borderRadius:8,background:'var(--background)',border:'1px solid var(--border)',color:'var(--muted-foreground)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={TYPE_ICON[r.type]||'file'} size={15}/></span>
                   <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
                     <div className="muted" style={{fontSize:11.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.snippet.replace(/^…|…$/g,'')}</div>
                   </div>
                   <span style={{display:'flex',alignItems:'center',gap:5,color:m.color,fontWeight:600,fontSize:11.5,flex:'none',whiteSpace:'nowrap'}}><Icon name={m.icon} size={12}/>{m.label.split(' ')[0]}</span>
@@ -447,7 +447,7 @@ function SearchOverview({q, count, analyzing, onClose, onOpen, onAsk}){
           </div>
 
           {/* footer */}
-          <div style={{display:'flex',alignItems:'center',gap:12,marginTop:15,paddingTop:13,borderTop:'1px solid var(--line)',flexWrap:'wrap'}}>
+          <div style={{display:'flex',alignItems:'center',gap:12,marginTop:15,paddingTop:13,borderTop:'1px solid var(--border)',flexWrap:'wrap'}}>
             <span className="muted" style={{fontSize:11.5,display:'flex',alignItems:'center',gap:6,flex:1,minWidth:160}}>
               <Icon name="sparkle" size={12} style={{color:'var(--violet)'}}/>Synthesized from the top 50 matches · AI can be imprecise
             </span>

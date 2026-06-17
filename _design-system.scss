@@ -175,18 +175,21 @@ $spacing: (
   --info-foreground:        oklch(1.000 0.000 271.2);
 
   // Subtle fills — callouts, row highlights, badge backgrounds
-  --accent-subtle:          oklch(0.950 0.030 256.1);  // #EBF4FF
+  --accent-subtle:          oklch(0.964 0.017 250);    // #EBF4FF (corrected \u2014 was 0.950/0.030/256.1 = #E2F0FF)
   --success-subtle:         oklch(0.971 0.029 149.2);  // #F0FDF4
   --warning-subtle:         oklch(0.987 0.030 89.2);   // #FFFBEB
   --destructive-subtle:     oklch(0.981 0.025 27.3);   // #FEF2F2
   --info-subtle:            oklch(0.971 0.030 237.3);  // #F0F9FF
 
-  // shadcn chart tokens — standard 5-slot palette
-  --chart-1:  oklch(0.569 0.195 256.1);  // accent blue
-  --chart-2:  oklch(0.627 0.170 149.2);  // success green
-  --chart-3:  oklch(0.809 0.160 89.2);   // warning amber
-  --chart-4:  oklch(0.577 0.215 27.3);   // destructive red
-  --chart-5:  oklch(0.685 0.148 237.3);  // info cyan
+  // shadcn chart tokens — 5-slot palette.
+  // Per §11.1 these MUST NOT reuse brand/semantic colors (--accent, --success,
+  // --warning…). A series rendered in --accent reads as an interactive element.
+  // They map to the distinct categorical palette so charts never collide with UI.
+  --chart-1:  var(--chart-cat-1);  // #3B82F6 blue — distinct from --accent (#0073E6)
+  --chart-2:  var(--chart-cat-2);  // #10B981 emerald
+  --chart-3:  var(--chart-cat-3);  // #F59E0B amber
+  --chart-4:  var(--chart-cat-4);  // #EF4444 red
+  --chart-5:  var(--chart-cat-5);  // #8B5CF6 purple
 
   // Chart tokens (IMIN categorical + semantic)
   --chart-cat-1: #{$chart-cat-1};
@@ -203,6 +206,16 @@ $spacing: (
   --chart-grid-line:  #{$chart-grid-line};
   --chart-axis-text:  #{$chart-axis-text};
   --chart-tooltip-bg: #{$chart-tooltip-bg};
+
+  // Neutral scale — exposed as runtime CSS vars so components that need a raw
+  // neutral (tooltip surface, dividers, etc.) can use var(--neutral-*) and not
+  // only the compile-time $neutral-*. Absolute values — identical in dark mode.
+  --neutral-0:   #{$neutral-0};   --neutral-50:  #{$neutral-50};
+  --neutral-100: #{$neutral-100}; --neutral-200: #{$neutral-200};
+  --neutral-300: #{$neutral-300}; --neutral-400: #{$neutral-400};
+  --neutral-500: #{$neutral-500}; --neutral-600: #{$neutral-600};
+  --neutral-700: #{$neutral-700}; --neutral-800: #{$neutral-800};
+  --neutral-900: #{$neutral-900}; --neutral-950: #{$neutral-950};
 
   // ── Backward-compat aliases ─────────────────────────────────
   // Map old IMIN token names → new shadcn names.
@@ -231,7 +244,7 @@ $spacing: (
   --surface-base:          var(--card);
   --surface-subtle:        var(--secondary);
   --border-default:        var(--border);
-  --border-strong:         oklch(0.821 0.022 256.1);  // neutral-300
+  --border-strong:         oklch(0.868 0.020 254);    // #CBD5E1 neutral-300 (corrected — was 0.821/256.1 = #BBC5D3)
   --border-accent:         var(--accent);
   --border-danger:         var(--destructive);
   --border-success:        var(--success);
@@ -1257,7 +1270,7 @@ $z-tooltip: 700;   // tooltips — always highest (must appear above modals)
   &__actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding-top: 4px; }
 }
 
-.page-title { font-size: 26px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
+.page-title { font-size: 28px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
 .page-desc  { font-size: 14px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
 
 .breadcrumb { margin-bottom: 6px; }
