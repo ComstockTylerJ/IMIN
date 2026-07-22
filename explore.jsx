@@ -76,21 +76,21 @@ const LAND = [
 ];
 
 // ===================== Explore page =====================
-function ExplorePage({setPage, openCreate, flash, onSearch, openPerson, openDevice, openTopic}){
+function ExplorePage({setPage, openCreate, flash, onSearch, openPerson, openDevice, openTopic, openEntity, onAISearch}){
   const [tab,setTab]=React.useState('search');
   const subNew=subTotalNew({});
   const tabs=[{id:'search',label:'Search',icon:'search'},{id:'map',label:'Map',icon:'globe'},{id:'subs',label:'Subscriptions',icon:'bell',badge:subNew}];
   return (
     <div className="rise">
-      <div style={{borderBottom:'1px solid var(--border)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
+      <div style={{borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.65)',backdropFilter:'blur(4px)'}}>
         <div className="page" style={{paddingTop:0,paddingBottom:0}}>
           <div style={{display:'flex',alignItems:'flex-end',gap:24}}>
-            <h1 style={{fontSize:18.5,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--foreground)',paddingBottom:13,flex:1}}>Explore</h1>
-            <div style={{display:'flex',gap:22,flex:'none'}}>
+            <h1 style={{fontSize:18.5,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)',paddingBottom:13,flex:1}}>Explore</h1>
+            <div style={{display:'flex',gap:22,flex:'none'}} data-tour="explore-tabs">
                 {tabs.map(t=>(
                   <button key={t.id} onClick={()=>setTab(t.id)} style={{display:'flex',alignItems:'center',gap:7,border:0,background:'transparent',
                     padding:'13px 0',cursor:'pointer',fontSize:13.5,fontWeight:tab===t.id?600:500,
-                    color:tab===t.id?'var(--blue)':'var(--muted-foreground)',position:'relative'}}>
+                    color:tab===t.id?'var(--blue)':'var(--ink-3)',position:'relative'}}>
                     <Icon name={t.icon} size={15}/>{t.label}
                     {t.badge>0 && <span style={{fontSize:11,fontWeight:700,background:tab===t.id?'var(--blue)':'#EBF4FF',color:tab===t.id?'#fff':'var(--blue)',borderRadius:999,padding:'1px 7px'}}>{t.badge}</span>}
                     {tab===t.id && <span style={{position:'absolute',left:0,right:0,bottom:-1,height:2.5,background:'var(--blue)',borderRadius:2}}></span>}
@@ -102,7 +102,7 @@ function ExplorePage({setPage, openCreate, flash, onSearch, openPerson, openDevi
         </div>
       </div>
       {tab==='search'
-        ? <ContentWorkspace embed w={CONTENT_WS} setPage={setPage} openCreate={openCreate} flash={flash} onSearch={onSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic}/>
+        ? <ContentWorkspace embed w={CONTENT_WS} setPage={setPage} openCreate={openCreate} flash={flash} onSearch={onSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic} openEntity={openEntity} onAISearch={onAISearch}/>
         : tab==='map'
           ? <MapSearch flash={flash} setPage={setPage}/>
           : <SubscriptionSearches flash={flash} setPage={setPage} onSearch={onSearch}/>}
@@ -193,14 +193,14 @@ function MapSearch({flash, setPage}){
       {/* toolbar */}
       <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap',marginBottom:14}}>
         <button onClick={mode==='idle'?start:start} className={'btn '+(mode!=='idle'?'btn-primary':'btn-secondary')}
-          style={mode!=='idle'?{}:{borderColor:'var(--border-strong)'}}>
+          style={mode!=='idle'?{}:{borderColor:'var(--line-2)'}}>
           <Icon name="polygon" size={16}/>{mode==='idle'?'Draw area':'Redraw'}
         </button>
         <button onClick={clear} className="btn btn-ghost btn-sm" disabled={!pts.length}
-          style={{opacity:pts.length?1:.45,pointerEvents:pts.length?'auto':'none',border:'1px solid var(--border-strong)'}}>
+          style={{opacity:pts.length?1:.45,pointerEvents:pts.length?'auto':'none',border:'1px solid var(--line-2)'}}>
           <Icon name="trash" size={14}/>Clear
         </button>
-        <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--muted-foreground)',fontWeight:500}}>
+        <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12.5,color:'var(--ink-3)',fontWeight:500}}>
           <Icon name={mode==='draw'?'pin_loc':'globe'} size={14} style={{color:'var(--ink-4)'}}/>
           {mode==='idle' && 'Draw a polygon to query geotagged data within it'}
           {mode==='draw' && 'Click to add points · click the first point (or double-click) to close'}
@@ -212,7 +212,7 @@ function MapSearch({flash, setPage}){
             <button key={k} onClick={()=>setActive(a=>({...a,[k]:!a[k]}))}
               style={{display:'inline-flex',alignItems:'center',gap:6,height:28,padding:'0 10px',borderRadius:999,cursor:'pointer',
                 fontSize:12,fontWeight:550,transition:'.12s',
-                border:'1px solid '+(active[k]?v.color:'var(--border-strong)'),
+                border:'1px solid '+(active[k]?v.color:'var(--line-2)'),
                 background:active[k]?v.tint:'#fff', color:active[k]?v.color:'var(--ink-4)'}}>
               <span style={{width:8,height:8,borderRadius:'50%',background:active[k]?v.color:'var(--ink-4)'}}></span>{v.label}
             </button>
@@ -295,8 +295,8 @@ function MapSearch({flash, setPage}){
 
           {/* coord readout */}
           <div style={{position:'absolute',left:12,top:12,display:'flex',alignItems:'center',gap:7,
-            background:'rgba(255,255,255,.9)',border:'1px solid var(--border)',borderRadius:8,padding:'5px 10px',
-            fontSize:11.5,fontWeight:600,color:'var(--secondary-foreground)',fontFamily:'ui-monospace,Menlo,monospace',boxShadow:'var(--shadow-sm)'}}>
+            background:'rgba(255,255,255,.9)',border:'1px solid var(--line)',borderRadius:8,padding:'5px 10px',
+            fontSize:11.5,fontWeight:600,color:'var(--ink-2)',fontFamily:'ui-monospace,Menlo,monospace',boxShadow:'var(--shadow-sm)'}}>
             <Icon name="target" size={13} style={{color:'var(--blue)'}}/>
             {cursor?geoLatLng(cursor.x,cursor.y):'—'}
           </div>
@@ -304,10 +304,10 @@ function MapSearch({flash, setPage}){
           {/* idle CTA overlay */}
           {mode==='idle' && pts.length===0 && (
             <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',pointerEvents:'none'}}>
-              <div className="pop" style={{background:'rgba(255,255,255,.94)',border:'1px solid var(--border)',borderRadius:14,padding:'18px 22px',
+              <div className="pop" style={{background:'rgba(255,255,255,.94)',border:'1px solid var(--line)',borderRadius:14,padding:'18px 22px',
                 textAlign:'center',boxShadow:'var(--shadow-md)',pointerEvents:'auto',maxWidth:300}}>
                 <span style={{width:42,height:42,borderRadius:11,background:'var(--blue-t)',color:'var(--blue)',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="polygon" size={21}/></span>
-                <div style={{fontSize:14.5,fontWeight:700,color:'var(--foreground)',marginTop:11}}>Query by area</div>
+                <div style={{fontSize:14.5,fontWeight:700,color:'var(--ink)',marginTop:11}}>Query by area</div>
                 <div className="muted" style={{fontSize:12.5,marginTop:4,lineHeight:1.5}}>Draw a polygon to return every geotagged item that falls inside it.</div>
                 <button className="btn btn-primary btn-sm" style={{marginTop:13}} onClick={start}><Icon name="polygon" size={14}/>Draw area</button>
               </div>
@@ -322,7 +322,7 @@ function MapSearch({flash, setPage}){
               <div style={{display:'flex',alignItems:'center',gap:9}}>
                 <span style={{width:30,height:30,borderRadius:8,background:'var(--blue-t)',color:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="pin_loc" size={16}/></span>
                 <div>
-                  <div style={{fontSize:14,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em'}}>{mode==='done'?'In selected area':'Geotagged data'}</div>
+                  <div style={{fontSize:14,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{mode==='done'?'In selected area':'Geotagged data'}</div>
                   <div className="muted" style={{fontSize:11.5}}>{mode==='done'?`≈ ${areaKm.toLocaleString()} km² · ${pts.length} vertices`:`${visible.length} items on map`}</div>
                 </div>
               </div>
@@ -330,7 +330,7 @@ function MapSearch({flash, setPage}){
             </div>
 
             {mode!=='done' && (
-              <div style={{marginTop:14,borderTop:'1px solid var(--border)',paddingTop:14}}>
+              <div style={{marginTop:14,borderTop:'1px solid var(--line)',paddingTop:14}}>
                 <div className="eyebrow" style={{marginBottom:10}}>On map by type</div>
                 <div style={{display:'flex',flexDirection:'column',gap:9}}>
                   {Object.entries(GEO_KIND).map(([k,v])=>{
@@ -338,13 +338,13 @@ function MapSearch({flash, setPage}){
                     return (
                       <div key={k} style={{display:'flex',alignItems:'center',gap:10}}>
                         <span style={{width:24,height:24,borderRadius:7,background:v.tint,color:v.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={v.icon} size={13}/></span>
-                        <span style={{flex:1,fontSize:13,color:'var(--secondary-foreground)',fontWeight:500}}>{v.label}</span>
-                        <span style={{fontSize:12.5,fontWeight:600,color:'var(--muted-foreground)'}}>{n}</span>
+                        <span style={{flex:1,fontSize:13,color:'var(--ink-2)',fontWeight:500}}>{v.label}</span>
+                        <span style={{fontSize:12.5,fontWeight:600,color:'var(--ink-3)'}}>{n}</span>
                       </div>
                     );
                   })}
                 </div>
-                <div style={{marginTop:14,fontSize:12.5,color:'var(--muted-foreground)',lineHeight:1.5,background:'var(--background)',border:'1px solid var(--border)',borderRadius:10,padding:'11px 13px'}}>
+                <div style={{marginTop:14,fontSize:12.5,color:'var(--ink-3)',lineHeight:1.5,background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:10,padding:'11px 13px'}}>
                   <Icon name="polygon" size={13} style={{color:'var(--blue)',verticalAlign:'-2px',marginRight:6}}/>
                   Draw an area on the map to filter these down to a specific region.
                 </div>
@@ -356,8 +356,8 @@ function MapSearch({flash, setPage}){
             <div className="card card-pad" style={{maxHeight:'calc(100vh - var(--header-h) - 190px)',overflowY:'auto'}}>
               {inside.length===0 ? (
                 <div style={{textAlign:'center',padding:'24px 8px'}}>
-                  <span style={{width:38,height:38,borderRadius:10,background:'var(--background)',color:'var(--ink-4)',display:'inline-flex',alignItems:'center',justifyContent:'center',border:'1px solid var(--border)'}}><Icon name="search" size={18}/></span>
-                  <div style={{fontSize:13,color:'var(--muted-foreground)',marginTop:9,fontWeight:500}}>No geotagged items in this area.</div>
+                  <span style={{width:38,height:38,borderRadius:10,background:'var(--surface-2)',color:'var(--ink-4)',display:'inline-flex',alignItems:'center',justifyContent:'center',border:'1px solid var(--line)'}}><Icon name="search" size={18}/></span>
+                  <div style={{fontSize:13,color:'var(--ink-3)',marginTop:9,fontWeight:500}}>No geotagged items in this area.</div>
                   <button className="btn btn-secondary btn-sm" style={{marginTop:12}} onClick={start}>Redraw area</button>
                 </div>
               ) : (
@@ -367,12 +367,12 @@ function MapSearch({flash, setPage}){
                     return (
                       <div key={g.id} onMouseEnter={()=>setHover(g.id)} onMouseLeave={()=>setHover(null)}
                         onClick={()=>flash&&flash(`Opening ${g.title}…`)}
-                        style={{display:'flex',gap:11,padding:'10px 8px',borderTop:i?'1px solid var(--border)':0,cursor:'pointer',borderRadius:8,
-                          background:hover===g.id?'var(--background)':'transparent',transition:'.12s'}}>
+                        style={{display:'flex',gap:11,padding:'10px 8px',borderTop:i?'1px solid var(--line)':0,cursor:'pointer',borderRadius:8,
+                          background:hover===g.id?'var(--surface-2)':'transparent',transition:'.12s'}}>
                         <span style={{width:30,height:30,borderRadius:8,background:v.tint,color:v.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={v.icon} size={15}/></span>
                         <div style={{flex:1,minWidth:0}}>
-                          <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{g.title}</div>
-                          <div style={{display:'flex',alignItems:'center',gap:7,marginTop:3,fontSize:11.5,color:'var(--muted-foreground)'}}>
+                          <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{g.title}</div>
+                          <div style={{display:'flex',alignItems:'center',gap:7,marginTop:3,fontSize:11.5,color:'var(--ink-3)'}}>
                             <span style={{fontFamily:'ui-monospace,Menlo,monospace'}}>{g.sector}</span>
                             <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
                             <Avatar id={g.who} size={15}/>{PEOPLE[g.who].name.split(' ')[0]}
@@ -386,7 +386,7 @@ function MapSearch({flash, setPage}){
                 </div>
               )}
               {inside.length>0 && (
-                <div style={{display:'flex',gap:8,marginTop:13,paddingTop:13,borderTop:'1px solid var(--border)'}}>
+                <div style={{display:'flex',gap:8,marginTop:13,paddingTop:13,borderTop:'1px solid var(--line)'}}>
                   <button className="btn btn-primary btn-sm" style={{flex:1}} onClick={()=>flash&&flash(`${inside.length} items added to a new collection`)}><Icon name="download" size={14}/>Export {inside.length}</button>
                   <button className="btn btn-secondary btn-sm" onClick={saveArea}><Icon name="bookmark" size={14}/>Save</button>
                 </div>
@@ -400,24 +400,24 @@ function MapSearch({flash, setPage}){
               <div style={{display:'flex',alignItems:'center',gap:9}}>
                 <span style={{width:30,height:30,borderRadius:8,background:'var(--blue-t)',color:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="polygon" size={16}/></span>
                 <div>
-                  <div style={{fontSize:14,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em'}}>Polygon Repo</div>
+                  <div style={{fontSize:14,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>Polygon Repo</div>
                   <div className="muted" style={{fontSize:11.5}}>Saved area queries</div>
                 </div>
               </div>
-              <span style={{fontSize:12.5,fontWeight:600,color:'var(--muted-foreground)'}}>{saved.length}</span>
+              <span style={{fontSize:12.5,fontWeight:600,color:'var(--ink-3)'}}>{saved.length}</span>
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:2,maxHeight:268,overflowY:'auto',margin:'0 -8px'}}>
               {saved.map((a,i)=>{
                 const n=GEO.filter(g=>active[g.kind]&&pointInPoly(g,a.pts)).length;
                 return (
                   <div key={a.id} onClick={()=>loadArea(a)} title="Load this area"
-                    style={{display:'flex',alignItems:'center',gap:11,padding:'9px 8px',borderTop:i?'1px solid var(--border)':0,cursor:'pointer',borderRadius:8,transition:'.12s'}}
-                    onMouseEnter={e=>e.currentTarget.style.background='var(--background)'}
+                    style={{display:'flex',alignItems:'center',gap:11,padding:'9px 8px',borderTop:i?'1px solid var(--line)':0,cursor:'pointer',borderRadius:8,transition:'.12s'}}
+                    onMouseEnter={e=>e.currentTarget.style.background='var(--surface-2)'}
                     onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
                     <PolyThumb pts={a.pts}/>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.name}</div>
-                      <div style={{display:'flex',alignItems:'center',gap:6,marginTop:3,fontSize:11,color:'var(--muted-foreground)'}}>
+                      <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{a.name}</div>
+                      <div style={{display:'flex',alignItems:'center',gap:6,marginTop:3,fontSize:11,color:'var(--ink-3)'}}>
                         <Avatar id={a.who} size={14}/>{PEOPLE[a.who].name.split(' ')[0]}
                         <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{a.when}
                       </div>
@@ -482,16 +482,113 @@ const SUB_SEARCHES = [
 function subNewCount(s, seen){ return seen[s.id] ? 0 : s.results.filter(r=>r.isNew).length; }
 function subTotalNew(seen){ return SUB_SEARCHES.reduce((a,s)=>a+subNewCount(s,seen),0); }
 
+// ---- schedule / scope options for the New Subscription flow ----
+const SUB_CADENCES = [
+  {id:'Realtime', label:'Realtime', note:'Alert the moment a match lands'},
+  {id:'Hourly',   label:'Hourly',   note:'Check for new matches every hour'},
+  {id:'Daily',    label:'Daily',    note:'One digest each morning'},
+  {id:'Weekly',   label:'Weekly',   note:'A summary once a week'},
+];
+const SUB_SCOPES = ['All content','Documents','Email','Images','Devices'];
+
+function NewSubscriptionModal({onClose, onCreate, prefill}){
+  const [name,setName]=React.useState('');
+  const [query,setQuery]=React.useState(prefill||'');
+  const [cadence,setCadence]=React.useState('Realtime');
+  const [scope,setScope]=React.useState(['All content']);
+  const [notify,setNotify]=React.useState(['In-app']);
+  React.useEffect(()=>{const esc=e=>e.key==='Escape'&&onClose();window.addEventListener('keydown',esc);return()=>window.removeEventListener('keydown',esc);},[]);
+  function toggle(arr,set,v){ set(arr.includes(v)?arr.filter(x=>x!==v):[...arr,v]); }
+  function toggleScope(v){
+    if(v==='All content'){ setScope(['All content']); return; }
+    setScope(prev=>{ const base=prev.filter(x=>x!=='All content'); const next=base.includes(v)?base.filter(x=>x!==v):[...base,v]; return next.length?next:['All content']; });
+  }
+  const valid = name.trim() && query.trim();
+  const cad = SUB_CADENCES.find(c=>c.id===cadence);
+  function submit(){
+    if(!valid) return;
+    onCreate({ id:'sub'+Math.floor(Math.random()*9000+1000), name:name.trim(), query:query.trim(), cadence, last:'just now', owner:'tyler',
+      scope:scope.slice(), total:0, results:[] });
+    onClose();
+  }
+  const inputStyle={width:'100%',height:40,border:'1px solid var(--line-2)',borderRadius:9,padding:'0 13px',fontSize:14,fontFamily:'inherit',outline:'none'};
+  const labelStyle={fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7};
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:300,display:'flex',alignItems:'flex-start',justifyContent:'center',paddingTop:'8vh'}}>
+      <div onClick={onClose} style={{position:'absolute',inset:0,background:'rgba(36,39,45,.32)',backdropFilter:'blur(2px)',animation:'fade .2s'}}></div>
+      <div className="pop card" style={{position:'relative',width:'min(560px,94vw)',maxHeight:'84vh',display:'flex',flexDirection:'column',boxShadow:'var(--shadow-lg)',borderRadius:16,overflow:'hidden'}}>
+        <div style={{padding:'18px 22px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between',flex:'none'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <span style={{width:32,height:32,borderRadius:9,background:'var(--blue-t)',color:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="bell" size={17}/></span>
+            <div>
+              <div style={{fontSize:16,fontWeight:700,letterSpacing:'-.02em'}}>New subscription</div>
+              <div className="muted" style={{fontSize:12}}>Save a search and get alerted when new matches land</div>
+            </div>
+          </div>
+          <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon name="x" size={17}/></button>
+        </div>
+        <div style={{padding:'20px 22px',display:'flex',flexDirection:'column',gap:18,overflowY:'auto'}}>
+          <div>
+            <label style={labelStyle}>Name</label>
+            <input autoFocus value={name} onChange={e=>setName(e.target.value)} placeholder="e.g. Project Atlas mentions"
+              style={inputStyle} onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--line-2)'}/>
+          </div>
+          <div>
+            <label style={labelStyle}>Query</label>
+            <div style={{display:'flex',alignItems:'center',gap:9,border:'1px solid var(--line-2)',borderRadius:9,padding:'0 12px',height:40}}
+              onFocus={e=>e.currentTarget.style.borderColor='var(--blue)'} onBlur={e=>e.currentTarget.style.borderColor='var(--line-2)'}>
+              <Icon name="search" size={15} style={{color:'var(--ink-4)',flex:'none'}}/>
+              <input value={query} onChange={e=>setQuery(e.target.value)} placeholder='"Project Atlas" OR tag:privileged'
+                style={{flex:1,border:0,outline:'none',fontSize:13,fontFamily:'ui-monospace,Menlo,monospace',background:'transparent',color:'var(--ink)'}}/>
+            </div>
+            <div className="muted" style={{fontSize:11.5,marginTop:6}}>Use quotes for phrases, <b>AND</b>/<b>OR</b> to combine, and <code>tag:</code> for labels.</div>
+          </div>
+          <div>
+            <label style={labelStyle}>Search within</label>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{SUB_SCOPES.map(sc=>{
+              const on=scope.includes(sc);
+              return <button key={sc} onClick={()=>toggleScope(sc)} className={'chip'+(on?' on':'')} style={{height:30}}>{on&&<Icon name="check" size={13} sw={2.6}/>}{sc}</button>;
+            })}</div>
+          </div>
+          <div>
+            <label style={labelStyle}>Run schedule</label>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{SUB_CADENCES.map(c=>(
+              <button key={c.id} onClick={()=>setCadence(c.id)} className={'chip'+(cadence===c.id?' on':'')} style={{height:30}}>
+                {c.id==='Realtime'&&<span style={{width:6,height:6,borderRadius:'50%',background:cadence===c.id?'#16A34A':'var(--ink-4)'}}></span>}{c.label}
+              </button>
+            ))}</div>
+            <div className="muted" style={{fontSize:11.5,marginTop:7,display:'flex',alignItems:'center',gap:6}}><Icon name="history" size={13} style={{color:'var(--ink-4)'}}/>{cad.note}.</div>
+          </div>
+          <div>
+            <label style={labelStyle}>Notify me by</label>
+            <div style={{display:'flex',gap:6,flexWrap:'wrap'}}>{['In-app','Email'].map(n=>{
+              const on=notify.includes(n);
+              return <button key={n} onClick={()=>toggle(notify,setNotify,n)} className="badge" style={{cursor:'pointer',border:'1px solid',borderColor:on?'var(--blue)':'var(--line-2)',background:on?'var(--blue-t)':'#fff',color:on?'var(--blue)':'var(--ink-3)',height:28,gap:5}}><Icon name={n==='Email'?'mail':'bell'} size={13}/>{n}</button>;
+            })}</div>
+          </div>
+        </div>
+        <div style={{padding:'14px 22px',borderTop:'1px solid var(--line)',display:'flex',justifyContent:'flex-end',gap:9,background:'var(--surface-2)',flex:'none'}}>
+          <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary" onClick={submit} disabled={!valid} style={valid?{}:{opacity:.5,pointerEvents:'none'}}><Icon name="plus" size={16} sw={2.2}/>Create subscription</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SubscriptionSearches({flash, setPage, onSearch}){
   const [seen,setSeen]=React.useState({});
-  const withNew=SUB_SEARCHES.filter(s=>subNewCount(s,seen)>0).length;
+  const [subs,setSubs]=React.useState(SUB_SEARCHES);
+  const [showNew,setShowNew]=React.useState(false);
+  const withNew=subs.filter(s=>subNewCount(s,seen)>0).length;
   // default-select the first subscription that has new content
-  const firstNew=(SUB_SEARCHES.find(s=>s.results.some(r=>r.isNew))||SUB_SEARCHES[0]).id;
+  const firstNew=(subs.find(s=>s.results.some(r=>r.isNew))||subs[0]).id;
   const [selId,setSelId]=React.useState(firstNew);
-  const sel=SUB_SEARCHES.find(s=>s.id===selId);
+  const sel=subs.find(s=>s.id===selId);
 
   function markRead(id){ setSeen(m=>({...m,[id]:true})); flash&&flash('Marked results as read'); }
   function openInSearch(s){ onSearch ? onSearch(s.query) : (flash&&flash('Opening “'+s.name+'” in Search')); }
+  function createSub(sub){ setSubs(prev=>[sub,...prev]); setSelId(sub.id); flash&&flash('Subscription “'+sub.name+'” created · '+sub.cadence.toLowerCase()); }
 
   const selNew = sel ? subNewCount(sel,seen) : 0;
 
@@ -502,35 +599,36 @@ function SubscriptionSearches({flash, setPage, onSearch}){
         <div style={{display:'flex',alignItems:'center',gap:10}}>
           <span style={{width:34,height:34,borderRadius:9,background:'var(--blue-t)',color:'var(--blue)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="bell" size={18}/></span>
           <div>
-            <div style={{fontSize:15,fontWeight:700,letterSpacing:'-.01em',color:'var(--foreground)'}}>Subscription searches</div>
+            <div style={{fontSize:15,fontWeight:700,letterSpacing:'-.01em',color:'var(--ink)'}}>Subscription searches</div>
             <div className="muted" style={{fontSize:12.5,marginTop:1}}>Saved searches that auto-run &mdash; {withNew?`${withNew} ${withNew===1?'query has':'queries have'} new results`:'all caught up'}.</div>
           </div>
         </div>
         <div style={{flex:1}}></div>
-        <button className="btn btn-primary btn-sm" onClick={()=>flash&&flash('New subscription — name it and set a schedule')}><Icon name="plus" size={15} sw={2.2}/>New subscription</button>
+        <button className="btn btn-primary btn-sm" onClick={()=>setShowNew(true)}><Icon name="plus" size={15} sw={2.2}/>New subscription</button>
       </div>
+      {showNew && <NewSubscriptionModal onClose={()=>setShowNew(false)} onCreate={createSub}/>}
 
       <div style={{display:'grid',gridTemplateColumns:'360px minmax(0,1fr)',gap:20,alignItems:'start'}}>
         {/* LEFT — subscription list */}
         <div style={{display:'flex',flexDirection:'column',gap:10}}>
-          {SUB_SEARCHES.map(s=>{
+          {subs.map(s=>{
             const n=subNewCount(s,seen), on=selId===s.id;
             return (
               <div key={s.id} onClick={()=>setSelId(s.id)} className="card"
-                style={{padding:'13px 15px',cursor:'pointer',borderColor:on?'var(--blue)':n?'#CBDDF5':'var(--border)',
+                style={{padding:'13px 15px',cursor:'pointer',borderColor:on?'var(--blue)':n?'#CBDDF5':'var(--line)',
                   boxShadow:on?'0 0 0 1px var(--blue), var(--shadow-sm)':'var(--shadow-sm)',transition:'.14s'}}>
                 <div style={{display:'flex',alignItems:'center',gap:9}}>
                   <span style={{width:28,height:28,borderRadius:8,flex:'none',display:'flex',alignItems:'center',justifyContent:'center',
-                    background:n?'var(--blue-t)':'var(--background)',color:n?'var(--blue)':'var(--muted-foreground)'}}><Icon name={n?'bell':'search'} size={15}/></span>
-                  <span style={{flex:1,minWidth:0,fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.name}</span>
+                    background:n?'var(--blue-t)':'var(--surface-2)',color:n?'var(--blue)':'var(--ink-3)'}}><Icon name={n?'bell':'search'} size={15}/></span>
+                  <span style={{flex:1,minWidth:0,fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.name}</span>
                   {n>0
                     ? <span style={{flex:'none',fontSize:11,fontWeight:700,color:'#fff',background:'var(--blue)',borderRadius:999,padding:'2px 8px'}}>{n} new</span>
                     : <Icon name="check" size={15} sw={2.4} style={{color:'#16A34A',flex:'none'}}/>}
                 </div>
-                <div style={{fontFamily:'ui-monospace,Menlo,monospace',fontSize:11,color:'var(--muted-foreground)',margin:'9px 0 0',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',
-                  background:'var(--background)',border:'1px solid var(--border)',borderRadius:6,padding:'5px 8px'}}>{s.query}</div>
-                <div style={{display:'flex',alignItems:'center',gap:8,marginTop:9,fontSize:11,color:'var(--muted-foreground)'}}>
-                  <span style={{display:'inline-flex',alignItems:'center',gap:4,fontWeight:600,color:s.cadence==='Realtime'?'#16A34A':'var(--muted-foreground)'}}>
+                <div style={{fontFamily:'ui-monospace,Menlo,monospace',fontSize:11,color:'var(--ink-3)',margin:'9px 0 0',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',
+                  background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:6,padding:'5px 8px'}}>{s.query}</div>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginTop:9,fontSize:11,color:'var(--ink-3)'}}>
+                  <span style={{display:'inline-flex',alignItems:'center',gap:4,fontWeight:600,color:s.cadence==='Realtime'?'#16A34A':'var(--ink-3)'}}>
                     <span style={{width:6,height:6,borderRadius:'50%',background:s.cadence==='Realtime'?'#16A34A':'var(--ink-4)'}}></span>{s.cadence}
                   </span>
                   <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
@@ -546,20 +644,20 @@ function SubscriptionSearches({flash, setPage, onSearch}){
         {/* RIGHT — selected subscription results */}
         {sel && (
           <div className="card" style={{padding:0,overflow:'hidden'}}>
-            <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)'}}>
+            <div style={{padding:'16px 20px',borderBottom:'1px solid var(--line)'}}>
               <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:14}}>
                 <div style={{minWidth:0}}>
                   <div style={{display:'flex',alignItems:'center',gap:9,flexWrap:'wrap'}}>
-                    <h2 style={{fontSize:17,fontWeight:700,letterSpacing:'-.015em',color:'var(--foreground)',margin:0}}>{sel.name}</h2>
+                    <h2 style={{fontSize:17,fontWeight:700,letterSpacing:'-.015em',color:'var(--ink)',margin:0}}>{sel.name}</h2>
                     {selNew>0 && <span style={{fontSize:11,fontWeight:700,color:'#fff',background:'var(--blue)',borderRadius:999,padding:'2px 9px'}}>{selNew} new</span>}
                   </div>
-                  <div style={{display:'flex',alignItems:'center',gap:8,marginTop:8,fontSize:12,color:'var(--muted-foreground)',flexWrap:'wrap'}}>
-                    <span style={{display:'inline-flex',alignItems:'center',gap:5,fontWeight:600,whiteSpace:'nowrap',color:sel.cadence==='Realtime'?'#16A34A':'var(--secondary-foreground)'}}><Icon name="history" size={13}/>{sel.cadence}</span>
+                  <div style={{display:'flex',alignItems:'center',gap:8,marginTop:8,fontSize:12,color:'var(--ink-3)',flexWrap:'wrap'}}>
+                    <span style={{display:'inline-flex',alignItems:'center',gap:5,fontWeight:600,whiteSpace:'nowrap',color:sel.cadence==='Realtime'?'#16A34A':'var(--ink-2)'}}><Icon name="history" size={13}/>{sel.cadence}</span>
                     <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)',flex:'none'}}></span>
                     <span style={{whiteSpace:'nowrap'}}>Last run {sel.last}</span>
                     <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)',flex:'none'}}></span>
                     <span style={{whiteSpace:'nowrap'}}>{sel.total} total matches</span>
-                    <span style={{display:'inline-flex',gap:5,marginLeft:2}}>{sel.scope.map((sc)=><span key={sc} className="badge" style={{background:'var(--background)',color:'var(--muted-foreground)',border:'1px solid var(--border)',height:18,fontSize:10.5,whiteSpace:'nowrap'}}>{sc}</span>)}</span>
+                    <span style={{display:'inline-flex',gap:5,marginLeft:2}}>{sel.scope.map((sc)=><span key={sc} className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',border:'1px solid var(--line)',height:18,fontSize:10.5,whiteSpace:'nowrap'}}>{sc}</span>)}</span>
                   </div>
                 </div>
                 <div style={{display:'flex',gap:8,flex:'none'}}>
@@ -567,18 +665,26 @@ function SubscriptionSearches({flash, setPage, onSearch}){
                   <button className="btn btn-primary btn-sm" onClick={()=>openInSearch(sel)}><Icon name="search" size={14}/>Open in Search</button>
                 </div>
               </div>
-              <div style={{display:'flex',alignItems:'center',gap:8,marginTop:13,fontFamily:'ui-monospace,Menlo,monospace',fontSize:11.5,color:'var(--secondary-foreground)',
-                background:'var(--background)',border:'1px solid var(--border)',borderRadius:8,padding:'8px 11px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginTop:13,fontFamily:'ui-monospace,Menlo,monospace',fontSize:11.5,color:'var(--ink-2)',
+                background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:8,padding:'8px 11px'}}>
                 <Icon name="search" size={13} style={{color:'var(--ink-4)',flex:'none'}}/>
                 <span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{sel.query}</span>
               </div>
             </div>
 
             <div style={{padding:'8px 12px 14px'}}>
+              {sel.results.length===0 && (
+                <div style={{padding:'40px 20px',textAlign:'center'}}>
+                  <span style={{width:44,height:44,borderRadius:12,background:'var(--blue-t)',color:'var(--blue)',display:'inline-flex',alignItems:'center',justifyContent:'center'}}><Icon name="bell" size={22}/></span>
+                  <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',marginTop:12}}>Watching for matches</div>
+                  <div className="muted" style={{fontSize:12.5,marginTop:4,maxWidth:340,marginLeft:'auto',marginRight:'auto',lineHeight:1.5}}>This subscription is live. New results will appear here as they arrive{sel.cadence==='Realtime'?' in real time':' on the '+sel.cadence.toLowerCase()+' run'}.</div>
+                  <button className="btn btn-secondary btn-sm" style={{marginTop:16}} onClick={()=>openInSearch(sel)}><Icon name="search" size={14}/>Run it now in Search</button>
+                </div>
+              )}
               {selNew>0 && (
                 <div style={{display:'flex',alignItems:'center',gap:8,padding:'12px 8px 8px'}}>
                   <span className="eyebrow" style={{color:'var(--blue)'}}>New since last viewed</span>
-                  <span style={{flex:1,height:1,background:'var(--border)'}}></span>
+                  <span style={{flex:1,height:1,background:'var(--line)'}}></span>
                 </div>
               )}
               {sel.results.map((r,i)=>{
@@ -591,23 +697,23 @@ function SubscriptionSearches({flash, setPage, onSearch}){
                     {showEarlierLabel && (
                       <div style={{display:'flex',alignItems:'center',gap:8,padding:'12px 8px 8px'}}>
                         <span className="eyebrow">Earlier results</span>
-                        <span style={{flex:1,height:1,background:'var(--border)'}}></span>
+                        <span style={{flex:1,height:1,background:'var(--line)'}}></span>
                       </div>
                     )}
                     <div onClick={()=>flash&&flash('Opening '+r.title+'…')}
                       style={{display:'flex',gap:12,padding:'11px 10px',borderRadius:10,cursor:'pointer',transition:'.12s',
                         background:isNew?'var(--blue-t)':'transparent',opacity:isNew?1:.92}}
-                      onMouseEnter={e=>e.currentTarget.style.background=isNew?'#E2EDFB':'var(--background)'}
+                      onMouseEnter={e=>e.currentTarget.style.background=isNew?'#E2EDFB':'var(--surface-2)'}
                       onMouseLeave={e=>e.currentTarget.style.background=isNew?'var(--blue-t)':'transparent'}>
                       <span style={{width:34,height:34,borderRadius:9,flex:'none',display:'flex',alignItems:'center',justifyContent:'center',background:v.tint,color:v.color}}><Icon name={v.icon} size={17}/></span>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{display:'flex',alignItems:'center',gap:8}}>
-                          <span style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</span>
+                          <span style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</span>
                           {isNew && <span style={{flex:'none',width:7,height:7,borderRadius:'50%',background:'var(--blue)'}}></span>}
                         </div>
-                        <div style={{fontSize:12,color:'var(--secondary-foreground)',lineHeight:1.45,marginTop:3,display:'-webkit-box',WebkitLineClamp:1,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{r.snippet}</div>
-                        <div style={{display:'flex',alignItems:'center',gap:7,marginTop:5,fontSize:11,color:'var(--muted-foreground)'}}>
-                          <span className="badge" style={{background:'var(--background)',color:'var(--muted-foreground)',border:'1px solid var(--border)',height:17,fontSize:10}}>{v.label}</span>
+                        <div style={{fontSize:12,color:'var(--ink-2)',lineHeight:1.45,marginTop:3,display:'-webkit-box',WebkitLineClamp:1,WebkitBoxOrient:'vertical',overflow:'hidden'}}>{r.snippet}</div>
+                        <div style={{display:'flex',alignItems:'center',gap:7,marginTop:5,fontSize:11,color:'var(--ink-3)'}}>
+                          <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',border:'1px solid var(--line)',height:17,fontSize:10}}>{v.label}</span>
                           <Avatar id={r.who} size={15}/>{PEOPLE[r.who].name.split(' ')[0]}
                           <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>{r.time} ago
                         </div>

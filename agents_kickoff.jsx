@@ -28,7 +28,7 @@ function NewRequestModal({ onClose, onDelegate, onTeamRequest, glyph='diamond', 
   const chosen = REQUEST_TYPES.find(t=>t.id===sel);
   return (
     <ModalShell onClose={onClose} width={640}>
-      <div style={{padding:'18px 22px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+      <div style={{padding:'18px 22px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
         <div style={{display:'flex',alignItems:'center',gap:11}}>
           <span style={{width:32,height:32,borderRadius:9,background:'var(--primary-tint)',color:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="plus" size={18} sw={2.2}/></span>
           <div>
@@ -45,12 +45,12 @@ function NewRequestModal({ onClose, onDelegate, onTeamRequest, glyph='diamond', 
             const on = sel===t.id;
             return (
               <button key={t.id} onClick={()=>setSel(t.id)} style={{display:'flex',alignItems:'flex-start',gap:12,padding:'13px 13px',textAlign:'left',
-                border:'1.5px solid '+(on?t.color:'var(--border)'),borderRadius:12,background:on?t.color+'0d':'#fff',cursor:'pointer',transition:'.14s',position:'relative'}}
-                onMouseEnter={e=>{if(!on)e.currentTarget.style.borderColor='var(--border-strong)';}}
-                onMouseLeave={e=>{if(!on)e.currentTarget.style.borderColor='var(--border)';}}>
-                <span style={{width:36,height:36,borderRadius:9,background:'var(--secondary)',color:'var(--secondary-foreground)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={18}/></span>
+                border:'1.5px solid '+(on?t.color:'var(--line)'),borderRadius:12,background:on?t.color+'0d':'#fff',cursor:'pointer',transition:'.14s',position:'relative'}}
+                onMouseEnter={e=>{if(!on)e.currentTarget.style.borderColor='var(--line-2)';}}
+                onMouseLeave={e=>{if(!on)e.currentTarget.style.borderColor='var(--line)';}}>
+                <span style={{width:36,height:36,borderRadius:9,background:'var(--hover)',color:'var(--ink-2)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={t.icon} size={18}/></span>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13.5,fontWeight:650,color:'var(--foreground)',display:'flex',alignItems:'center',gap:6}}>{t.label}</div>
+                  <div style={{fontSize:13.5,fontWeight:650,color:'var(--ink)',display:'flex',alignItems:'center',gap:6}}>{t.label}</div>
                   <div className="muted" style={{fontSize:11.5,lineHeight:1.4,marginTop:2}}>{t.sub}</div>
                 </div>
                 {on && <span style={{position:'absolute',top:11,right:11,width:18,height:18,borderRadius:'50%',background:t.color,display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={12} sw={3} style={{color:'#fff'}}/></span>}
@@ -60,9 +60,9 @@ function NewRequestModal({ onClose, onDelegate, onTeamRequest, glyph='diamond', 
         </div>
       </div>
 
-      <div style={{padding:'14px 22px',borderTop:'1px solid var(--border)',display:'flex',alignItems:'center',gap:10,background:'var(--background)'}}>
+      <div style={{padding:'14px 22px',borderTop:'1px solid var(--line)',display:'flex',alignItems:'center',gap:10,background:'var(--surface-2)'}}>
         {chosen && chosen.agent
-          ? <span style={{fontSize:12,color:'var(--secondary-foreground)',display:'flex',alignItems:'center',gap:7}}>
+          ? <span style={{fontSize:12,color:'var(--ink-2)',display:'flex',alignItems:'center',gap:7}}>
               <Icon name="sparkle" size={14} style={{color:chosen.color}}/>{AGENTS[chosen.agent].code} can take this now, or assign it to a teammate.
             </span>
           : <span className="muted" style={{fontSize:12}}>{chosen?(chosen.page?'Opens the '+chosen.label+' workspace.':'This request routes to a teammate.'):'Choose a request type to continue.'}</span>}
@@ -113,7 +113,7 @@ function KickoffModal({ onClose, agentId, prefill, launch, glyph='diamond', flat
     <ModalShell onClose={onClose} width={760}>
       <div style={{display:'grid',gridTemplateColumns:'232px 1fr'}}>
         {/* left: agent picker */}
-        <div style={{borderRight:'1px solid var(--border)',background:'var(--background)',padding:'16px 14px',display:'flex',flexDirection:'column',gap:5}}>
+        <div style={{borderRight:'1px solid var(--line)',background:'var(--surface-2)',padding:'16px 14px',display:'flex',flexDirection:'column',gap:5}}>
           <div className="eyebrow" style={{padding:'2px 6px 8px'}}>Pick an agent</div>
           {AGENT_ORDER.map(id=>{
             const ag=AGENTS[id], on=id===aid;
@@ -123,7 +123,7 @@ function KickoffModal({ onClose, agentId, prefill, launch, glyph='diamond', flat
                 onMouseEnter={e=>{if(!on)e.currentTarget.style.background='#fff';}} onMouseLeave={e=>{if(!on)e.currentTarget.style.background='transparent';}}>
                 <AgentToken id={id} size={32} glyph={glyph} flat={flat}/>
                 <div style={{minWidth:0}}>
-                  <div style={{fontSize:12.5,fontWeight:700,color:'var(--foreground)',whiteSpace:'nowrap'}}>{framing==='role'?ag.role:ag.code}</div>
+                  <div style={{fontSize:12.5,fontWeight:700,color:'var(--ink)',whiteSpace:'nowrap'}}>{framing==='role'?ag.role:ag.code}</div>
                   <div className="muted" style={{fontSize:10.5,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',maxWidth:150}}>{ag.role}</div>
                 </div>
               </button>
@@ -133,10 +133,10 @@ function KickoffModal({ onClose, agentId, prefill, launch, glyph='diamond', flat
 
         {/* right: config */}
         <div style={{display:'flex',flexDirection:'column',minWidth:0}}>
-          <div style={{padding:'16px 20px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',gap:12}}>
+          <div style={{padding:'16px 20px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',gap:12}}>
             <AgentToken id={aid} size={40} glyph={glyph} flat={flat}/>
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:15.5,fontWeight:700,letterSpacing:'-.02em',color:'var(--foreground)'}}>Delegate to {a.code}</div>
+              <div style={{fontSize:15.5,fontWeight:700,letterSpacing:'-.02em',color:'var(--ink)'}}>Delegate to {a.code}</div>
               <div className="muted" style={{fontSize:11.5}}>{a.skill}</div>
             </div>
             <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon name="x" size={17}/></button>
@@ -144,21 +144,21 @@ function KickoffModal({ onClose, agentId, prefill, launch, glyph='diamond', flat
 
           <div style={{padding:'18px 20px',display:'flex',flexDirection:'column',gap:17,maxHeight:'56vh',overflowY:'auto'}}>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>What should {a.code} do?</label>
+              <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>What should {a.code} do?</label>
               <textarea autoFocus value={instr} onChange={e=>setInstr(e.target.value)} placeholder={PLACE[aid]} rows={3}
-                style={{width:'100%',border:'1px solid var(--border-strong)',borderRadius:10,padding:'10px 12px',fontSize:13,fontFamily:'inherit',outline:'none',resize:'vertical',lineHeight:1.5}}
-                onFocus={e=>e.target.style.borderColor=a.color} onBlur={e=>e.target.style.borderColor='var(--border-strong)'}/>
+                style={{width:'100%',border:'1px solid var(--line-2)',borderRadius:10,padding:'10px 12px',fontSize:13,fontFamily:'inherit',outline:'none',resize:'vertical',lineHeight:1.5}}
+                onFocus={e=>e.target.style.borderColor=a.color} onBlur={e=>e.target.style.borderColor='var(--line-2)'}/>
             </div>
 
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>Scope — what it works on</label>
+              <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>Scope — what it works on</label>
               <div style={{display:'flex',flexDirection:'column',gap:7}}>
                 {sources.map((sc,i)=>(
                   <button key={i} onClick={()=>setSrc(i)} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 12px',borderRadius:10,
-                    border:'1.5px solid '+(src===i?a.color:'var(--border)'),background:src===i?a.tint+'66':'#fff',cursor:'pointer',textAlign:'left',transition:'.13s'}}>
-                    <span style={{width:18,height:18,borderRadius:'50%',border:'2px solid '+(src===i?a.color:'var(--border-strong)'),flex:'none',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                    border:'1.5px solid '+(src===i?a.color:'var(--line)'),background:src===i?a.tint+'66':'#fff',cursor:'pointer',textAlign:'left',transition:'.13s'}}>
+                    <span style={{width:18,height:18,borderRadius:'50%',border:'2px solid '+(src===i?a.color:'var(--line-2)'),flex:'none',display:'flex',alignItems:'center',justifyContent:'center'}}>
                       {src===i && <span style={{width:8,height:8,borderRadius:'50%',background:a.color}}></span>}</span>
-                    <span style={{fontSize:13,fontWeight:600,color:'var(--foreground)',flex:1}}>{sc[0]}</span>
+                    <span style={{fontSize:13,fontWeight:600,color:'var(--ink)',flex:1}}>{sc[0]}</span>
                     <span className="muted" style={{fontSize:11.5,fontFamily:"ui-monospace,Menlo,monospace"}}>{sc[1]}</span>
                   </button>
                 ))}
@@ -166,15 +166,15 @@ function KickoffModal({ onClose, agentId, prefill, launch, glyph='diamond', flat
             </div>
 
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'var(--muted-foreground)',display:'block',marginBottom:7}}>Autonomy</label>
+              <label style={{fontSize:12,fontWeight:600,color:'var(--ink-3)',display:'block',marginBottom:7}}>Autonomy</label>
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8}}>
                 {Object.entries(AUTONOMY).map(([k,m])=>{
                   const on=mode===k;
                   return (
-                    <button key={k} onClick={()=>setMode(k)} style={{padding:'11px 11px',borderRadius:11,border:'1.5px solid '+(on?m.color:'var(--border)'),
+                    <button key={k} onClick={()=>setMode(k)} style={{padding:'11px 11px',borderRadius:11,border:'1.5px solid '+(on?m.color:'var(--line)'),
                       background:on?m.color+'10':'#fff',cursor:'pointer',textAlign:'left',transition:'.13s'}}>
-                      <Icon name={m.icon} size={17} style={{color:on?m.color:'var(--muted-foreground)'}}/>
-                      <div style={{fontSize:12.5,fontWeight:700,color:on?m.color:'var(--foreground)',marginTop:6}}>{m.label}</div>
+                      <Icon name={m.icon} size={17} style={{color:on?m.color:'var(--ink-3)'}}/>
+                      <div style={{fontSize:12.5,fontWeight:700,color:on?m.color:'var(--ink)',marginTop:6}}>{m.label}</div>
                       <div className="muted" style={{fontSize:10.5,lineHeight:1.35,marginTop:2}}>{m.desc}</div>
                     </button>
                   );
@@ -188,7 +188,7 @@ function KickoffModal({ onClose, agentId, prefill, launch, glyph='diamond', flat
             </div>
           </div>
 
-          <div style={{padding:'14px 20px',borderTop:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,background:'var(--background)'}}>
+          <div style={{padding:'14px 20px',borderTop:'1px solid var(--line)',display:'flex',justifyContent:'space-between',alignItems:'center',gap:10,background:'var(--surface-2)'}}>
             <AutonomyChip mode={mode}/>
             <div style={{display:'flex',gap:9}}>
               <button className="btn btn-secondary" onClick={onClose}>Cancel</button>

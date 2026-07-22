@@ -9,7 +9,7 @@ function Brand({size=30, onClick}){
   return (
     <div onClick={onClick} style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer',userSelect:'none'}}>
       <Logo size={size}/>
-      <span style={{fontSize:18,fontWeight:700,letterSpacing:'-.03em',color:'var(--foreground)'}}>IMIN</span>
+      <span style={{fontSize:18,fontWeight:700,letterSpacing:'-.03em',color:'var(--ink)'}}>IMIN</span>
     </div>
   );
 }
@@ -28,7 +28,7 @@ function AvatarStack({ids, size=24, max=3}){
   return (
     <div className="av-stack">
       {shown.map(id=> <Avatar key={id} id={id} size={size}/>)}
-      {extra>0 && <span className="av" style={{width:size,height:size,background:'#E2E8F0',color:'var(--muted-foreground)',fontSize:Math.round(size*0.38)}}>+{extra}</span>}
+      {extra>0 && <span className="av" style={{width:size,height:size,background:'#E2E8F0',color:'var(--ink-3)',fontSize:Math.round(size*0.38)}}>+{extra}</span>}
     </div>
   );
 }
@@ -135,8 +135,8 @@ function Donut({value, size=120, stroke=13, color='#0073E6', track='#F1F5F9', la
           style={{transition:'stroke-dashoffset 1s cubic-bezier(.2,.8,.3,1)'}}/>
       </svg>
       <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-        <span style={{fontSize:size*0.24,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.02em'}}>{label}</span>
-        {sub && <span style={{fontSize:11,color:'var(--muted-foreground)',fontWeight:500}}>{sub}</span>}
+        <span style={{fontSize:size*0.24,fontWeight:700,color:'var(--ink)',letterSpacing:'-.02em'}}>{label}</span>
+        {sub && <span style={{fontSize:11,color:'var(--ink-3)',fontWeight:500}}>{sub}</span>}
       </div>
     </div>
   );
@@ -181,7 +181,7 @@ function SectionHead({title, sub, action, icon}){
   return (
     <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:14,gap:12}}>
       <div style={{display:'flex',alignItems:'center',gap:10}}>
-        {icon && <span style={{display:'inline-flex',color:'var(--muted-foreground)'}}><Icon name={icon} size={17}/></span>}
+        {icon && <span style={{display:'inline-flex',color:'var(--ink-3)'}}><Icon name={icon} size={17}/></span>}
         <div>
           <div className="card-title" style={{fontSize:15.5}}>{title}</div>
           {sub && <div className="muted" style={{fontSize:12.5,marginTop:1}}>{sub}</div>}

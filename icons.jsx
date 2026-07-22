@@ -60,6 +60,7 @@ const ICON_PATHS = {
   megaphone: <><path d="M4 10.5v3a1.5 1.5 0 0 0 1.5 1.5H8l8 4.5V5L8 9.5H5.5A1.5 1.5 0 0 0 4 10.5z"/><path d="M8 15v3.3a1 1 0 0 0 1 1h1.4"/><path d="M18.5 9a3.4 3.4 0 0 1 0 6"/></>,
   pen: <><path d="M4 20l.9-3.6L15.4 5.9a2 2 0 0 1 2.8 0l-.1-.1a2 2 0 0 1 0 2.8L7.6 19.1 4 20z"/><path d="M14 7.4l2.6 2.6"/></>,
   shield: <><path d="M12 3.4l7 2.5v5c0 4.5-3 7.8-7 9.6-4-1.8-7-5.1-7-9.6v-5l7-2.5z"/><path d="M9 12l2 2 4-4"/></>,
+  help: <><circle cx="12" cy="12" r="9"/><path d="M9.3 9.2a2.8 2.8 0 0 1 5.3 1c0 1.9-2.6 2.2-2.6 4"/><circle cx="12" cy="17.4" r="0.6" fill="currentColor" stroke="none"/></>,
   mic: <><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><path d="M12 18v3M8.5 21h7"/></>,
   gavel: <><path d="M14 4.5l5.5 5.5M11 7.5l5.5 5.5M9.5 9l3.5 3.5-5 5L4.5 14l5-5z"/><path d="M13.5 13l5 5M11 21h9"/></>,
   map: <><path d="M9 4.5L3.5 7v12.5L9 17l6 2.5 5.5-2.5V4.5L15 7 9 4.5z"/><path d="M9 4.5v12.5M15 7v12.5"/></>,
@@ -91,6 +92,14 @@ const ICON_PATHS = {
   fingerprint: <><path d="M5.5 11a6.5 6.5 0 0 1 13 0v1"/><path d="M8.5 11a3.5 3.5 0 0 1 7 0v2a9 9 0 0 0 .8 3.7"/><path d="M12 11v3a12 12 0 0 0 1 5"/><path d="M9 19.5A10 10 0 0 1 8.5 16v-5"/></>,
   cpu: <><rect x="7" y="7" width="10" height="10" rx="1.6"/><path d="M10 4v2M14 4v2M10 18v2M14 18v2M4 10h2M4 14h2M18 10h2M18 14h2"/></>,
   shield_check: <><path d="M12 3.4l7 2.5v5c0 4.5-3 7.8-7 9.6-4-1.8-7-5.1-7-9.6v-5l7-2.5z"/><path d="M9 12l2 2 4-4"/></>,
+  beaker: <><path d="M9 3h6"/><path d="M10 3v6L4.8 18.2A1.6 1.6 0 0 0 6.2 20.7h11.6a1.6 1.6 0 0 0 1.4-2.5L14 9V3"/><path d="M7.4 15h9.2"/><circle cx="10.5" cy="17.3" r=".55" fill="currentColor" stroke="none"/><circle cx="13.6" cy="18.4" r=".55" fill="currentColor" stroke="none"/></>,
+  flask: <><path d="M9 3h6"/><path d="M10 3v6L4.8 18.2A1.6 1.6 0 0 0 6.2 20.7h11.6a1.6 1.6 0 0 0 1.4-2.5L14 9V3"/></>,
+  sun: <><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.3M12 19.1v2.3M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.6 12h2.3M19.1 12h2.3M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></>,
+  cloud: <><path d="M7.4 18.5a4 4 0 0 1-.4-7.98A5.2 5.2 0 0 1 17 10.7a3.6 3.6 0 0 1-.1 7.8H7.4z"/></>,
+  cloud_sun: <><circle cx="8" cy="7.4" r="2.9"/><path d="M8 2.3v1.3M3.1 7.4h1.3M4.5 3.9l.9.9M11.5 3.9l-.9.9"/><path d="M10.5 18.7a3.3 3.3 0 0 1-.4-6.6A4.4 4.4 0 0 1 18.3 12a3 3 0 0 1-.1 6.7h-7.7z"/></>,
+  cloud_rain: <><path d="M7.6 15.6a3.7 3.7 0 0 1-.3-7.4A4.7 4.7 0 0 1 16.6 9a3.3 3.3 0 0 1 .2 6.6H7.6z"/><path d="M8.6 18.4l-.9 2.1M12 18.4l-.9 2.1M15.4 18.4l-.9 2.1"/></>,
+  cloud_snow: <><path d="M7.6 15.6a3.7 3.7 0 0 1-.3-7.4A4.7 4.7 0 0 1 16.6 9a3.3 3.3 0 0 1 .2 6.6H7.6z"/><path d="M9 18.6h.01M12 19.6h.01M15 18.6h.01"/></>,
+  moon: <><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></>,
 };
 
 function Icon({name, size=18, sw=1.75, style, className, fill}){

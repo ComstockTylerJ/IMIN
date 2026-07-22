@@ -9,6 +9,10 @@ function App(){
   const [profileId, setProfileId] = React.useState(null);
   const [deviceId, setDeviceId] = React.useState(null);
   const [topicId, setTopicId] = React.useState(null);
+  const [entityId, setEntityId] = React.useState(null);
+  const [dashRole, setDashRole] = React.useState(() => { try { return localStorage.getItem('imin_dash_role') || 'investigator'; } catch(e) { return 'investigator'; } });
+  const [aiQuery, setAiQuery] = React.useState('');
+  function changeDashRole(r){ setDashRole(r); try { localStorage.setItem('imin_dash_role', r); } catch(e) {} }
 
   // ---- AI agents ----
   const [t, setTweak] = useTweaks(AGENT_TWEAK_DEFAULTS);
@@ -33,10 +37,14 @@ function App(){
   function teamRequest(type){ setNewReq(false); flash((type?type.label:'Request')+' submitted to your team'); }
 
   function runSearch(q){ setSearchQuery((q||'').trim()||'finance'); setPage('search'); }
+  function runAISearch(q){ setAiQuery((q||'').trim()); setPage('aisearch'); window.scrollTo({top:0}); }
   function openPerson(id){ setProfileId(id); setPage('profile'); }
   function openDevice(id){ setDeviceId(id); setPage('device'); }
   function openTopic(id){ setTopicId(id); setPage('topic'); }
+  function openEntity(id){ setEntityId(id); setPage('entity'); window.scrollTo({top:0}); }
   window.__openPerson = openPerson;
+  window.__openEntity = openEntity;
+  window.__runAISearch = runAISearch;
   window.__openKickoff = (agentId, prefill)=>openKickoff(agentId, prefill);
   window.__openRun = openRun;
   window.__agentTweaks = agentProps;
@@ -55,13 +63,15 @@ function App(){
 
   let body;
   if(page==='agentrun') body=<AgentRunDetail runId={runId} setPage={setPage} flash={flash} {...agentProps}/>;
-  else if(page==='dashboard') body=<Dashboard setPage={setPage} openTask={openTask} openCreate={openNewRequest}/>;
+  else if(page==='dashboard') body=<Dashboard setPage={setPage} openTask={openTask} openCreate={openNewRequest} role={dashRole}/>;
   else if(page==='tasks') body=<TasksPage tasks={tasks} moveTask={moveTask} openTask={openTask} openCreate={openNewRequest} openKickoff={openKickoff} openRun={openRun} flash={flash} {...agentProps}/>;
   else if(page==='metrics') body=<MetricsPage/>;
   else if(page==='tools') body=<ToolsPage setPage={setPage} flash={flash}/>;
-  else if(page==='explore') body=<ExplorePage setPage={setPage} openCreate={openNewRequest} flash={flash} onSearch={runSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic}/>;
+  else if(page==='explore') body=<ExplorePage setPage={setPage} openCreate={openNewRequest} flash={flash} onSearch={runSearch} openPerson={openPerson} openDevice={openDevice} openTopic={openTopic} openEntity={openEntity} onAISearch={runAISearch}/>;
   else if(page==='profile') body=<PersonProfile id={profileId} setPage={setPage} openTask={openTask} openDevice={openDevice} flash={flash}/>;
+  else if(page==='entity') body=<EntityProfile id={entityId} setPage={setPage} openEntity={openEntity} flash={flash}/>;
   else if(page==='myprofile') body=<MyProfile setPage={setPage} openTask={openTask} openDevice={openDevice} flash={flash}/>;
+  else if(page==='labs') body=<LabsPage setPage={setPage} flash={flash}/>;
   else if(page==='termbase') body=<TermbaseWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='device') body=<DeviceDetail id={deviceId} setPage={setPage} openPerson={openPerson} flash={flash}/>;
   else if(page==='topic') body=<TopicDetail id={topicId} setPage={setPage} openDevice={openDevice} openPerson={openPerson} flash={flash}/>;
@@ -72,6 +82,7 @@ function App(){
   else if(page==='knowledge') body=<KnowledgeWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='upload') body=<DataUploadWorkspace setPage={setPage} flash={flash}/>;
   else if(page==='search') body=<SearchResults query={searchQuery} setPage={setPage} onSearch={runSearch}/>;
+  else if(page==='aisearch') body=<AISearchPage query={aiQuery} setPage={setPage} onSearch={runSearch} openEntity={openEntity} flash={flash}/>;
   else if(page==='review') body=<ReviewQueue setPage={setPage} flash={flash} folderName={window.__reviewFolder} openKickoff={openKickoff} {...agentProps}/>;
   else body=<WorkspaceDetail id={page} setPage={setPage} openTask={openTask} openCreate={openNewRequest} flash={flash} onSearch={runSearch}/>;
 
@@ -79,7 +90,7 @@ function App(){
     <React.Fragment>
       <div className="mesh-bg"></div>
       <div className="shell">
-        <Header page={page} setPage={setPage} onCreate={openNewRequest} onSearch={runSearch} openRun={openRun} {...agentProps}/>
+        <Header page={page} setPage={setPage} onCreate={openNewRequest} onSearch={runSearch} openRun={openRun} dashRole={dashRole} setDashRole={changeDashRole} {...agentProps}/>
         {body}
       </div>
       {task && <TaskDrawer task={task} onClose={()=>setSelectedTask(null)} moveTask={moveTask}/>}
@@ -88,9 +99,10 @@ function App(){
       {kickoff && <KickoffModal onClose={()=>setKickoff(null)} agentId={kickoff.agentId} prefill={kickoff.prefill} launch={launchAgent} {...agentProps}/>}
       {askAI && <AskAIDrawer onClose={()=>setAskAI(false)} openRun={openRun} {...agentProps}/>}
       <AgentTweaks t={t} setTweak={setTweak}/>
+      <ExperimentalGlobal/>
       {toast && (
         <div className="pop" style={{position:'fixed',bottom:26,left:'50%',transform:'translateX(-50%)',zIndex:400,
-          background:'var(--foreground)',color:'#fff',padding:'11px 18px',borderRadius:11,fontSize:13.5,fontWeight:550,
+          background:'var(--ink)',color:'#fff',padding:'11px 18px',borderRadius:11,fontSize:13.5,fontWeight:550,
           display:'flex',alignItems:'center',gap:9,boxShadow:'var(--shadow-lg)'}}>
           <span style={{width:18,height:18,borderRadius:'50%',background:'var(--lime)',display:'flex',alignItems:'center',justifyContent:'center'}}><Icon name="check" size={12} sw={3} style={{color:'#fff'}}/></span>
           {toast}

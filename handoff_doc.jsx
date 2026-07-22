@@ -39,9 +39,9 @@ function Sidebar({active, go}){
           ))}
         </div>
       ))}
-      <div style={{padding:'22px 10px 0',marginTop:14,borderTop:'1px solid var(--border)'}}>
-        <div style={{fontSize:11,color:'var(--muted-foreground)',lineHeight:1.6}}>
-          <div style={{fontWeight:650,color:'var(--secondary-foreground)'}}>v1.0 · Jun 2026</div>
+      <div style={{padding:'22px 10px 0',marginTop:14,borderTop:'1px solid var(--line)'}}>
+        <div style={{fontSize:11,color:'var(--ink-3)',lineHeight:1.6}}>
+          <div style={{fontWeight:650,color:'var(--ink-2)'}}>v1.0 · Jun 2026</div>
           Handoff reference · derived from <code style={{fontSize:10.5}}>styles.css</code>
         </div>
       </div>
@@ -86,7 +86,7 @@ function BrandSection(){
         <div className="tcard">
           <div className="eyebrow" style={{marginBottom:8}}>Signature gradient</div>
           <div className="grad-bar" style={{height:34,borderRadius:8}}></div>
-          <div className="tcard tv" style={{border:0,padding:'10px 0 0',fontFamily:'ui-monospace,Menlo,monospace',fontSize:11,color:'var(--muted-foreground)'}}>--logo-grad · 135° · cyan → blue → violet → coral → orange → lime</div>
+          <div className="tcard tv" style={{border:0,padding:'10px 0 0',fontFamily:'ui-monospace,Menlo,monospace',fontSize:11,color:'var(--ink-3)'}}>--logo-grad · 135° · cyan → blue → violet → coral → orange → lime</div>
         </div>
         <div className="tcard">
           <div className="eyebrow" style={{marginBottom:8}}>Gradient text</div>
@@ -177,13 +177,13 @@ function TypeSection(){
       </div>
       <div className="gd-sub">Type scale</div>
       <Demo col padLg>
-        <div style={{fontFamily:"'Spectral',serif",fontSize:44,fontWeight:700,letterSpacing:'-.02em',lineHeight:1.05,color:'var(--foreground)'}}>Display · Spectral 700</div>
-        <div style={{fontFamily:"'Spectral',serif",fontSize:30,fontWeight:700,letterSpacing:'-.015em',color:'var(--foreground)'}}>Section heading · Spectral 700 · 30px</div>
-        <div style={{fontSize:18,fontWeight:600,letterSpacing:'-.02em',color:'var(--foreground)'}}>Subtitle · Inter 600 · 18px</div>
-        <div style={{fontSize:14.5,fontWeight:600,color:'var(--foreground)'}}>Card title · Inter 600 · 14.5px</div>
-        <div style={{fontSize:14,color:'var(--secondary-foreground)',lineHeight:1.45}}>Body · Inter 400 · 14px · letter-spacing −0.006em. The base reading size for the entire product — tables, panels, descriptions.</div>
+        <div style={{fontFamily:"'Spectral',serif",fontSize:44,fontWeight:700,letterSpacing:'-.02em',lineHeight:1.05,color:'var(--ink)'}}>Display · Spectral 700</div>
+        <div style={{fontFamily:"'Spectral',serif",fontSize:30,fontWeight:700,letterSpacing:'-.015em',color:'var(--ink)'}}>Section heading · Spectral 700 · 30px</div>
+        <div style={{fontSize:18,fontWeight:600,letterSpacing:'-.02em',color:'var(--ink)'}}>Subtitle · Inter 600 · 18px</div>
+        <div style={{fontSize:14.5,fontWeight:600,color:'var(--ink)'}}>Card title · Inter 600 · 14.5px</div>
+        <div style={{fontSize:14,color:'var(--ink-2)',lineHeight:1.45}}>Body · Inter 400 · 14px · letter-spacing −0.006em. The base reading size for the entire product — tables, panels, descriptions.</div>
         <div className="eyebrow">Eyebrow · Inter 600 · 11px · .08em uppercase</div>
-        <div style={{fontSize:12.5,color:'var(--muted-foreground)'}}>Caption / muted · Inter 400 · 12.5px</div>
+        <div style={{fontSize:12.5,color:'var(--ink-3)'}}>Caption / muted · Inter 400 · 12.5px</div>
       </Demo>
       <SpecTable cols={['Role','Family','Size','Weight','Tracking']} rows={[
         [{tok:'Display'}, 'Spectral', {val:'46px'}, {val:'700'}, {val:'-0.02em'}],
@@ -227,7 +227,7 @@ function SpacingSection(){
           {SPACE.map(n=>(
             <div key={n} style={{textAlign:'center'}}>
               <div style={{width:n,height:n,minWidth:2,background:'var(--blue)',borderRadius:2,margin:'0 auto'}}></div>
-              <div style={{fontSize:10.5,color:'var(--muted-foreground)',marginTop:8,fontVariantNumeric:'tabular-nums'}}>{n}</div>
+              <div style={{fontSize:10.5,color:'var(--ink-3)',marginTop:8,fontVariantNumeric:'tabular-nums'}}>{n}</div>
             </div>
           ))}
         </div>
@@ -249,9 +249,9 @@ function SpacingSection(){
       <div className="gd-grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
         {SHADOWS.map(sh=>(
           <div key={sh.tk} style={{textAlign:'center'}}>
-            <div style={{height:84,background:'#fff',borderRadius:14,boxShadow:`var(${sh.tk})`,border:'1px solid var(--border)',marginBottom:12}}></div>
+            <div style={{height:84,background:'#fff',borderRadius:14,boxShadow:`var(${sh.tk})`,border:'1px solid var(--line)',marginBottom:12}}></div>
             <div className="tk" style={{fontSize:12,fontFamily:'ui-monospace,Menlo,monospace',fontWeight:600}}>{sh.tk}</div>
-            <div className="tv" style={{fontSize:11.5,color:'var(--muted-foreground)'}}>{sh.d}</div>
+            <div className="tv" style={{fontSize:11.5,color:'var(--ink-3)'}}>{sh.d}</div>
           </div>
         ))}
       </div>
@@ -275,8 +275,8 @@ function MotionSection(){
         <div className="tcard">
           <div className="eyebrow" style={{marginBottom:10}}>Signature easing</div>
           <svg width="100%" height="120" viewBox="0 0 200 120" style={{display:'block'}}>
-            <line x1="10" y1="110" x2="190" y2="110" stroke="var(--border-strong)"/>
-            <line x1="10" y1="110" x2="10" y2="10" stroke="var(--border-strong)"/>
+            <line x1="10" y1="110" x2="190" y2="110" stroke="var(--line-2)"/>
+            <line x1="10" y1="110" x2="10" y2="10" stroke="var(--line-2)"/>
             <path d="M10 110 C 46 30, 64 18, 190 14" fill="none" stroke="var(--blue)" strokeWidth="2.5" strokeLinecap="round"/>
           </svg>
           <div className="tv" style={{fontFamily:'ui-monospace,Menlo,monospace',marginTop:6}}>cubic-bezier(.2,.8,.3,1)</div>
@@ -339,7 +339,7 @@ function HandoffNotes(){
           'Decorative animation respects prefers-reduced-motion.',
           'Icon-only buttons carry an accessible label (title / aria-label).',
         ].map((t,i)=>(
-          <div key={i} style={{display:'flex',gap:11,alignItems:'flex-start',fontSize:13.5,color:'var(--secondary-foreground)',lineHeight:1.5}}>
+          <div key={i} style={{display:'flex',gap:11,alignItems:'flex-start',fontSize:13.5,color:'var(--ink-2)',lineHeight:1.5}}>
             <Icon name="shield_check" size={17} sw={1.9} style={{color:'#1FA98A',flex:'none',marginTop:1}}/> {t}
           </div>
         ))}
@@ -350,13 +350,13 @@ function HandoffNotes(){
         <div className="tcard" style={{borderColor:'#BFE3D6'}}>
           <div style={{display:'flex',alignItems:'center',gap:7,color:'#1FA98A',fontWeight:650,fontSize:13,marginBottom:10}}><Icon name="check" size={16} sw={2.4}/> Do</div>
           {['Reference tokens for every color, radius, shadow.','Use one primary button per view.','Lean on tints for badge / pill fills.','Build groups with flex/grid + gap.'].map((t,i)=>(
-            <div key={i} style={{fontSize:13,color:'var(--secondary-foreground)',lineHeight:1.5,padding:'4px 0'}}>· {t}</div>
+            <div key={i} style={{fontSize:13,color:'var(--ink-2)',lineHeight:1.5,padding:'4px 0'}}>· {t}</div>
           ))}
         </div>
         <div className="tcard" style={{borderColor:'#F2C9C9'}}>
           <div style={{display:'flex',alignItems:'center',gap:7,color:'#F86566',fontWeight:650,fontSize:13,marginBottom:10}}><Icon name="x" size={16} sw={2.4}/> Don't</div>
           {['Invent new hex values or one-off shadows.','Apply the spectrum gradient to UI chrome.','Hard-code status colors in components.','Round Inter 550 up to 600 or 700.'].map((t,i)=>(
-            <div key={i} style={{fontSize:13,color:'var(--secondary-foreground)',lineHeight:1.5,padding:'4px 0'}}>· {t}</div>
+            <div key={i} style={{fontSize:13,color:'var(--ink-2)',lineHeight:1.5,padding:'4px 0'}}>· {t}</div>
           ))}
         </div>
       </div>

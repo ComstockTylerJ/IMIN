@@ -91,7 +91,7 @@ function MemoChain({chain, size=26}){
             {s.state==='done' && <span style={{position:'absolute',right:-2,bottom:-2,width:13,height:13,borderRadius:'50%',background:'#16A34A',
               display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 0 2px #fff'}}><Icon name="check" size={8} sw={3.5} style={{color:'#fff'}}/></span>}
           </span>
-          {i<chain.length-1 && <span style={{width:18,height:2,background: s.state==='done'?'#16A34A':'var(--border-strong)',flex:'none',margin:'0 1px'}}></span>}
+          {i<chain.length-1 && <span style={{width:18,height:2,background: s.state==='done'?'#16A34A':'var(--line-2)',flex:'none',margin:'0 1px'}}></span>}
         </React.Fragment>
       ))}
     </div>
@@ -146,6 +146,7 @@ function MemosWorkspace({setPage, flash}){
       <WsHeader name="Memos" setPage={setPage}
         action={<button className="btn btn-primary" onClick={()=>setPage('prep')}><Icon name="plus" size={16} sw={2.2}/>New memo</button>}/>
       <WorkQueue
+        blurb="Memos carry decisions up the chain — each is read, concurred on, and routed to the next approver until it reaches the deciding authority."
         scopes={MEMO_SCOPES} scopeOf={m=>memoStage(m)==='mine'?'me':'team'} rows={memos} columns={columns} onOpen={setOpenId}
         emptyLabel="No memos in this view."/>
     </div>
@@ -166,9 +167,9 @@ function MemoCard({m, onOpen}){
             <span className="muted" style={{fontSize:11.5,fontFamily:M_MONO}}>{m.id}</span>
             {m.priority==='urgent' && <span className="badge" style={{background:'#FEF2F2',color:'#DC2626',height:18}}>Urgent</span>}
           </div>
-          <h3 style={{fontFamily:M_SERIF,fontSize:19,fontWeight:600,letterSpacing:'-.01em',margin:0,color:'var(--foreground)',lineHeight:1.25}}>{m.title}</h3>
-          <p style={{fontSize:13.5,color:'var(--secondary-foreground)',margin:'7px 0 0',lineHeight:1.5,maxWidth:680}}>{m.summary}</p>
-          <div style={{display:'flex',alignItems:'center',gap:16,marginTop:16,paddingTop:14,borderTop:'1px solid var(--border)',flexWrap:'wrap'}}>
+          <h3 style={{fontFamily:M_SERIF,fontSize:19,fontWeight:600,letterSpacing:'-.01em',margin:0,color:'var(--ink)',lineHeight:1.25}}>{m.title}</h3>
+          <p style={{fontSize:13.5,color:'var(--ink-2)',margin:'7px 0 0',lineHeight:1.5,maxWidth:680}}>{m.summary}</p>
+          <div style={{display:'flex',alignItems:'center',gap:16,marginTop:16,paddingTop:14,borderTop:'1px solid var(--line)',flexWrap:'wrap'}}>
             <MemoChain chain={m.chain}/>
             <div style={{flex:1}}></div>
             <span style={{flex:'none',fontSize:12.5,fontWeight:600,color:b.color,background:b.tint,padding:'5px 11px',borderRadius:999,whiteSpace:'nowrap'}}>{b.label}</span>
@@ -187,12 +188,12 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
   const passed=stage==='passed';
   return (
     <div className="rise">
-      <div style={{position:'sticky',top:'var(--header-h)',zIndex:40,background:'rgba(255,255,255,.85)',backdropFilter:'blur(10px)',borderBottom:'1px solid var(--border)'}}>
+      <div style={{position:'sticky',top:'var(--header-h)',zIndex:40,background:'rgba(255,255,255,.85)',backdropFilter:'blur(10px)',borderBottom:'1px solid var(--line)'}}>
         <div className="page" style={{padding:'11px 28px',display:'flex',alignItems:'center',gap:14}}>
           <button onClick={onBack} className="btn btn-secondary btn-sm"><Icon name="chevron_left" size={15} sw={2.2}/>Memos</button>
-          <span style={{width:1,height:24,background:'var(--border-strong)'}}></span>
+          <span style={{width:1,height:24,background:'var(--line-2)'}}></span>
           <div style={{minWidth:0,flex:1}}>
-            <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{m.title}</div>
+            <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{m.title}</div>
             <div className="muted" style={{fontSize:11.5}}>{m.type} · {m.id}</div>
           </div>
           <ClsTag cls={m.cls}/>
@@ -204,11 +205,11 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
         <div className="card" style={{padding:0,overflow:'hidden'}}>
           <div style={{background:c.bg,color:'#fff',textAlign:'center',fontSize:11.5,fontWeight:700,letterSpacing:'.12em',padding:'5px'}}>{c.label}</div>
           <div style={{padding:'44px 56px 40px'}}>
-            <div style={{fontFamily:M_MONO,fontSize:12,color:'var(--muted-foreground)',letterSpacing:'.04em'}}>MEMORANDUM · {m.id}</div>
-            <h1 style={{fontFamily:M_SERIF,fontSize:27,fontWeight:700,letterSpacing:'-.015em',color:'var(--foreground)',lineHeight:1.2,margin:'14px 0 0'}}>{m.title}</h1>
-            <div style={{display:'flex',gap:24,margin:'18px 0',paddingBottom:18,borderBottom:'1px solid var(--border)',fontSize:12.5,flexWrap:'wrap'}}>
+            <div style={{fontFamily:M_MONO,fontSize:12,color:'var(--ink-3)',letterSpacing:'.04em'}}>MEMORANDUM · {m.id}</div>
+            <h1 style={{fontFamily:M_SERIF,fontSize:27,fontWeight:700,letterSpacing:'-.015em',color:'var(--ink)',lineHeight:1.2,margin:'14px 0 0'}}>{m.title}</h1>
+            <div style={{display:'flex',gap:24,margin:'18px 0',paddingBottom:18,borderBottom:'1px solid var(--line)',fontSize:12.5,flexWrap:'wrap'}}>
               {[['From',PEOPLE[m.originator].name],['Type',m.type],['Date',m.date]].map(([k,v])=>(
-                <div key={k}><div className="muted" style={{fontSize:10.5,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:2}}>{k}</div><div style={{fontWeight:600,color:'var(--foreground)'}}>{v}</div></div>
+                <div key={k}><div className="muted" style={{fontSize:10.5,textTransform:'uppercase',letterSpacing:'.06em',marginBottom:2}}>{k}</div><div style={{fontWeight:600,color:'var(--ink)'}}>{v}</div></div>
               ))}
             </div>
             <div style={{fontFamily:M_SERIF,fontSize:16.5,lineHeight:1.72,color:'#2A2C30'}}>
@@ -224,7 +225,7 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
           <div className="card card-pad">
             <div className="eyebrow" style={{marginBottom:14}}>Routing chain</div>
             <div style={{position:'relative'}}>
-              <div style={{position:'absolute',left:13,top:14,bottom:14,width:2,background:'var(--border)'}}></div>
+              <div style={{position:'absolute',left:13,top:14,bottom:14,width:2,background:'var(--line)'}}></div>
               {m.chain.map((s,i)=>{
                 const done=s.state==='done', curr=s.state==='current';
                 return (
@@ -235,7 +236,7 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
                       {curr && <span style={{position:'absolute',inset:-3,borderRadius:'50%',boxShadow:'0 0 0 2px #0073E6'}}></span>}
                     </span>
                     <div style={{minWidth:0,flex:1}}>
-                      <div style={{fontSize:13,fontWeight:600,color:done||curr?'var(--foreground)':'var(--muted-foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{PEOPLE[s.who].name}</div>
+                      <div style={{fontSize:13,fontWeight:600,color:done||curr?'var(--ink)':'var(--ink-3)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{PEOPLE[s.who].name}</div>
                       <div style={{fontSize:11.5,color:curr?'var(--blue)':'var(--ink-4)',fontWeight:curr?600:500,whiteSpace:'nowrap'}}>{s.role}{curr?' · now':done?' · done':''}</div>
                     </div>
                   </div>
@@ -250,7 +251,7 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
             </div>
           ) : mine ? (
             <div className="card card-pad" style={{display:'flex',flexDirection:'column',gap:9}}>
-              <div style={{fontSize:13,fontWeight:700,color:'var(--foreground)'}}>Your action</div>
+              <div style={{fontSize:13,fontWeight:700,color:'var(--ink)'}}>Your action</div>
               <div className="muted" style={{fontSize:12.5,lineHeight:1.5,marginBottom:3}}>Concur to pass this memo to the next reviewer, or return it to the originator.</div>
               <button className="btn btn-primary" onClick={()=>onAdvance(m.id)}><Icon name="check" size={16} sw={2.2}/>Concur &amp; pass</button>
               <button className="btn btn-secondary" onClick={()=>onReturn(m.id)}><Icon name="route" size={15}/>Return for edits</button>
@@ -264,12 +265,12 @@ function MemoDetail({m, onBack, onAdvance, onReturn}){
           <div className="card card-pad">
             <div className="eyebrow" style={{marginBottom:12}}>History</div>
             <div style={{position:'relative'}}>
-              <div style={{position:'absolute',left:12,top:8,bottom:8,width:1.5,background:'var(--border)'}}></div>
+              <div style={{position:'absolute',left:12,top:8,bottom:8,width:1.5,background:'var(--line)'}}></div>
               {m.history.map((h,i)=>(
                 <div key={i} style={{display:'flex',gap:12,padding:'5px 0',position:'relative'}}>
-                  <span style={{width:25,height:25,borderRadius:7,background:'var(--background)',color:'var(--muted-foreground)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',zIndex:1,boxShadow:'0 0 0 3px #fff'}}><Icon name={h.ic} size={13}/></span>
+                  <span style={{width:25,height:25,borderRadius:7,background:'var(--surface-2)',color:'var(--ink-3)',display:'flex',alignItems:'center',justifyContent:'center',flex:'none',zIndex:1,boxShadow:'0 0 0 3px #fff'}}><Icon name={h.ic} size={13}/></span>
                   <div style={{paddingTop:3}}>
-                    <div style={{fontSize:12.5,fontWeight:550,color:'var(--secondary-foreground)'}}>{h.t}</div>
+                    <div style={{fontSize:12.5,fontWeight:550,color:'var(--ink-2)'}}>{h.t}</div>
                     <div style={{fontFamily:M_MONO,fontSize:11,color:'var(--ink-4)',marginTop:1}}>{h.s}</div>
                   </div>
                 </div>

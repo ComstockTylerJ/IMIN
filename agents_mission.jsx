@@ -41,7 +41,7 @@ function AgentsPage({ openRun, openKickoff, glyph='diamond', framing='codename',
           <div style={{marginBottom:22}}>
             <div style={{display:'flex',alignItems:'center',gap:9,margin:'0 2px 11px'}}>
               <span style={{width:7,height:7,borderRadius:'50%',background:'#E8920C',boxShadow:'0 0 0 3px #FCF0DC'}}></span>
-              <span style={{fontSize:13.5,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em'}}>Waiting on you</span>
+              <span style={{fontSize:13.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>Waiting on you</span>
               <span className="badge" style={{background:'#FCF0DC',color:'#B5851C'}}>{attention.length}</span>
               <span className="muted" style={{fontSize:12.5}}>· agents paused for a decision</span>
             </div>
@@ -65,7 +65,7 @@ function AgentsPage({ openRun, openKickoff, glyph='diamond', framing='codename',
         {/* the feed */}
         <div style={{display:'flex',flexDirection:'column',gap:12}}>
           {feed.map(r=><RunRow key={r.id} run={r} openRun={openRun} glyph={glyph} flat={flat} framing={framing}/>)}
-          {feed.length===0 && <div style={{padding:'40px',textAlign:'center',color:'var(--ink-4)',border:'1.5px dashed var(--border-strong)',borderRadius:14}}>No agent runs in this view.</div>}
+          {feed.length===0 && <div style={{padding:'40px',textAlign:'center',color:'var(--ink-4)',border:'1.5px dashed var(--line-2)',borderRadius:14}}>No agent runs in this view.</div>}
         </div>
       </div>
     </div>
@@ -82,9 +82,9 @@ function MissionHero({ openKickoff, glyph, flat, counts, framing }){
             <FleetToken size={50}/>
             <div>
               <div className="eyebrow" style={{marginBottom:6}}>Agents · Mission Control</div>
-              <h1 style={{fontSize:27,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--foreground)'}}>Agent Mission Control</h1>
+              <h1 style={{fontSize:27,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)'}}>Agent Mission Control</h1>
               <p className="sec" style={{fontSize:14,margin:'6px 0 0',maxWidth:520}}>
-                <b style={{color:'var(--foreground)'}}>{counts.running} agents</b> working the Vantage matter ·
+                <b style={{color:'var(--ink)'}}>{counts.running} agents</b> working the Vantage matter ·
                 <b style={{color:'#B5851C'}}> {counts.needs} waiting</b> on your call.
               </p>
             </div>
@@ -105,11 +105,11 @@ function MissionHero({ openKickoff, glyph, flat, counts, framing }){
             const wait = active.some(r=>r.status==='needs_you'||r.status==='ready');
             return (
               <div key={id} className="card" style={{padding:'9px 12px 9px 10px',display:'flex',alignItems:'center',gap:10,minWidth:170,
-                boxShadow:'var(--shadow-sm)',borderColor: wait?'#F4D79A':'var(--border)'}}>
+                boxShadow:'var(--shadow-sm)',borderColor: wait?'#F4D79A':'var(--line)'}}>
                 <AgentToken id={id} size={34} glyph={glyph} flat={flat} live={live}/>
                 <div style={{minWidth:0}}>
-                  <div style={{fontSize:12.5,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em',whiteSpace:'nowrap'}}>{agentName(id,framing)}</div>
-                  <div style={{fontSize:10.5,fontWeight:550,color: live?a.color: wait?'#B5851C':'var(--muted-foreground)',whiteSpace:'nowrap',display:'flex',alignItems:'center',gap:4}}>
+                  <div style={{fontSize:12.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap'}}>{agentName(id,framing)}</div>
+                  <div style={{fontSize:10.5,fontWeight:550,color: live?a.color: wait?'#B5851C':'var(--ink-3)',whiteSpace:'nowrap',display:'flex',alignItems:'center',gap:4}}>
                     {live?'● Working':wait?'Needs you':active.length?'Active':'Idle'}
                     {agentSub(id,framing)!=='Agent' && framing!=='named' && <span className="muted" style={{fontWeight:450}}>· {a.role}</span>}
                   </div>
@@ -129,18 +129,18 @@ function AttentionCard({ run, openRun, glyph, flat, framing }){
   const cta = run.status==='needs_you' ? 'Review & approve' : run.status==='ready' ? 'Review output' : 'Resolve';
   return (
     <div className="card agent-row" onClick={()=>openRun(run.id)} style={{padding:0,cursor:'pointer',overflow:'hidden',
-      border:'1.5px solid '+(run.status==='needs_you'?'#F4D79A':'var(--border-strong)')}}>
+      border:'1.5px solid '+(run.status==='needs_you'?'#F4D79A':'var(--line-2)')}}>
       <div style={{height:3,background:s.color}}></div>
       <div style={{padding:'15px 16px'}}>
         <div style={{display:'flex',alignItems:'center',gap:11,marginBottom:11}}>
           <AgentToken id={run.agent} size={36} glyph={glyph} flat={flat}/>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:12.5,fontWeight:700,color:'var(--foreground)'}}>{agentName(run.agent,framing)}</div>
+            <div style={{fontSize:12.5,fontWeight:700,color:'var(--ink)'}}>{agentName(run.agent,framing)}</div>
             <RunStatusPill k={run.status} sm/>
           </div>
         </div>
-        <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',lineHeight:1.35,marginBottom:6}}>{run.title}</div>
-        <div style={{fontSize:12,color:'var(--secondary-foreground)',lineHeight:1.5,marginBottom:13,
+        <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',lineHeight:1.35,marginBottom:6}}>{run.title}</div>
+        <div style={{fontSize:12,color:'var(--ink-2)',lineHeight:1.5,marginBottom:13,
           display:'-webkit-box',WebkitLineClamp:2,WebkitBoxOrient:'vertical',overflow:'hidden'}}>
           {run.gate ? run.gate.body : run.summary}
         </div>
@@ -162,7 +162,7 @@ function RunRow({ run, openRun, glyph, flat, framing }){
   const curStep = run.steps[run.steps.length-1];
   return (
     <div className="card agent-row" onClick={()=>openRun(run.id)}
-      style={{display:'flex',alignItems:'stretch',padding:0,cursor:'pointer',overflow:'hidden',borderColor:'var(--border)'}}>
+      style={{display:'flex',alignItems:'stretch',padding:0,cursor:'pointer',overflow:'hidden',borderColor:'var(--line)'}}>
       <div style={{width:4,background:s.color,flex:'none'}}></div>
       <div style={{flex:1,display:'flex',alignItems:'center',gap:16,padding:'15px 18px',minWidth:0}}>
         <AgentToken id={run.agent} size={42} glyph={glyph} flat={flat} live={live}/>
@@ -174,9 +174,9 @@ function RunRow({ run, openRun, glyph, flat, framing }){
             <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)',flex:'none'}}></span>
             <span className="muted" style={{fontSize:11.5,minWidth:0,overflow:'hidden',textOverflow:'ellipsis'}}>{run.workspace}</span>
           </div>
-          <div style={{fontSize:14,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginBottom:5}}>{run.title}</div>
-          <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12,color:'var(--secondary-foreground)',minWidth:0}}>
-            {live && <Icon name={STEP_KIND[curStep.kind].icon} size={13} sw={2} style={{flex:'none',color:'var(--muted-foreground)'}}/>}
+          <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginBottom:5}}>{run.title}</div>
+          <div style={{display:'flex',alignItems:'center',gap:7,fontSize:12,color:'var(--ink-2)',minWidth:0}}>
+            {live && <Icon name={STEP_KIND[curStep.kind].icon} size={13} sw={2} style={{flex:'none',color:'var(--ink-3)'}}/>}
             <span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>
               {curStep.txt}
             </span>
@@ -186,7 +186,7 @@ function RunRow({ run, openRun, glyph, flat, framing }){
         {/* progress */}
         <div style={{width:170,flex:'none'}} className="hide-sm">
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:6}}>
-            <span style={{fontSize:11.5,fontWeight:600,color:'var(--secondary-foreground)',fontFamily:"ui-monospace,Menlo,monospace"}}>{run.metric}</span>
+            <span style={{fontSize:11.5,fontWeight:600,color:'var(--ink-2)',fontFamily:"ui-monospace,Menlo,monospace"}}>{run.metric}</span>
             <span style={{fontSize:11,fontWeight:600,color:s.color}}>{run.progress}%</span>
           </div>
           <RunProgress value={run.progress} color={s.color} animated={false}/>

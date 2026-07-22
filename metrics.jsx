@@ -10,13 +10,13 @@ function MetricsPage(){
   ];
   return (
     <div className="rise">
-      <div style={{position:'relative',overflow:'hidden',borderBottom:'1px solid var(--border)',background:'rgba(255,255,255,.4)'}}>
+      <div style={{position:'relative',overflow:'hidden',borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.4)'}}>
         <HeroPattern opacity={0.7}/>
         <div className="page" style={{position:'relative',zIndex:1,paddingTop:34,paddingBottom:26}}>
           <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:20,flexWrap:'wrap'}}>
             <div>
               <div className="eyebrow" style={{marginBottom:6}}>Analytics</div>
-              <h1 style={{fontSize:25,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--foreground)'}}>Metrics</h1>
+              <h1 style={{fontSize:25,fontWeight:700,letterSpacing:'-.03em',margin:0,color:'var(--ink)'}}>Metrics</h1>
               <p className="sec" style={{fontSize:14,margin:'5px 0 0'}}>Performance & productivity across the agency</p>
             </div>
             <div style={{display:'flex',gap:9,alignItems:'center'}}>
@@ -24,7 +24,7 @@ function MetricsPage(){
               <button className="btn btn-secondary btn-sm"><Icon name="layers" size={14}/>All Workspaces<Icon name="chevron_down" size={13}/></button>
               <div style={{display:'flex',gap:3,background:'#EEF1F6',padding:3,borderRadius:8}}>
                 {['7d','30d','90d'].map(r=>(
-                  <button key={r} onClick={()=>setRange(r)} style={{border:0,background:range===r?'#fff':'transparent',color:range===r?'var(--foreground)':'var(--muted-foreground)',
+                  <button key={r} onClick={()=>setRange(r)} style={{border:0,background:range===r?'#fff':'transparent',color:range===r?'var(--ink)':'var(--ink-3)',
                     fontSize:12.5,fontWeight:550,padding:'5px 11px',borderRadius:6,cursor:'pointer',boxShadow:range===r?'var(--shadow-sm)':'none'}}>{r}</button>
                 ))}
               </div>
@@ -39,11 +39,11 @@ function MetricsPage(){
           {perf.map(p=>(
             <div key={p.label} className="card card-pad" style={{display:'flex',flexDirection:'column',gap:12}}>
               <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                <span style={{fontSize:12.5,fontWeight:550,color:'var(--secondary-foreground)'}}>{p.label}</span>
+                <span style={{fontSize:12.5,fontWeight:550,color:'var(--ink-2)'}}>{p.label}</span>
                 <span style={{width:8,height:8,borderRadius:3,background:p.accent}}></span>
               </div>
               <div style={{display:'flex',alignItems:'baseline',gap:8}}>
-                <span style={{fontSize:28,fontWeight:700,letterSpacing:'-.03em',color:'var(--foreground)'}}>{p.value}{p.unit&&<span style={{fontSize:14,fontWeight:600,color:'var(--muted-foreground)',marginLeft:2}}>{p.unit}</span>}</span>
+                <span style={{fontSize:28,fontWeight:700,letterSpacing:'-.03em',color:'var(--ink)'}}>{p.value}{p.unit&&<span style={{fontSize:14,fontWeight:600,color:'var(--ink-3)',marginLeft:2}}>{p.unit}</span>}</span>
                 <TrendBadge delta={p.delta} dir={p.dir} good={p.good}/>
               </div>
               <Sparkline data={p.spark} color={p.accent} w={210} h={32}/>
@@ -68,7 +68,7 @@ function MetricsPage(){
                 {[['Met SLA','#16A34A',94],['At risk','#B5851C',4],['Breached','#DC2626',2]].map(([l,c,v])=>(
                   <div key={l}>
                     <div style={{display:'flex',justifyContent:'space-between',fontSize:12.5,marginBottom:4}}>
-                      <span style={{color:'var(--secondary-foreground)',fontWeight:500}}>{l}</span><span style={{fontWeight:600,color:'var(--foreground)'}}>{v}%</span>
+                      <span style={{color:'var(--ink-2)',fontWeight:500}}>{l}</span><span style={{fontWeight:600,color:'var(--ink)'}}>{v}%</span>
                     </div>
                     <div style={{height:6,background:'#F1F5F9',borderRadius:4,overflow:'hidden'}}><div style={{width:v+'%',height:'100%',background:c,borderRadius:4}}></div></div>
                   </div>
@@ -93,11 +93,11 @@ function MetricsPage(){
                 return (
                   <div key={w.who} style={{display:'flex',alignItems:'center',gap:12}}>
                     <Avatar id={w.who} size={26}/>
-                    <span style={{width:120,fontSize:12.5,fontWeight:550,color:'var(--foreground)'}}>{p.name}</span>
+                    <span style={{width:120,fontSize:12.5,fontWeight:550,color:'var(--ink)'}}>{p.name}</span>
                     <div style={{flex:1,height:8,background:'#F1F5F9',borderRadius:5,overflow:'hidden'}}>
                       <div style={{width:w.load+'%',height:'100%',background:c,borderRadius:5,transition:'width .8s'}}></div>
                     </div>
-                    <span style={{width:38,textAlign:'right',fontSize:12.5,fontWeight:600,color:over?'#DC2626':'var(--secondary-foreground)'}}>{w.load}%</span>
+                    <span style={{width:38,textAlign:'right',fontSize:12.5,fontWeight:600,color:over?'#DC2626':'var(--ink-2)'}}>{w.load}%</span>
                   </div>
                 );
               })}
@@ -109,7 +109,7 @@ function MetricsPage(){
   );
 }
 function Legend({c,l}){
-  return <span style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--secondary-foreground)',fontWeight:500}}><span style={{width:9,height:9,borderRadius:3,background:c}}></span>{l}</span>;
+  return <span style={{display:'flex',alignItems:'center',gap:6,fontSize:12,color:'var(--ink-2)',fontWeight:500}}><span style={{width:9,height:9,borderRadius:3,background:c}}></span>{l}</span>;
 }
 
 Object.assign(window, { MetricsPage });

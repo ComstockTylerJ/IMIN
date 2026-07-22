@@ -42,7 +42,7 @@ function AgentRunDetail({ runId, setPage, glyph='diamond', framing='codename', f
   return (
     <div className="rise" data-screen-label="Agent run detail">
       {/* header band */}
-      <div style={{position:'relative',overflow:'hidden',borderBottom:'1px solid var(--border)',background:'rgba(255,255,255,.5)'}}>
+      <div style={{position:'relative',overflow:'hidden',borderBottom:'1px solid var(--line)',background:'rgba(255,255,255,.5)'}}>
         <HeroPattern opacity={.7}/>
         <div className="page" style={{position:'relative',zIndex:1,paddingTop:20,paddingBottom:20}}>
           <button className="btn btn-ghost btn-sm" onClick={()=>(window.__goAgents?window.__goAgents():setPage('tasks'))} style={{marginLeft:-8,marginBottom:14}}>
@@ -58,9 +58,9 @@ function AgentRunDetail({ runId, setPage, glyph='diamond', framing='codename', f
                   <RunStatusPill k={status}/>
                   <AutonomyChip mode={run.autonomy} sm/>
                 </div>
-                <h1 style={{fontSize:22,fontWeight:700,letterSpacing:'-.025em',margin:0,color:'var(--foreground)',lineHeight:1.2}}>{run.title}</h1>
-                <div style={{display:'flex',alignItems:'center',gap:8,marginTop:7,fontSize:12.5,color:'var(--secondary-foreground)'}}>
-                  <Icon name="gavel" size={14} style={{color:'var(--muted-foreground)'}}/><b style={{fontWeight:600,color:'var(--foreground)'}}>{run.matter}</b>
+                <h1 style={{fontSize:22,fontWeight:700,letterSpacing:'-.025em',margin:0,color:'var(--ink)',lineHeight:1.2}}>{run.title}</h1>
+                <div style={{display:'flex',alignItems:'center',gap:8,marginTop:7,fontSize:12.5,color:'var(--ink-2)'}}>
+                  <Icon name="gavel" size={14} style={{color:'var(--ink-3)'}}/><b style={{fontWeight:600,color:'var(--ink)'}}>{run.matter}</b>
                   <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
                   {run.workspace}
                   {run.wfTask && <><span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span><span className="linkish">Task {run.wfTask}</span></>}
@@ -76,9 +76,9 @@ function AgentRunDetail({ runId, setPage, glyph='diamond', framing='codename', f
         {/* ---- left: reasoning stream ---- */}
         <div style={{display:'flex',flexDirection:'column',gap:16,minWidth:0}}>
           <div className="card" style={{overflow:'hidden'}}>
-            <div style={{display:'flex',alignItems:'center',gap:9,padding:'14px 18px',borderBottom:'1px solid var(--border)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:9,padding:'14px 18px',borderBottom:'1px solid var(--line)'}}>
               <Icon name="pulse" size={16} style={{color:a.color}}/>
-              <span style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)'}}>Reasoning stream</span>
+              <span style={{fontSize:13.5,fontWeight:600,color:'var(--ink)'}}>Reasoning stream</span>
               {live && <span style={{display:'inline-flex',alignItems:'center',gap:5,marginLeft:2,fontSize:11,fontWeight:600,color:a.color}}>
                 <span style={{position:'relative',width:6,height:6}}><span style={{position:'absolute',inset:0,borderRadius:'50%',background:a.color}}></span><span style={{position:'absolute',inset:0,borderRadius:'50%',background:a.color,animation:'livePing 1.6s ease-out infinite'}}></span></span>Live
               </span>}
@@ -90,11 +90,11 @@ function AgentRunDetail({ runId, setPage, glyph='diamond', framing='codename', f
             </div>
 
             {/* steer composer */}
-            <div style={{padding:'12px 18px',borderTop:'1px solid var(--border)',background:'var(--background)',display:'flex',gap:10,alignItems:'center'}}>
+            <div style={{padding:'12px 18px',borderTop:'1px solid var(--line)',background:'var(--surface-2)',display:'flex',gap:10,alignItems:'center'}}>
               <AgentToken id={run.agent} size={28} glyph={glyph} flat={flat}/>
               <input value={steer} onChange={e=>setSteer(e.target.value)} onKeyDown={e=>e.key==='Enter'&&sendSteer()}
                 placeholder={`Steer ${a.code} — add an instruction or constraint…`}
-                style={{flex:1,height:38,border:'1px solid var(--border-strong)',borderRadius:9,padding:'0 13px',fontSize:13,fontFamily:'inherit',outline:'none',background:'#fff'}}/>
+                style={{flex:1,height:38,border:'1px solid var(--line-2)',borderRadius:9,padding:'0 13px',fontSize:13,fontFamily:'inherit',outline:'none',background:'#fff'}}/>
               <button className="btn btn-primary btn-icon" onClick={sendSteer}><Icon name="send" size={16}/></button>
             </div>
           </div>
@@ -139,7 +139,7 @@ function Stream({ steps, agent, live }){
   const endRef = React.useRef(null);
   return (
     <div style={{position:'relative'}}>
-      <div style={{position:'absolute',left:15,top:10,bottom:18,width:2,background:'var(--border)'}}></div>
+      <div style={{position:'absolute',left:15,top:10,bottom:18,width:2,background:'var(--line)'}}></div>
       <div style={{display:'flex',flexDirection:'column'}}>
         {steps.map((st,i)=>{
           const k=STEP_KIND[st.kind]||STEP_KIND.think;
@@ -151,7 +151,7 @@ function Stream({ steps, agent, live }){
                 <Icon name={st.you?'user':k.icon} size={15} sw={1.9}/>
               </span>
               <div style={{flex:1,minWidth:0,paddingTop:3}}>
-                <div style={{fontSize:13,color: st.you?'var(--primary)':'var(--secondary-foreground)',lineHeight:1.5,fontWeight:st.you?600:450}}>
+                <div style={{fontSize:13,color: st.you?'var(--primary)':'var(--ink-2)',lineHeight:1.5,fontWeight:st.you?600:450}}>
                   {st.kind==='gate' && <b style={{color:'#B5851C'}}>⏸ Checkpoint · </b>}
                   {st.txt}
                   {live && isLast && <span className="cursor-blink" style={{marginLeft:3,color:agent.color,fontWeight:700}}>▍</span>}
@@ -181,15 +181,15 @@ function GateCard({ run, agent, onApprove, flash }){
         <span className="badge" style={{background:'#FBE4B0',color:'#7A5B12'}}>Approval required</span>
       </div>
       <div style={{padding:'15px 18px'}}>
-        <p style={{fontSize:13,color:'var(--secondary-foreground)',lineHeight:1.55,margin:'0 0 14px'}}>{g.body}</p>
+        <p style={{fontSize:13,color:'var(--ink-2)',lineHeight:1.55,margin:'0 0 14px'}}>{g.body}</p>
         <div style={{border:'1px solid #EFD9A6',borderRadius:11,overflow:'hidden',background:'#fff'}}>
           {g.rows.map((r,i)=>{
             const on = approved[i]!==false;
             return (
-              <div key={i} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 13px',borderTop:i?'1px solid var(--border)':'0',opacity:on?1:.45,transition:'.15s'}}>
+              <div key={i} style={{display:'flex',alignItems:'center',gap:12,padding:'11px 13px',borderTop:i?'1px solid var(--line)':'0',opacity:on?1:.45,transition:'.15s'}}>
                 <span style={{fontFamily:"ui-monospace,Menlo,monospace",fontSize:11.5,fontWeight:600,color:'var(--primary)',width:96,flex:'none'}}>{r.doc}</span>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:12.5,color:'var(--foreground)',fontWeight:550,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.basis}</div>
+                  <div style={{fontSize:12.5,color:'var(--ink)',fontWeight:550,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.basis}</div>
                   <div className="muted" style={{fontSize:11}}>{r.from} → {r.to}</div>
                 </div>
                 <span className="badge" style={{background: r.conf>=.9?'#F0FDF4':'#FFFBEB', color:r.conf>=.9?'#16A34A':'#C58A1E',flex:'none'}}>{Math.round(r.conf*100)}%</span>
@@ -199,7 +199,7 @@ function GateCard({ run, agent, onApprove, flash }){
               </div>
             );
           })}
-          <div style={{padding:'9px 13px',borderTop:'1px solid var(--border)',fontSize:11.5,color:'var(--muted-foreground)',background:'var(--background)'}}>+ {g.more} more entries with confidence ≥ 0.82</div>
+          <div style={{padding:'9px 13px',borderTop:'1px solid var(--line)',fontSize:11.5,color:'var(--ink-3)',background:'var(--surface-2)'}}>+ {g.more} more entries with confidence ≥ 0.82</div>
         </div>
         <div style={{display:'flex',gap:9,marginTop:15,alignItems:'center'}}>
           <button className="btn btn-primary" onClick={onApprove}><Icon name="check" size={16} sw={2.4}/>Approve & write to log</button>
@@ -217,22 +217,22 @@ function FindingsCard({ run, agent, flash, setStatus }){
   const SEV={high:{label:'High risk',color:'#DC2626',tint:'#FEF2F2'},low:{label:'Minor',color:'#C58A1E',tint:'#FFF7E6'}};
   return (
     <div className="card" style={{overflow:'hidden',borderColor:'#E3D6F2'}}>
-      <div style={{padding:'15px 18px',display:'flex',alignItems:'center',gap:11,borderBottom:'1px solid var(--border)',background:'#FAF7FE'}}>
+      <div style={{padding:'15px 18px',display:'flex',alignItems:'center',gap:11,borderBottom:'1px solid var(--line)',background:'#FAF7FE'}}>
         <span style={{width:34,height:34,borderRadius:9,background:'#EFE6FA',color:'#475569',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="megaphone" size={17}/></span>
         <div style={{flex:1}}>
-          <div style={{fontSize:14,fontWeight:700,color:'var(--foreground)'}}>Clearance findings — {agent.code} flagged {run.findings.length}</div>
-          <div style={{fontSize:11.5,color:'var(--muted-foreground)',fontWeight:500}}>Review each before clearing the statement for release</div>
+          <div style={{fontSize:14,fontWeight:700,color:'var(--ink)'}}>Clearance findings — {agent.code} flagged {run.findings.length}</div>
+          <div style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}>Review each before clearing the statement for release</div>
         </div>
       </div>
       <div style={{padding:'6px 18px 16px'}}>
         {run.findings.map((f,i)=>{
           const sv=SEV[f.sev];
           return (
-            <div key={i} style={{display:'flex',gap:12,padding:'13px 0',borderBottom:i<run.findings.length-1?'1px solid var(--border)':'0'}}>
+            <div key={i} style={{display:'flex',gap:12,padding:'13px 0',borderBottom:i<run.findings.length-1?'1px solid var(--line)':'0'}}>
               <span className="badge" style={{background:sv.tint,color:sv.color,flex:'none',height:22,marginTop:1}}><span className="dot" style={{background:sv.color}}></span>{sv.label}</span>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontSize:11,fontWeight:700,letterSpacing:'.03em',textTransform:'uppercase',color:'var(--muted-foreground)',marginBottom:3}}>{f.rule}</div>
-                <div style={{fontSize:13,color:'var(--secondary-foreground)',lineHeight:1.5}}>{f.txt}</div>
+                <div style={{fontSize:11,fontWeight:700,letterSpacing:'.03em',textTransform:'uppercase',color:'var(--ink-3)',marginBottom:3}}>{f.rule}</div>
+                <div style={{fontSize:13,color:'var(--ink-2)',lineHeight:1.5}}>{f.txt}</div>
               </div>
               <button className="btn btn-ghost btn-sm" style={{flex:'none',alignSelf:'flex-start'}}>View<Icon name="arrow_right" size={13}/></button>
             </div>
@@ -263,16 +263,16 @@ function RunMetaCard({ run, agent, status }){
       <div style={{display:'flex',alignItems:'center',gap:15,marginBottom:16}}>
         <Donut value={run.progress} size={66} stroke={9} color={s.color} label={run.progress+'%'}/>
         <div style={{minWidth:0,display:'flex',flexDirection:'column',gap:3}}>
-          <div style={{fontSize:12.5,fontWeight:700,color:'var(--foreground)',lineHeight:1.3}}>{run.metric}</div>
+          <div style={{fontSize:12.5,fontWeight:700,color:'var(--ink)',lineHeight:1.3}}>{run.metric}</div>
           <div className="muted" style={{fontSize:11.5,lineHeight:1.3}}>{run.eta}</div>
         </div>
       </div>
       <div style={{display:'flex',flexDirection:'column',gap:1}}>
         {rows.map(([l,v,ic])=>(
-          <div key={l} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 0',borderTop:'1px solid var(--border)'}}>
+          <div key={l} style={{display:'flex',alignItems:'center',gap:10,padding:'8px 0',borderTop:'1px solid var(--line)'}}>
             <Icon name={ic} size={14} style={{color:'var(--ink-4)',flex:'none'}}/>
-            <span style={{fontSize:12,color:'var(--muted-foreground)',fontWeight:550,width:84,flex:'none'}}>{l}</span>
-            <span style={{fontSize:12.5,color:'var(--foreground)',fontWeight:550,textAlign:'right',flex:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{v}</span>
+            <span style={{fontSize:12,color:'var(--ink-3)',fontWeight:550,width:84,flex:'none'}}>{l}</span>
+            <span style={{fontSize:12.5,color:'var(--ink)',fontWeight:550,textAlign:'right',flex:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{v}</span>
           </div>
         ))}
       </div>
@@ -295,11 +295,11 @@ function ArtifactsCard({ run, agent }){
       <SectionHead title="Artifacts" sub="What this run is producing" icon="layers"/>
       <div style={{display:'flex',flexDirection:'column',gap:9}}>
         {arts.map(([t,sub,ic,c],i)=>(
-          <div key={i} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 11px',border:'1px solid var(--border)',borderRadius:10,cursor:'pointer',transition:'.13s'}}
-            onMouseEnter={e=>e.currentTarget.style.background='var(--background)'} onMouseLeave={e=>e.currentTarget.style.background='#fff'}>
+          <div key={i} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 11px',border:'1px solid var(--line)',borderRadius:10,cursor:'pointer',transition:'.13s'}}
+            onMouseEnter={e=>e.currentTarget.style.background='var(--surface-2)'} onMouseLeave={e=>e.currentTarget.style.background='#fff'}>
             <span style={{width:32,height:32,borderRadius:8,background:c+'18',color:c,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={ic} size={16}/></span>
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:12.5,fontWeight:600,color:'var(--foreground)'}}>{t}</div>
+              <div style={{fontSize:12.5,fontWeight:600,color:'var(--ink)'}}>{t}</div>
               <div className="muted" style={{fontSize:11}}>{sub}</div>
             </div>
             <Icon name="external" size={14} style={{color:'var(--ink-4)'}}/>
@@ -322,7 +322,7 @@ function GuardrailsCard({ run, agent }){
       <SectionHead title="Guardrails" sub="What this agent may & may not do" icon="lock"/>
       <div style={{display:'flex',flexDirection:'column',gap:9}}>
         {rails.map(([t],i)=>(
-          <div key={i} style={{display:'flex',alignItems:'flex-start',gap:9,fontSize:12.5,color:'var(--secondary-foreground)',lineHeight:1.4}}>
+          <div key={i} style={{display:'flex',alignItems:'flex-start',gap:9,fontSize:12.5,color:'var(--ink-2)',lineHeight:1.4}}>
             <Icon name="shield_check" size={15} sw={2} style={{color:'#16A34A',flex:'none',marginTop:1}}/>{t}
           </div>
         ))}

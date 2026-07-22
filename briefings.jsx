@@ -99,7 +99,7 @@ function FbStat({value, label, icon, color}){
     <div className="card card-pad" style={{display:'flex',alignItems:'center',gap:12,padding:'13px 15px'}}>
       <span style={{width:34,height:34,borderRadius:9,background:(color||'#0073E6')+'1a',color:color||'#0073E6',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={icon} size={17}/></span>
       <div style={{minWidth:0}}>
-        <div style={{fontSize:19,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.02em',lineHeight:1}}>{value}</div>
+        <div style={{fontSize:19,fontWeight:700,color:'var(--ink)',letterSpacing:'-.02em',lineHeight:1}}>{value}</div>
         <div className="muted" style={{fontSize:11,marginTop:3,fontWeight:500}}>{label}</div>
       </div>
     </div>
@@ -129,7 +129,7 @@ function BriefingsWorkspace({setPage, flash}){
         action={<button className="btn btn-primary" onClick={()=>flash&&flash('New briefing book created')}><Icon name="plus" size={16} sw={2.2}/>New book</button>}/>
       <div className="page" style={{paddingTop:22}}>
         {/* stats */}
-        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14,marginBottom:20}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14,marginBottom:20}} data-tour="brief-stats">
           <FbStat value={queue.length} label="In the build queue" icon="layers" color="#475569"/>
           <FbStat value={dist.length} label="Distributed (history)" icon="send" color="#0073E6"/>
           <FbStat value={awaiting} label="Awaiting feedback" icon="clock" color="#B5851C"/>
@@ -137,12 +137,12 @@ function BriefingsWorkspace({setPage, flash}){
         </div>
 
         {/* view switch */}
-        <div style={{display:'flex',gap:4,marginBottom:18,background:'var(--background)',padding:4,borderRadius:11,width:'fit-content',border:'1px solid var(--border)'}}>
+        <div style={{display:'flex',gap:4,marginBottom:18,background:'var(--surface-2)',padding:4,borderRadius:11,width:'fit-content',border:'1px solid var(--line)'}} data-tour="brief-views">
           {[['queue','Build queue',queue.length],['history','History & feedback',dist.length]].map(([id,label,n])=>(
             <button key={id} onClick={()=>setView(id)}
               style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 16px',borderRadius:8,border:0,cursor:'pointer',
                 fontSize:13,fontWeight:600,fontFamily:'inherit',
-                background:view===id?'#fff':'transparent',color:view===id?'var(--foreground)':'var(--muted-foreground)',
+                background:view===id?'#fff':'transparent',color:view===id?'var(--ink)':'var(--ink-3)',
                 boxShadow:view===id?'0 1px 2px rgba(29,53,87,.1)':'none'}}>
               {label}<span style={{fontSize:11,fontWeight:700,color:view===id?'var(--blue)':'var(--ink-4)'}}>{n}</span>
             </button>
@@ -150,7 +150,7 @@ function BriefingsWorkspace({setPage, flash}){
         </div>
 
         {view==='queue' ? (
-          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:18,paddingBottom:40}}>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:18,paddingBottom:40}} data-tour="brief-grid">
             {queue.map(b=>{
               const st=B_STATUS[b.status];
               const mats=b.sections.filter(s=>s.type!=='section');
@@ -166,12 +166,12 @@ function BriefingsWorkspace({setPage, flash}){
                       <div className="muted" style={{fontSize:11.5,fontWeight:500}}>{b.sub}</div>
                       <span className="badge" style={{background:st.tint,color:st.color,height:19,flex:'none'}}>{st.label}</span>
                     </div>
-                    <div style={{fontFamily:B_SERIF,fontSize:18,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em',lineHeight:1.2,margin:'5px 0 0'}}>{b.title}</div>
+                    <div style={{fontFamily:B_SERIF,fontSize:18,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',lineHeight:1.2,margin:'5px 0 0'}}>{b.title}</div>
                     <div className="muted" style={{fontSize:11.5,marginTop:6,display:'flex',alignItems:'center',gap:5}}><Icon name="send" size={12}/>For {b.recipient}</div>
-                    <div style={{display:'flex',alignItems:'center',gap:9,marginTop:11,paddingTop:11,borderTop:'1px solid var(--border)'}}>
-                      <span style={{fontSize:11.5,color:'var(--muted-foreground)',fontWeight:500}}><b style={{color:'var(--secondary-foreground)'}}>{mats.length}</b> items</span>
+                    <div style={{display:'flex',alignItems:'center',gap:9,marginTop:11,paddingTop:11,borderTop:'1px solid var(--line)'}}>
+                      <span style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><b style={{color:'var(--ink-2)'}}>{mats.length}</b> items</span>
                       <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span>
-                      <span style={{fontSize:11.5,color:'var(--muted-foreground)',fontWeight:500}}><b style={{color:'var(--secondary-foreground)'}}>{pages}</b> pages</span>
+                      <span style={{fontSize:11.5,color:'var(--ink-3)',fontWeight:500}}><b style={{color:'var(--ink-2)'}}>{pages}</b> pages</span>
                       <div style={{flex:1}}></div>
                       <AvatarStack ids={b.contributors} size={22} max={3}/>
                     </div>
@@ -193,7 +193,7 @@ function HistoryTable({books, open}){
   const sorted=[...books];
   return (
     <div className="card" style={{padding:0,overflow:'hidden',marginBottom:40}}>
-      <div style={{display:'grid',gridTemplateColumns:'minmax(0,2.4fr) 1.4fr 1fr 1.6fr 80px',gap:12,padding:'11px 18px',borderBottom:'1px solid var(--border)',background:'var(--background)'}}>
+      <div style={{display:'grid',gridTemplateColumns:'minmax(0,2.4fr) 1.4fr 1fr 1.6fr 80px',gap:12,padding:'11px 18px',borderBottom:'1px solid var(--line)',background:'var(--surface-2)'}}>
         {['Briefing book','Recipient','Distributed','Receiver feedback','Made by'].map(h=>(
           <div key={h} className="eyebrow" style={{fontSize:10.5}}>{h}</div>
         ))}
@@ -202,17 +202,17 @@ function HistoryTable({books, open}){
         const fb=b.feedback, v=fb&&B_VERDICT[fb.verdict];
         return (
           <div key={b.id} onClick={()=>open(b.id,'feedback')}
-            style={{display:'grid',gridTemplateColumns:'minmax(0,2.4fr) 1.4fr 1fr 1.6fr 80px',gap:12,alignItems:'center',padding:'13px 18px',borderTop:i?'1px solid var(--border)':0,cursor:'pointer',transition:'.12s'}}
-            onMouseEnter={e=>e.currentTarget.style.background='var(--background)'}
+            style={{display:'grid',gridTemplateColumns:'minmax(0,2.4fr) 1.4fr 1fr 1.6fr 80px',gap:12,alignItems:'center',padding:'13px 18px',borderTop:i?'1px solid var(--line)':0,cursor:'pointer',transition:'.12s'}}
+            onMouseEnter={e=>e.currentTarget.style.background='var(--surface-2)'}
             onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
             <div style={{display:'flex',alignItems:'center',gap:12,minWidth:0}}>
               <span style={{width:30,height:38,borderRadius:'3px 5px 5px 3px',background:b.cover,flex:'none',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'inset 4px 0 0 rgba(255,255,255,.18)'}}><Icon name="book" size={14} style={{color:'#fff'}}/></span>
               <div style={{minWidth:0}}>
-                <div style={{fontFamily:B_SERIF,fontSize:14.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.title}</div>
+                <div style={{fontFamily:B_SERIF,fontSize:14.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.title}</div>
                 <div className="muted" style={{fontSize:11,marginTop:1,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.sub}</div>
               </div>
             </div>
-            <div style={{fontSize:12.5,color:'var(--secondary-foreground)',fontWeight:550,minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.recipient}</div>
+            <div style={{fontSize:12.5,color:'var(--ink-2)',fontWeight:550,minWidth:0,whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.recipient}</div>
             <div className="muted" style={{fontSize:12}}>{b.distributed}</div>
             <div>
               {fb ? (
@@ -229,7 +229,7 @@ function HistoryTable({books, open}){
           </div>
         );
       })}
-      {!sorted.length && <div style={{textAlign:'center',padding:'40px',color:'var(--muted-foreground)',fontSize:13}}>No books distributed yet.</div>}
+      {!sorted.length && <div style={{textAlign:'center',padding:'40px',color:'var(--ink-3)',fontSize:13}}>No books distributed yet.</div>}
     </div>
   );
 }
@@ -249,13 +249,13 @@ function BookBuilder({b, tab, setTab, onBack, update, flash}){
 
   return (
     <div className="rise">
-      <div style={{position:'sticky',top:'var(--header-h)',zIndex:40,background:'rgba(255,255,255,.85)',backdropFilter:'blur(10px)',borderBottom:'1px solid var(--border)'}}>
+      <div style={{position:'sticky',top:'var(--header-h)',zIndex:40,background:'rgba(255,255,255,.85)',backdropFilter:'blur(10px)',borderBottom:'1px solid var(--line)'}}>
         <div className="page" style={{padding:'11px 28px',display:'flex',alignItems:'center',gap:14}}>
           <button onClick={onBack} className="btn btn-secondary btn-sm"><Icon name="chevron_left" size={15} sw={2.2}/>Books</button>
-          <span style={{width:1,height:24,background:'var(--border-strong)'}}></span>
+          <span style={{width:1,height:24,background:'var(--line-2)'}}></span>
           <span style={{width:28,height:28,borderRadius:7,background:b.cover,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="book" size={15} style={{color:'#fff'}}/></span>
           <div style={{minWidth:0,flex:1}}>
-            <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.title}</div>
+            <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{b.title}</div>
             <div className="muted" style={{fontSize:11.5}}>{b.sub} · For {b.recipient}{b.distributed?` · sent ${b.distributed}`:''}</div>
           </div>
           <span className="badge" style={{background:st.tint,color:st.color,height:22}}>{st.label}</span>
@@ -269,7 +269,7 @@ function BookBuilder({b, tab, setTab, onBack, update, flash}){
           {[['contents','Contents','layers'],['feedback','Receiver feedback','comment']].map(([id,label,icon])=>(
             <button key={id} onClick={()=>setTab(id)} style={{display:'flex',alignItems:'center',gap:7,border:0,background:'transparent',
               padding:'11px 0',cursor:'pointer',fontSize:13,fontWeight:tab===id?600:500,position:'relative',
-              color:tab===id?'var(--blue)':'var(--muted-foreground)'}}>
+              color:tab===id?'var(--blue)':'var(--ink-3)'}}>
               <Icon name={icon} size={15}/>{label}
               {id==='feedback'&&fbCount>0 && <span style={{fontSize:10.5,fontWeight:700,background:'#EBF4FF',color:'var(--blue)',borderRadius:999,padding:'1px 7px'}}>{fbCount}</span>}
               {tab===id && <span style={{position:'absolute',left:0,right:0,bottom:-1,height:2.5,background:'var(--blue)',borderRadius:2}}></span>}
@@ -306,11 +306,11 @@ function BookContents({b, update, flash, secCount}){
           {(()=>{ let n=0; const hasSec=secCount>0; return b.sections.map((s,i)=>{
             if(s.type==='section'){
               return (
-                <div key={s.id} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 13px',borderRadius:11,background:'var(--background)',border:'1px solid var(--border-strong)',marginTop:i?6:0}}>
-                  <span style={{width:30,height:30,borderRadius:8,background:'var(--foreground)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="bookmark" size={15}/></span>
+                <div key={s.id} style={{display:'flex',alignItems:'center',gap:11,padding:'10px 13px',borderRadius:11,background:'var(--surface-2)',border:'1px solid var(--line-2)',marginTop:i?6:0}}>
+                  <span style={{width:30,height:30,borderRadius:8,background:'var(--ink)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="bookmark" size={15}/></span>
                   <input value={s.name} onChange={e=>renameSection(s.id,e.target.value)} placeholder="Section name"
-                    style={{flex:1,minWidth:0,border:0,outline:'none',background:'transparent',fontSize:13.5,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em',fontFamily:'inherit'}}/>
-                  <span className="badge" style={{background:'#fff',color:'var(--muted-foreground)',border:'1px solid var(--border)',height:19,fontSize:10.5,flex:'none'}}>Section</span>
+                    style={{flex:1,minWidth:0,border:0,outline:'none',background:'transparent',fontSize:13.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em',fontFamily:'inherit'}}/>
+                  <span className="badge" style={{background:'#fff',color:'var(--ink-3)',border:'1px solid var(--line)',height:19,fontSize:10.5,flex:'none'}}>Section</span>
                   <div style={{display:'flex',alignItems:'center',gap:2,flex:'none'}}>
                     <button className="btn btn-ghost btn-icon btn-sm" title="Move up" onClick={()=>move(i,-1)} disabled={i===0} style={{opacity:i===0?.35:1}}><Icon name="arrow_up" size={15}/></button>
                     <button className="btn btn-ghost btn-icon btn-sm" title="Move down" onClick={()=>move(i,1)} disabled={i===b.sections.length-1} style={{opacity:i===b.sections.length-1?.35:1}}><Icon name="arrow_down" size={15}/></button>
@@ -322,11 +322,11 @@ function BookContents({b, update, flash, secCount}){
             n++;
             const k=B_KIND[s.kind];
             return (
-              <div key={s.id} style={{display:'flex',alignItems:'center',gap:13,padding:'12px 14px',border:'1px solid var(--border)',borderRadius:11,background:'#fff',marginLeft:hasSec?18:0}}>
+              <div key={s.id} style={{display:'flex',alignItems:'center',gap:13,padding:'12px 14px',border:'1px solid var(--line)',borderRadius:11,background:'#fff',marginLeft:hasSec?18:0}}>
                 <span style={{fontFamily:'ui-monospace,Menlo,monospace',fontSize:12,fontWeight:700,color:'var(--ink-4)',width:20,textAlign:'center',flex:'none'}}>{n}</span>
                 <span style={{width:34,height:34,borderRadius:9,background:k.color+'18',color:k.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={k.icon} size={16}/></span>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontSize:13.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.title}</div>
+                  <div style={{fontSize:13.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{s.title}</div>
                   <div className="muted" style={{fontSize:11.5,marginTop:2,display:'flex',alignItems:'center',gap:6}}>{k.label} · {s.pages} {s.pages>1?'pages':'page'} <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)'}}></span><Avatar id={s.src} size={14}/>{PEOPLE[s.src].name.split(' ')[0]}</div>
                 </div>
                 <div style={{display:'flex',alignItems:'center',gap:2,flex:'none'}}>
@@ -337,32 +337,32 @@ function BookContents({b, update, flash, secCount}){
               </div>
             );
           }); })()}
-          {!b.sections.length && <div style={{textAlign:'center',padding:'30px',color:'var(--muted-foreground)',fontSize:13,border:'1.5px dashed var(--border-strong)',borderRadius:12}}>Empty book — add a section or materials from the library.</div>}
+          {!b.sections.length && <div style={{textAlign:'center',padding:'30px',color:'var(--ink-3)',fontSize:13,border:'1.5px dashed var(--line-2)',borderRadius:12}}>Empty book — add a section or materials from the library.</div>}
         </div>
       </div>
 
       <div style={{position:'sticky',top:'calc(var(--header-h) + 60px)'}}>
         <div className="card card-pad">
           <SectionHead title="Add materials" sub="Collate from the library" icon="plus"/>
-          <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 11px',border:'1px solid var(--border-strong)',background:'#fff',borderRadius:8,marginBottom:12}}>
-            <Icon name="search" size={15} style={{color:'var(--muted-foreground)'}}/>
+          <div style={{display:'flex',alignItems:'center',gap:8,height:34,padding:'0 11px',border:'1px solid var(--line-2)',background:'#fff',borderRadius:8,marginBottom:12}}>
+            <Icon name="search" size={15} style={{color:'var(--ink-3)'}}/>
             <input value={filter} onChange={e=>setFilter(e.target.value)} placeholder="Search materials…" style={{flex:1,border:0,outline:'none',fontSize:13,fontFamily:'inherit',background:'transparent'}}/>
           </div>
           <div style={{display:'flex',flexDirection:'column',gap:2,maxHeight:'calc(100vh - var(--header-h) - 280px)',overflowY:'auto'}}>
             {lib.map((x,i)=>{
               const k=B_KIND[x.kind];
               return (
-                <div key={i} style={{display:'flex',alignItems:'center',gap:11,padding:'9px 6px',borderTop:i?'1px solid var(--border)':0}}>
+                <div key={i} style={{display:'flex',alignItems:'center',gap:11,padding:'9px 6px',borderTop:i?'1px solid var(--line)':0}}>
                   <span style={{width:30,height:30,borderRadius:8,background:k.color+'18',color:k.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name={k.icon} size={14}/></span>
                   <div style={{flex:1,minWidth:0}}>
-                    <div style={{fontSize:12.5,fontWeight:550,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{x.title}</div>
+                    <div style={{fontSize:12.5,fontWeight:550,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{x.title}</div>
                     <div className="muted" style={{fontSize:11}}>{k.label} · {x.meta}</div>
                   </div>
                   <button className="btn btn-secondary btn-sm" style={{flex:'none'}} onClick={()=>add(x)}><Icon name="plus" size={13} sw={2.4}/>Add</button>
                 </div>
               );
             })}
-            {!lib.length && <div style={{textAlign:'center',padding:'24px',color:'var(--muted-foreground)',fontSize:12.5}}>No materials match.</div>}
+            {!lib.length && <div style={{textAlign:'center',padding:'24px',color:'var(--ink-3)',fontSize:12.5}}>No materials match.</div>}
           </div>
         </div>
       </div>
@@ -377,9 +377,9 @@ function FeedbackTab({b, update, flash}){
     return (
       <div className="page" style={{paddingTop:24,maxWidth:760}}>
         <div className="card card-pad" style={{textAlign:'center',padding:'48px 30px'}}>
-          <span style={{width:48,height:48,borderRadius:12,background:'var(--background)',display:'inline-flex',alignItems:'center',justifyContent:'center',marginBottom:14}}><Icon name="send" size={22} style={{color:'var(--ink-4)'}}/></span>
-          <div style={{fontSize:15,fontWeight:600,color:'var(--foreground)'}}>Distribute the book to collect feedback</div>
-          <div className="muted" style={{fontSize:13,marginTop:6,maxWidth:420,margin:'6px auto 0',lineHeight:1.5}}>Once this book reaches <b style={{color:'var(--secondary-foreground)'}}>{b.recipient}</b>, you can log their feedback here and route it back to everyone who contributed.</div>
+          <span style={{width:48,height:48,borderRadius:12,background:'var(--surface-2)',display:'inline-flex',alignItems:'center',justifyContent:'center',marginBottom:14}}><Icon name="send" size={22} style={{color:'var(--ink-4)'}}/></span>
+          <div style={{fontSize:15,fontWeight:600,color:'var(--ink)'}}>Distribute the book to collect feedback</div>
+          <div className="muted" style={{fontSize:13,marginTop:6,maxWidth:420,margin:'6px auto 0',lineHeight:1.5}}>Once this book reaches <b style={{color:'var(--ink-2)'}}>{b.recipient}</b>, you can log their feedback here and route it back to everyone who contributed.</div>
         </div>
       </div>
     );
@@ -403,7 +403,7 @@ function FeedbackView({b, fb, update, flash}){
           <div style={{display:'flex',alignItems:'center',gap:13,marginBottom:14}}>
             <span style={{width:42,height:42,borderRadius:11,background:v.tint,color:v.color,display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="comment" size={20}/></span>
             <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:15,fontWeight:600,color:'var(--foreground)'}}>Feedback from {fb.who}</div>
+              <div style={{fontSize:15,fontWeight:600,color:'var(--ink)'}}>Feedback from {fb.who}</div>
               <div className="muted" style={{fontSize:12,marginTop:1}}>{fb.role} · received {fb.date}</div>
             </div>
             <div style={{textAlign:'right',flex:'none'}}>
@@ -412,7 +412,7 @@ function FeedbackView({b, fb, update, flash}){
             </div>
           </div>
           <span className="badge" style={{background:v.tint,color:v.color,height:22,marginBottom:12}}>{v.label}</span>
-          <p style={{fontFamily:B_SERIF,fontSize:16,lineHeight:1.55,color:'var(--foreground)',margin:0,fontStyle:'italic'}}>“{fb.summary}”</p>
+          <p style={{fontFamily:B_SERIF,fontSize:16,lineHeight:1.55,color:'var(--ink)',margin:0,fontStyle:'italic'}}>“{fb.summary}”</p>
         </div>
 
         {/* notes routed to contributors */}
@@ -420,14 +420,14 @@ function FeedbackView({b, fb, update, flash}){
           <SectionHead title="Notes for contributors" sub="Routed back to the people who built each part" icon="message"/>
           <div style={{display:'flex',flexDirection:'column',gap:11}}>
             {fb.notes.map((nt,i)=>(
-              <div key={i} style={{display:'flex',gap:12,padding:'13px 14px',border:'1px solid var(--border)',borderRadius:11,background:'#fff'}}>
+              <div key={i} style={{display:'flex',gap:12,padding:'13px 14px',border:'1px solid var(--line)',borderRadius:11,background:'#fff'}}>
                 <Avatar id={nt.src} size={32}/>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
-                    <span style={{fontSize:13,fontWeight:600,color:'var(--foreground)'}}>{PEOPLE[nt.src].name}</span>
-                    <span className="badge" style={{background:'var(--background)',color:'var(--muted-foreground)',height:18,fontSize:10.5,border:'1px solid var(--border)'}}>{nt.section}</span>
+                    <span style={{fontSize:13,fontWeight:600,color:'var(--ink)'}}>{PEOPLE[nt.src].name}</span>
+                    <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',height:18,fontSize:10.5,border:'1px solid var(--line)'}}>{nt.section}</span>
                   </div>
-                  <div style={{fontSize:13,color:'var(--secondary-foreground)',lineHeight:1.5,marginTop:5}}>{nt.note}</div>
+                  <div style={{fontSize:13,color:'var(--ink-2)',lineHeight:1.5,marginTop:5}}>{nt.note}</div>
                 </div>
               </div>
             ))}
@@ -451,7 +451,7 @@ function FeedbackView({b, fb, update, flash}){
               <button className="btn btn-primary btn-sm" style={{width:'100%'}} onClick={share}><Icon name="send" size={14}/>Share with contributors</button>
             </>
           )}
-          <div style={{marginTop:14,paddingTop:14,borderTop:'1px solid var(--border)'}}>
+          <div style={{marginTop:14,paddingTop:14,borderTop:'1px solid var(--line)'}}>
             <div className="muted" style={{fontSize:11,marginBottom:9,fontWeight:600,textTransform:'uppercase',letterSpacing:'.04em'}}>Contributors</div>
             <div style={{display:'flex',flexDirection:'column',gap:9}}>
               {b.contributors.map(id=>{
@@ -459,10 +459,10 @@ function FeedbackView({b, fb, update, flash}){
                 return (
                   <div key={id} style={{display:'flex',alignItems:'center',gap:10}}>
                     <Avatar id={id} size={26}/>
-                    <span style={{flex:1,fontSize:12.5,fontWeight:550,color:'var(--foreground)'}}>{PEOPLE[id].name}</span>
+                    <span style={{flex:1,fontSize:12.5,fontWeight:550,color:'var(--ink)'}}>{PEOPLE[id].name}</span>
                     {seen
                       ? <span className="badge" style={{background:'#F0FDF4',color:'#16A34A',height:18,fontSize:10.5}}><Icon name="check" size={11}/>Notified</span>
-                      : <span className="badge" style={{background:'var(--background)',color:'var(--muted-foreground)',height:18,fontSize:10.5,border:'1px solid var(--border)'}}>Pending</span>}
+                      : <span className="badge" style={{background:'var(--surface-2)',color:'var(--ink-3)',height:18,fontSize:10.5,border:'1px solid var(--line)'}}>Pending</span>}
                   </div>
                 );
               })}
@@ -488,7 +488,7 @@ function FeedbackCapture({b, update, flash}){
     update(b.id, bk=>({...bk, feedback:{who:who.trim()||b.recipient, role:b.recipient, date:'Jun 6 · '+new Date().toTimeString().slice(0,5), rating, verdict, summary:summary.trim(), notes:kept, shared:false, acks:[]}}));
     flash&&flash('Feedback logged — share it with the team when ready');
   }
-  const inputStyle={width:'100%',border:'1px solid var(--border-strong)',borderRadius:9,padding:'9px 12px',fontSize:13,fontFamily:'inherit',outline:'none',background:'#fff',color:'var(--foreground)'};
+  const inputStyle={width:'100%',border:'1px solid var(--line-2)',borderRadius:9,padding:'9px 12px',fontSize:13,fontFamily:'inherit',outline:'none',background:'#fff',color:'var(--ink)'};
 
   return (
     <div className="page" style={{paddingTop:24,maxWidth:760,paddingBottom:48}}>
@@ -496,7 +496,7 @@ function FeedbackCapture({b, update, flash}){
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:4}}>
           <span style={{width:34,height:34,borderRadius:9,background:'#F8EFD9',color:'#B5851C',display:'flex',alignItems:'center',justifyContent:'center',flex:'none'}}><Icon name="clock" size={17}/></span>
           <div>
-            <div style={{fontSize:15,fontWeight:600,color:'var(--foreground)'}}>Log feedback from {b.recipient}</div>
+            <div style={{fontSize:15,fontWeight:600,color:'var(--ink)'}}>Log feedback from {b.recipient}</div>
             <div className="muted" style={{fontSize:12,marginTop:1}}>Distributed {b.distributed} · awaiting feedback</div>
           </div>
         </div>
@@ -504,21 +504,21 @@ function FeedbackCapture({b, update, flash}){
         <div style={{marginTop:18,display:'flex',flexDirection:'column',gap:16}}>
           <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'var(--secondary-foreground)',display:'block',marginBottom:7}}>Overall rating</label>
+              <label style={{fontSize:12,fontWeight:600,color:'var(--ink-2)',display:'block',marginBottom:7}}>Overall rating</label>
               <div style={{height:39,display:'flex',alignItems:'center'}}><Stars value={rating} size={24} onSet={setRating}/></div>
             </div>
             <div>
-              <label style={{fontSize:12,fontWeight:600,color:'var(--secondary-foreground)',display:'block',marginBottom:7}}>From (receiver)</label>
+              <label style={{fontSize:12,fontWeight:600,color:'var(--ink-2)',display:'block',marginBottom:7}}>From (receiver)</label>
               <input value={who} onChange={e=>setWho(e.target.value)} placeholder={b.recipient} style={inputStyle}/>
             </div>
           </div>
 
           <div>
-            <label style={{fontSize:12,fontWeight:600,color:'var(--secondary-foreground)',display:'block',marginBottom:7}}>Verdict</label>
+            <label style={{fontSize:12,fontWeight:600,color:'var(--ink-2)',display:'block',marginBottom:7}}>Verdict</label>
             <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
               {Object.entries(B_VERDICT).map(([k,v])=>(
                 <button key={k} onClick={()=>setVerdict(k)} style={{display:'flex',alignItems:'center',gap:7,height:34,padding:'0 13px',borderRadius:9,cursor:'pointer',fontSize:12.5,fontWeight:600,fontFamily:'inherit',
-                  border:'1px solid '+(verdict===k?v.color:'var(--border-strong)'),background:verdict===k?v.tint:'#fff',color:verdict===k?v.color:'var(--muted-foreground)'}}>
+                  border:'1px solid '+(verdict===k?v.color:'var(--line-2)'),background:verdict===k?v.tint:'#fff',color:verdict===k?v.color:'var(--ink-3)'}}>
                   {verdict===k&&<Icon name="check" size={13}/>}{v.label}
                 </button>
               ))}
@@ -526,17 +526,17 @@ function FeedbackCapture({b, update, flash}){
           </div>
 
           <div>
-            <label style={{fontSize:12,fontWeight:600,color:'var(--secondary-foreground)',display:'block',marginBottom:7}}>Summary feedback</label>
+            <label style={{fontSize:12,fontWeight:600,color:'var(--ink-2)',display:'block',marginBottom:7}}>Summary feedback</label>
             <textarea value={summary} onChange={e=>setSummary(e.target.value)} rows={3} placeholder="What worked, what the receiver needs next time…" style={{...inputStyle,resize:'vertical',lineHeight:1.5}}/>
           </div>
 
           <div>
-            <label style={{fontSize:12,fontWeight:600,color:'var(--secondary-foreground)',display:'block',marginBottom:8}}>Notes for contributors <span style={{fontWeight:500,color:'var(--ink-4)'}}>· optional, routed to each person</span></label>
+            <label style={{fontSize:12,fontWeight:600,color:'var(--ink-2)',display:'block',marginBottom:8}}>Notes for contributors <span style={{fontWeight:500,color:'var(--ink-4)'}}>· optional, routed to each person</span></label>
             <div style={{display:'flex',flexDirection:'column',gap:9}}>
               {notes.map((n,i)=>(
                 <div key={n.src} style={{display:'flex',alignItems:'center',gap:11}}>
                   <Avatar id={n.src} size={28}/>
-                  <span style={{fontSize:12.5,fontWeight:550,color:'var(--foreground)',width:96,flex:'none',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{PEOPLE[n.src].name}</span>
+                  <span style={{fontSize:12.5,fontWeight:550,color:'var(--ink)',width:96,flex:'none',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{PEOPLE[n.src].name}</span>
                   <input value={n.note} onChange={e=>setNote(i,e.target.value)} placeholder="Note for this contributor…" style={{...inputStyle,flex:1}}/>
                 </div>
               ))}

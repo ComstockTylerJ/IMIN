@@ -20,20 +20,20 @@ function AskAIDrawer({ onClose, openRun, glyph='diamond', flat=false, framing='c
       <div style={{position:'absolute',top:0,right:0,bottom:0,width:'min(480px,96vw)',background:'#fff',
         boxShadow:'-20px 0 60px rgba(29,53,87,.18)',animation:'slidein .26s cubic-bezier(.2,.8,.3,1)',display:'flex',flexDirection:'column'}}>
         {/* header */}
-        <div style={{padding:'15px 18px',borderBottom:'1px solid var(--border)',display:'flex',alignItems:'center',gap:12}}>
+        <div style={{padding:'15px 18px',borderBottom:'1px solid var(--line)',display:'flex',alignItems:'center',gap:12}}>
           <FleetToken size={36}/>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:15.5,fontWeight:700,letterSpacing:'-.02em',display:'flex',alignItems:'center',gap:7}}>Ask AI
               <span className="badge" style={{background:'#EBF4FF',color:'#0073E6',height:17,fontSize:9.5,letterSpacing:'.04em'}}>COPILOT</span></div>
-            <div className="muted" style={{fontSize:11.5}}>Scoped to <b style={{fontWeight:600,color:'var(--secondary-foreground)'}}>Vantage v. Meridian</b></div>
+            <div className="muted" style={{fontSize:11.5}}>Scoped to <b style={{fontWeight:600,color:'var(--ink-2)'}}>Vantage v. Meridian</b></div>
           </div>
           <button className="btn btn-ghost btn-icon btn-sm" onClick={onClose}><Icon name="x" size={17}/></button>
         </div>
         {/* tabs */}
-        <div style={{display:'flex',gap:2,padding:'0 14px',borderBottom:'1px solid var(--border)'}}>
+        <div style={{display:'flex',gap:2,padding:'0 14px',borderBottom:'1px solid var(--line)'}}>
           {tabs.map(([id,lb,ic,n])=>(
             <button key={id} onClick={()=>setTab(id)} className="seg-tab" style={{display:'flex',alignItems:'center',gap:7,padding:'12px 12px',marginRight:4,
-              fontSize:13,fontWeight:tab===id?600:500,color:tab===id?'var(--foreground)':'var(--muted-foreground)',position:'relative'}}>
+              fontSize:13,fontWeight:tab===id?600:500,color:tab===id?'var(--ink)':'var(--ink-3)',position:'relative'}}>
               <Icon name={ic} size={15}/>{lb}
               {n>0 && <span className="badge" style={{background:'#FCF0DC',color:'#B5851C',height:17,fontSize:10,padding:'0 5px'}}>{n}</span>}
               {tab===id && <span style={{position:'absolute',left:6,right:6,bottom:-1,height:2,background:'var(--primary)',borderRadius:2}}></span>}
@@ -97,7 +97,7 @@ function AskChat({ glyph, flat, framing, goRun }){
             <div key={i} style={{display:'flex',gap:10,maxWidth:'92%'}}>
               <FleetToken size={26}/>
               <div style={{minWidth:0}}>
-                <div style={{background:'var(--background)',border:'1px solid var(--border)',padding:'10px 13px',borderRadius:'13px 13px 13px 4px',fontSize:13,lineHeight:1.55,color:'var(--secondary-foreground)',whiteSpace:'pre-wrap'}}>{m.txt}</div>
+                <div style={{background:'var(--surface-2)',border:'1px solid var(--line)',padding:'10px 13px',borderRadius:'13px 13px 13px 4px',fontSize:13,lineHeight:1.55,color:'var(--ink-2)',whiteSpace:'pre-wrap'}}>{m.txt}</div>
                 {(m.cta) &&
                   <button onClick={()=> m.run ? goRun(m.run) : (window.__openKickoff && window.__openKickoff(m.delegate))}
                     className="btn btn-secondary btn-sm" style={{marginTop:8}}>
@@ -108,14 +108,14 @@ function AskChat({ glyph, flat, framing, goRun }){
           {thinking &&
             <div style={{display:'flex',gap:10,alignItems:'center'}}>
               <FleetToken size={26}/>
-              <div style={{display:'flex',gap:4,padding:'12px 14px',background:'var(--background)',border:'1px solid var(--border)',borderRadius:13}}>
+              <div style={{display:'flex',gap:4,padding:'12px 14px',background:'var(--surface-2)',border:'1px solid var(--line)',borderRadius:13}}>
                 {[0,1,2].map(i=><span key={i} style={{width:6,height:6,borderRadius:'50%',background:'var(--ink-4)',animation:'blink 1s infinite',animationDelay:i*0.15+'s'}}></span>)}
               </div>
             </div>}
         </div>
       </div>
       {/* suggested + composer */}
-      <div style={{borderTop:'1px solid var(--border)',padding:'12px 14px',background:'var(--background)'}}>
+      <div style={{borderTop:'1px solid var(--line)',padding:'12px 14px',background:'var(--surface-2)'}}>
         <div style={{display:'flex',gap:7,flexWrap:'wrap',marginBottom:10}}>
           {SUGGESTED.map(s=>(
             <button key={s} onClick={()=>send(s)} className="chip" style={{height:28,fontSize:11.5}}>{s}</button>
@@ -125,8 +125,8 @@ function AskChat({ glyph, flat, framing, goRun }){
           <textarea value={val} onChange={e=>setVal(e.target.value)} rows={1}
             onKeyDown={e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); send(); } }}
             placeholder="Ask anything, or type / to delegate…"
-            style={{flex:1,border:'1px solid var(--border-strong)',borderRadius:10,padding:'9px 12px',fontSize:13,fontFamily:'inherit',outline:'none',resize:'none',background:'#fff',lineHeight:1.45,maxHeight:120}}
-            onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--border-strong)'}/>
+            style={{flex:1,border:'1px solid var(--line-2)',borderRadius:10,padding:'9px 12px',fontSize:13,fontFamily:'inherit',outline:'none',resize:'none',background:'#fff',lineHeight:1.45,maxHeight:120}}
+            onFocus={e=>e.target.style.borderColor='var(--blue)'} onBlur={e=>e.target.style.borderColor='var(--line-2)'}/>
           <button className="btn btn-primary btn-icon" onClick={()=>send()}><Icon name="send" size={16}/></button>
         </div>
       </div>
@@ -141,13 +141,13 @@ function AskAgents({ glyph, flat, framing, goRun, onClose }){
   const Row = ({r, big})=>{
     const a=AGENTS[r.agent], s=RUN_STATUS[r.status];
     return (
-      <div onClick={()=>goRun(r.id)} className="card" style={{padding:'12px 13px',cursor:'pointer',border:'1px solid '+(big?'#F4D79A':'var(--border)'),transition:'.13s'}}
+      <div onClick={()=>goRun(r.id)} className="card" style={{padding:'12px 13px',cursor:'pointer',border:'1px solid '+(big?'#F4D79A':'var(--line)'),transition:'.13s'}}
         onMouseEnter={e=>e.currentTarget.style.boxShadow='var(--shadow)'} onMouseLeave={e=>e.currentTarget.style.boxShadow='none'}>
         <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:big?9:8}}>
           <AgentToken id={r.agent} size={30} glyph={glyph} flat={flat} live={r.status==='running'}/>
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:12,fontWeight:700,color:a.color}}>{framing==='role'?a.role:a.code}</div>
-            <div style={{fontSize:12.5,fontWeight:600,color:'var(--foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
+            <div style={{fontSize:12.5,fontWeight:600,color:'var(--ink)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{r.title}</div>
           </div>
           <RunStatusPill k={r.status} sm/>
         </div>
@@ -164,14 +164,14 @@ function AskAgents({ glyph, flat, framing, goRun, onClose }){
       {attn.length>0 && <div>
         <div style={{display:'flex',alignItems:'center',gap:8,margin:'0 2px 10px'}}>
           <span style={{width:7,height:7,borderRadius:'50%',background:'#E8920C'}}></span>
-          <span style={{fontSize:12.5,fontWeight:700,color:'var(--foreground)'}}>Waiting on you</span>
+          <span style={{fontSize:12.5,fontWeight:700,color:'var(--ink)'}}>Waiting on you</span>
           <span className="badge" style={{background:'#FCF0DC',color:'#B5851C'}}>{attn.length}</span>
         </div>
         <div style={{display:'flex',flexDirection:'column',gap:10}}>{attn.map(r=><Row key={r.id} r={r} big/>)}</div>
       </div>}
       {running.length>0 && <div>
         <div style={{display:'flex',alignItems:'center',gap:8,margin:'0 2px 10px'}}>
-          <span style={{fontSize:12.5,fontWeight:700,color:'var(--foreground)'}}>Working now</span>
+          <span style={{fontSize:12.5,fontWeight:700,color:'var(--ink)'}}>Working now</span>
           <span className="badge" style={{background:'#EBF4FF',color:'#0073E6'}}>{running.length}</span>
         </div>
         <div style={{display:'flex',flexDirection:'column',gap:10}}>{running.map(r=><Row key={r.id} r={r}/>)}</div>
@@ -195,11 +195,11 @@ const AI_AUDIT = [
 function AskActivity({ glyph, flat, framing, goRun }){
   return (
     <div style={{flex:1,overflowY:'auto',padding:'16px 18px'}}>
-      <div style={{fontSize:12,color:'var(--muted-foreground)',fontWeight:550,marginBottom:14,display:'flex',alignItems:'center',gap:7}}>
+      <div style={{fontSize:12,color:'var(--ink-3)',fontWeight:550,marginBottom:14,display:'flex',alignItems:'center',gap:7}}>
         <Icon name="lock" size={13}/>Every AI & agent action on this matter is logged here.
       </div>
       <div style={{position:'relative'}}>
-        <div style={{position:'absolute',left:15,top:8,bottom:8,width:2,background:'var(--border)'}}></div>
+        <div style={{position:'absolute',left:15,top:8,bottom:8,width:2,background:'var(--line)'}}></div>
         {AI_AUDIT.map((e,i)=>(
           <div key={i} style={{display:'flex',gap:13,padding:'9px 0',position:'relative'}}>
             <span style={{flex:'none',zIndex:1}}>
@@ -207,7 +207,7 @@ function AskActivity({ glyph, flat, framing, goRun }){
                 <span style={{width:32,height:32,borderRadius:9,background:e.tone+'18',color:e.tone,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 0 3px #fff'}}><Icon name={e.icon} size={15}/></span>}
             </span>
             <div style={{flex:1,minWidth:0,paddingTop:3}}>
-              <div style={{fontSize:12.5,color:'var(--secondary-foreground)',lineHeight:1.5}}>
+              <div style={{fontSize:12.5,color:'var(--ink-2)',lineHeight:1.5}}>
                 {e.agent && <b style={{color:AGENTS[e.agent].color,fontWeight:700}}>{framing==='role'?AGENTS[e.agent].role:AGENTS[e.agent].code} </b>}
                 {e.txt}
               </div>

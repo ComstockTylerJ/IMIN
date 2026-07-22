@@ -11,8 +11,8 @@ function AgentRunCard({ run, glyph='diamond', flat=false, framing='codename' }){
   const cur = run.steps[run.steps.length-1];
   return (
     <div onClick={()=>window.__openRun && window.__openRun(run.id)}
-      style={{position:'relative',background:'#fff',border:'1px solid var(--border)',
-        borderLeft:'3px solid var(--border-strong)',borderRadius:10,padding:'11px 12px 12px',cursor:'pointer',boxShadow:'var(--shadow-sm)',
+      style={{position:'relative',background:'#fff',border:'1px solid var(--line)',
+        borderLeft:'3px solid var(--line-2)',borderRadius:10,padding:'11px 12px 12px',cursor:'pointer',boxShadow:'var(--shadow-sm)',
         transition:'box-shadow .15s,transform .12s'}}
       onMouseEnter={e=>{e.currentTarget.style.boxShadow='var(--shadow)';e.currentTarget.style.transform='translateY(-1px)';}}
       onMouseLeave={e=>{e.currentTarget.style.boxShadow='var(--shadow-sm)';e.currentTarget.style.transform='none';}}>
@@ -26,10 +26,10 @@ function AgentRunCard({ run, glyph='diamond', flat=false, framing='codename' }){
         <RunStatusPill k={run.status} sm/>
       </div>
       {/* title */}
-      <div style={{fontSize:13,fontWeight:600,color:'var(--foreground)',lineHeight:1.32,marginBottom:6}}>{run.title}</div>
+      <div style={{fontSize:13,fontWeight:600,color:'var(--ink)',lineHeight:1.32,marginBottom:6}}>{run.title}</div>
       {/* current step */}
-      <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--secondary-foreground)',marginBottom:10,minWidth:0}}>
-        {live && <Icon name={STEP_KIND[cur.kind].icon} size={12} sw={2} style={{flex:'none',color:'var(--muted-foreground)'}}/>}
+      <div style={{display:'flex',alignItems:'center',gap:6,fontSize:11,color:'var(--ink-2)',marginBottom:10,minWidth:0}}>
+        {live && <Icon name={STEP_KIND[cur.kind].icon} size={12} sw={2} style={{flex:'none',color:'var(--ink-3)'}}/>}
         <span style={{whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',minWidth:0,flex:1}}>{cur.txt}</span>
       </div>
       {/* progress */}
@@ -51,24 +51,24 @@ function AgentRunCard({ run, glyph='diamond', flat=false, framing='codename' }){
 function TaskFeedRow({ t, P, WF, openTask, flash }){
   const w = WF[t.wf], who = P[t.who];
   const due = t.done ? t.doneDate : (t.due?('Due '+t.due):'');
-  const dueColor = t.tone==='today'||t.tone==='tomorrow' ? '#DC2626' : 'var(--muted-foreground)';
+  const dueColor = t.tone==='today'||t.tone==='tomorrow' ? '#DC2626' : 'var(--ink-3)';
   return (
     <div className="card agent-row" onClick={()=>flash && flash('Opening '+t.id)}
-      style={{display:'flex',alignItems:'stretch',padding:0,cursor:'pointer',overflow:'hidden',borderColor:'var(--border)'}}>
-      <div style={{width:4,background:'var(--border-strong)',flex:'none'}}></div>
+      style={{display:'flex',alignItems:'stretch',padding:0,cursor:'pointer',overflow:'hidden',borderColor:'var(--line)'}}>
+      <div style={{width:4,background:'var(--line-2)',flex:'none'}}></div>
       <div style={{flex:1,display:'flex',alignItems:'center',gap:16,padding:'13px 18px',minWidth:0}}>
         <span title={who.name} className="av" style={{width:38,height:38,background:who.color,fontSize:13,flex:'none'}}>{who.initials}</span>
         <div style={{flex:1,minWidth:0}}>
           <div style={{display:'flex',alignItems:'center',gap:9,marginBottom:3,whiteSpace:'nowrap',overflow:'hidden'}}>
-            <span style={{fontSize:11,fontWeight:700,letterSpacing:'.03em',color:'var(--secondary-foreground)',textTransform:'uppercase',flex:'none'}}>{who.name}</span>
+            <span style={{fontSize:11,fontWeight:700,letterSpacing:'.03em',color:'var(--ink-2)',textTransform:'uppercase',flex:'none'}}>{who.name}</span>
             <span style={{width:3,height:3,borderRadius:'50%',background:'var(--ink-4)',flex:'none'}}></span>
-            <span className="muted" style={{fontSize:11.5,display:'inline-flex',alignItems:'center',gap:5,minWidth:0,overflow:'hidden',textOverflow:'ellipsis'}}><Icon name={w.icon} size={12} style={{color:'var(--muted-foreground)',flex:'none'}}/>{w.label}</span>
+            <span className="muted" style={{fontSize:11.5,display:'inline-flex',alignItems:'center',gap:5,minWidth:0,overflow:'hidden',textOverflow:'ellipsis'}}><Icon name={w.icon} size={12} style={{color:'var(--ink-3)',flex:'none'}}/>{w.label}</span>
           </div>
-          <div style={{fontSize:14,fontWeight:600,color:'var(--foreground)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginBottom:4}}>{t.title}</div>
-          <div style={{fontSize:12,color:'var(--muted-foreground)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.desc}</div>
+          <div style={{fontSize:14,fontWeight:600,color:'var(--ink)',letterSpacing:'-.01em',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis',marginBottom:4}}>{t.title}</div>
+          <div style={{fontSize:12,color:'var(--ink-3)',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.desc}</div>
         </div>
         <div style={{width:120,flex:'none',display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
-          <span className="badge" style={{background:'#F1F5F9',color:'var(--secondary-foreground)'}}><Icon name="user" size={11}/>Person</span>
+          <span className="badge" style={{background:'#F1F5F9',color:'var(--ink-2)'}}><Icon name="user" size={11}/>Person</span>
           <span style={{fontFamily:CMONO,fontSize:11,fontWeight:600,color:dueColor}}>{due}</span>
         </div>
       </div>
@@ -110,7 +110,7 @@ function UnifiedFeed({ wf, scoped, asg, openRun, glyph='diamond', flat=false, fr
           <div key={g.id}>
             <div style={{display:'flex',alignItems:'center',gap:9,margin:'0 2px 11px'}}>
               <span style={{width:7,height:7,borderRadius:'50%',background:g.color,boxShadow:'0 0 0 3px '+g.color+'22'}}></span>
-              <span style={{fontSize:13.5,fontWeight:700,color:'var(--foreground)',letterSpacing:'-.01em'}}>{g.label}</span>
+              <span style={{fontSize:13.5,fontWeight:700,color:'var(--ink)',letterSpacing:'-.01em'}}>{g.label}</span>
               <span className="badge" style={{background:g.color+'18',color:g.color}}>{total}</span>
               <span className="muted" style={{fontSize:12}}>· {g.runs.length} agent{g.runs.length===1?'':'s'} · {g.tasks.length} {g.tasks.length===1?'person':'people'}</span>
             </div>
